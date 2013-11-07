@@ -25,39 +25,5 @@
 
 <canvas id="gameCanvas" width="200" height="100" style="border:1px solid #000000;" ></canvas>
 
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 {% load staticfiles %}
-{% comment %}<script type="text/javascript" charset="utf-8" src="{% static "game/js/game.js" %}" ></script>{% endcomment %}
-
-<script>
-    var c=document.getElementById("gameCanvas");
-var ctx=c.getContext("2d");
-ctx.fillStyle="#FF0000";
-ctx.fillRect(0,0,150,75);
-
-
-$(function () {
-    var s = new WebSocket('ws://localhost:8000/game/echo');
-    s.onopen = function () {
-        console.log('WebSocket open');
-    };
-    s.onmessage = function (e) {
-        console.log('message: ' + e.data);
-        $('#messagecontainer').append('<p>' + e.data + '</p>');
-    };
-    window.s = s;
-
-    $('#send_message').click(function () {
-        s.send($('#message').val());
-    });
-});
-
-</script>
-
-
-
-<input type="text" id="message" value="Hello, World!" />
-<button type="button" id="send_message">Send message</button>
-<h4>Received Messages</h4>
-<div id="messagecontainer" />
+<script type="text/javascript" charset="utf-8" src="{% static "game/js/game.js" %}" ></script>
