@@ -19,9 +19,13 @@ function updateGame() {
 
 function loadGame() {
     $.ajax({
-        url : 'load',
+        url : 'load_game',
         success : function(records) {
-            $('#hernya').html(records);
+            for (var i = 0; i < records.length; i++) {
+                var fields = records[i].fields
+                var unit = new Unit(fields.player, fields.unit_type, fields.cell)
+                unit.show()
+            }
         }
     });
 }

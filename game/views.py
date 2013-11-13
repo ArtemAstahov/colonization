@@ -12,6 +12,7 @@ def game(request):
     return render(request, 'game/game.html', context)
 
 
-def load(request):
-    data = serializers.serialize('json', Game.objects.all())
+def load_game(request):
+    units = Game.objects.all()[0].field_set.all()[0].cell_set.all()[0].unit_set.all()
+    data = serializers.serialize('json', units, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')

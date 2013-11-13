@@ -5,5 +5,5 @@ from game import views
 urlpatterns = patterns('',
     # ex: /game/
     url(r'^$', views.game, name='game'),
-    url(r'^load/', views.load, name='load'),
+    url(r'^load_game/', views.load_game, name='load'),
 )

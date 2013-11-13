@@ -8,7 +8,7 @@ class Player(models.Model):
     name = models.CharField(max_length=100)
     money = models.IntegerField(default=10)
 
-    def __str__(self):
+    def __unicode__(self):
         return "name: " + self.name + " money: " + str(self.money)
 
 
@@ -42,7 +42,7 @@ class Field(models.Model):
     height = models.IntegerField(default=10)
     width = models.IntegerField(default=5)
 
-    def __str__(self):
+    def __unicode__(self):
         return "height: " + str(self.height) + " width: " + str(self.width)
 
 
@@ -50,6 +50,9 @@ class Cell(models.Model):
     field = models.ForeignKey(Field)
     left_position = models.IntegerField()
     top_position = models.IntegerField()
+
+    def natural_key(self):
+        return self.left_position, self.top_position
 
 
 def create_cell(field, left, top):
