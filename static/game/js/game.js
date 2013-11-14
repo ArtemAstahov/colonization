@@ -1,11 +1,14 @@
-function drawGame()
-{
-    var c=document.getElementById("gameCanvas");
-    var ctx=c.getContext("2d");
-    ctx.fillStyle="#FF0000";
-    ctx.fillRect(0,0,150,75);
+function drawGame() {
+    createMap()
 }
 
+function createMap() {
+    var c=document.getElementById("gameCanvas");
+    var ctx=c.getContext("2d");
+    for (var i=0; i<MAP_WIDTH; i++)
+        for(var j=0; j<MAP_HEIGHT; j++)
+            ctx.strokeRect( i * FIELD_SIZE, j * FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
+}
 
 function updateGame() {
     //var count = $(":selected").val();

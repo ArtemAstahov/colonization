@@ -5,5 +5,7 @@ function Unit(player, type, position) {
 }
 
 Unit.prototype.show = function(){
-    alert("player: " + this.player + " type: " + this.type + " position: " + this.position);
+    var c=document.getElementById("gameCanvas");
+    var ctx=c.getContext("2d");
+    ctx.fillRect((this.position[0] - 1) * FIELD_SIZE, (this.position[1] - 1) * FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
 }
