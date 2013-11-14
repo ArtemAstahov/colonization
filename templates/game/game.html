@@ -10,15 +10,15 @@
 <ul>
     <li>Player: {{game.player}}</li>
     <li>Creation date: {{game.creation_date}}</li>
-    <li>Field: {{game.field_set.all.0}}</li>
-    <li>Cells:
-        {% for cell in game.field_set.all.0.cell_set.all %}
+    <li>Map: {{game.map_set.all.0}}</li>
+    <li>Fields:
+        {% for field in game.map_set.all.0.field_set.all %}
             <ul>
-                <li>Left: {{ cell.left_position }}</li>
-                <li>Top: {{ cell.top_position }}</li>
+                <li>Left: {{ field.left_position }}</li>
+                <li>Top: {{ field.top_position }}</li>
                 <li>
                     Units
-                    {% for unit in cell.unit_set.all %}
+                    {% for unit in field.unit_set.all %}
                         <ul>
                             <li>Player: {{ unit.player }}</li>
                             <li>Unit type: {{ unit.unit_type }}</li>

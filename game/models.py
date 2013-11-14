@@ -27,17 +27,17 @@ def create_game(player):
     game = Game(player=player)
     game.save()
 
-    field = Field(game=game)
-    field.save()
+    game_map = Map(game=game)
+    game_map.save()
 
-    cell = create_cell(field, 3, 2)
+    field = create_field(game_map, 3, 2)
 
-    create_unit(cell, player, UnitType.settler)
+    create_unit(field, player, UnitType.settler)
 
     return game
 
 
-class Field(models.Model):
+class Map(models.Model):
     game = models.ForeignKey(Game)
     height = models.IntegerField(default=10)
     width = models.IntegerField(default=5)
@@ -46,8 +46,8 @@ class Field(models.Model):
         return "height: " + str(self.height) + " width: " + str(self.width)
 
 
-class Cell(models.Model):
-    field = models.ForeignKey(Field)
+class Field(models.Model):
+    map = models.ForeignKey(Map)
     left_position = models.IntegerField()
     top_position = models.IntegerField()
 
@@ -55,12 +55,10 @@ class Cell(models.Model):
         return self.left_position, self.top_position
 
 
-def create_cell(field, left, top):
-    cell = Cell(field=field)
-    cell.left_position = left
-    cell.top_position = top
-    cell.save()
-    return cell
+def create_field(game_map, left, top):
+    filed = Field(map=game_map, left_position=left, top_position=top)
+    filed.save()
+    return filed
 
 
 class UnitType(Enum):
@@ -72,13 +70,13 @@ class UnitType(Enum):
 
 
 class Unit(models.Model):
-    cell = models.ForeignKey(Cell)
+    field = models.ForeignKey(Field)
     player = models.ForeignKey(Player)
     unit_type = models.IntegerField()
 
 
-def create_unit(cell, player, unit_type):
-    unit = Unit(cell=cell, player=player)
+def create_unit(field, player, unit_type):
+    unit = Unit(field=field, player=player)
     unit.unit_type = UnitType(unit_type).value
     unit.save()
     return unit

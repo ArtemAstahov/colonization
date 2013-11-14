@@ -22,8 +22,8 @@ function loadGame() {
         url : 'load_game',
         success : function(records) {
             for (var i = 0; i < records.length; i++) {
-                var fields = records[i].fields
-                var unit = new Unit(fields.player, fields.unit_type, fields.cell)
+                var field = records[i].fields
+                var unit = new Unit(field.player, field.unit_type, field.field)
                 unit.show()
             }
         }
