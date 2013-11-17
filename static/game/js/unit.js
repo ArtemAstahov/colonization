@@ -51,7 +51,7 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mousedown', function() {
-        layer.add(border)
+        if (layer.children.length == 2) layer.add(border)
     });
 
     var shadow = new Kinetic.Rect({
