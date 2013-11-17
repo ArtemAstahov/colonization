@@ -1,13 +1,15 @@
-function Unit(player, type, position) {
+function Unit(pk, player, type, left, top) {
+    this.pk = pk
     this.player = player
-    this.type = type
-    this.position = position
+    this.unit_type = type
+    this.left = left
+    this.top = top
 }
 
 Unit.prototype.show = function() {
     var layer = new Kinetic.Layer();
-    var x = (this.position[0] - 1) * FIELD_SIZE
-    var y = (this.position[1] - 1) * FIELD_SIZE
+    var x = (this.left - 1) * FIELD_SIZE
+    var y = (this.top - 1) * FIELD_SIZE
 
     var border = new Kinetic.Rect({
         x: x - FIELD_SIZE,
@@ -45,8 +47,9 @@ Unit.prototype.show = function() {
         layer.destroyChildren()
         layer.destroy()
         var absolutePosition = stage.getPointerPosition()
-        var position = [parseInt(absolutePosition.x / FIELD_SIZE) + 1, parseInt(absolutePosition.y / FIELD_SIZE) + 1]
-        new Unit(this.player, this.type, position).show()
+        var left = parseInt(absolutePosition.x / FIELD_SIZE) + 1
+        var top = parseInt(absolutePosition.y / FIELD_SIZE) + 1
+        new Unit(this.pk, this.player, this.unit_type, left, top).show()
         delete this
     });
 

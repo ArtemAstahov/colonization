@@ -46,22 +46,6 @@ class Map(models.Model):
     def __unicode__(self):
         return "height: " + str(self.height) + " width: " + str(self.width)
 
-"""
-class Field(models.Model):
-    map = models.ForeignKey(Map)
-    left_position = models.IntegerField()
-    top_position = models.IntegerField()
-
-    def natural_key(self):
-        return self.left_position, self.top_position
-
-
-def create_field(game_map, left, top):
-    filed = Field(map=game_map, left_position=left, top_position=top)
-    filed.save()
-    return filed
-"""
-
 
 class UnitType(Enum):
     settler = 1

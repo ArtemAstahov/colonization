@@ -12,23 +12,6 @@
     <li>Player: {{game.player}}</li>
     <li>Creation date: {{game.creation_date}}</li>
     <li>Map: {{game.map_set.all.0}}</li>
-    <li>Fields:
-        {% for field in game.map_set.all.0.field_set.all %}
-            <ul>
-                <li>Left: {{ field.left_position }}</li>
-                <li>Top: {{ field.top_position }}</li>
-                <li>
-                    Units
-                    {% for unit in field.unit_set.all %}
-                        <ul>
-                            <li>Player: {{ unit.player }}</li>
-                            <li>Unit type: {{ unit.unit_type }}</li>
-                        </ul>
-                    {% endfor %}
-                </li>
-            </ul>
-        {% endfor %}
-    </li>
 </ul>
 
 <div id="container"></div>
