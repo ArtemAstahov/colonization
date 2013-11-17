@@ -13,6 +13,6 @@ def game(request):
 
 
 def load_game(request):
-    units = Game.objects.all()[0].map_set.all()[0].field_set.all()[0].unit_set.all()
+    units = Game.objects.all().last().map_set.all()[0].unit_set.all()
     data = serializers.serialize('json', units, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')

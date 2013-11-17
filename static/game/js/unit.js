@@ -25,18 +25,18 @@ Unit.prototype.show = function() {
         width: FIELD_SIZE,
         height: FIELD_SIZE,
         fill: 'red',
+        stroke: 'yellow',
         draggable: true,
         dragBoundFunc: function(pos) {
-            var newY = pos.y;
-            if(pos.y < y - FIELD_SIZE) newY = y - FIELD_SIZE;
-            else if(pos.y > y + FIELD_SIZE) newY = y + FIELD_SIZE;
-            var newX = pos.x;
-            if(pos.x < x - FIELD_SIZE) newX = x - FIELD_SIZE;
-            else if(pos.x > x + FIELD_SIZE) newX = x + FIELD_SIZE;
+            var border = function(pos, rectPos) {
+                if(pos < rectPos - FIELD_SIZE) return rectPos - FIELD_SIZE;
+                else if(pos > rectPos + FIELD_SIZE) return rectPos + FIELD_SIZE;
+                else return pos
+            };
 
             return {
-                x: newX,
-                y: newY
+                x: border(pos.x, x),
+                y: border(pos.y, y)
             };
         }
     });
