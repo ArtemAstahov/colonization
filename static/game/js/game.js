@@ -3,11 +3,22 @@ function drawGame() {
 }
 
 function createMap() {
-    var c=document.getElementById("gameCanvas");
-    var ctx=c.getContext("2d");
-    for (var i=0; i<MAP_WIDTH; i++)
-        for(var j=0; j<MAP_HEIGHT; j++)
-            ctx.strokeRect( i * FIELD_SIZE, j * FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
+    var layer = new Kinetic.Layer();
+
+    for (var i=0; i<MAP_WIDTH; i++) {
+        for(var j=0; j<MAP_HEIGHT; j++) {
+            var field = new Kinetic.Rect({
+                x: i * FIELD_SIZE,
+                y: j * FIELD_SIZE,
+                width: FIELD_SIZE,
+                height: FIELD_SIZE,
+                stroke: 'black'
+            });
+            layer.add(field);
+        }
+    }
+
+    stage.add(layer);
 }
 
 function updateGame() {

@@ -2,6 +2,7 @@
 <head>
 {% load staticfiles %}
 <script type="text/javascript" charset="utf-8" src="{% static "game/js/jquery-2.0.3.js" %}" ></script>
+<script type="text/javascript" charset="utf-8" src="{% static "game/js/kinetic-v4.7.4.min.js" %}" ></script>
 </head>
 <body>
 
@@ -30,13 +31,12 @@
     </li>
 </ul>
 
-<canvas id="gameCanvas" width="640" height="480" ></canvas>
+<div id="container"></div>
 
 {% load staticfiles %}
-<script type="text/javascript" charset="utf-8" src="{% static "game/js/constants.js" %}" ></script>
+<script type="text/javascript" charset="utf-8" src="{% static "game/js/global.js" %}" ></script>
 <script type="text/javascript" charset="utf-8" src="{% static "game/js/unit.js" %}" ></script>
 <script type="text/javascript" charset="utf-8" src="{% static "game/js/game.js" %}" ></script>
 
-<div id="hernya"> </div>
 </body>
 </html>
