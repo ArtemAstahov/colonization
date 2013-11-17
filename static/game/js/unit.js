@@ -8,6 +8,17 @@ Unit.prototype.show = function() {
     var layer = new Kinetic.Layer();
     var x = (this.position[0] - 1) * FIELD_SIZE
     var y = (this.position[1] - 1) * FIELD_SIZE
+
+    var border = new Kinetic.Rect({
+        x: x - FIELD_SIZE,
+        y: y - FIELD_SIZE,
+        width: 3 * FIELD_SIZE,
+        height: 3 * FIELD_SIZE,
+        stroke: 'red',
+        strokeWidth: 2.5,
+        listening: false
+    });
+
     var unit = new Kinetic.Rect({
         x: x,
         y: y,
@@ -22,6 +33,7 @@ Unit.prototype.show = function() {
             var newX = pos.x;
             if(pos.x < x - FIELD_SIZE) newX = x - FIELD_SIZE;
             else if(pos.x > x + FIELD_SIZE) newX = x + FIELD_SIZE;
+
             return {
                 x: newX,
                 y: newY
@@ -30,13 +42,16 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mouseup', function() {
-        layer.clear()
+        layer.destroyChildren()
+        layer.destroy()
         var absolutePosition = stage.getPointerPosition()
         var position = [parseInt(absolutePosition.x / FIELD_SIZE) + 1, parseInt(absolutePosition.y / FIELD_SIZE) + 1]
         new Unit(this.player, this.type, position).show()
-        layer.destroyChildren()
-        layer.destroy()
         delete this
+    });
+
+    unit.on('mousedown', function() {
+        layer.add(border)
     });
 
     var shadow = new Kinetic.Rect({
