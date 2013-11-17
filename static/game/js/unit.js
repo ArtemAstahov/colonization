@@ -28,6 +28,17 @@ Unit.prototype.show = function() {
             };
         }
     });
+
+    unit.on('mouseup', function() {
+        layer.clear()
+        var absolutePosition = stage.getPointerPosition()
+        var position = [parseInt(absolutePosition.x / FIELD_SIZE) + 1, parseInt(absolutePosition.y / FIELD_SIZE) + 1]
+        new Unit(this.player, this.type, position).show()
+        layer.destroyChildren()
+        layer.destroy()
+        delete this
+    });
+
     var shadow = new Kinetic.Rect({
         x: x,
         y: y,
@@ -36,6 +47,7 @@ Unit.prototype.show = function() {
         fill: 'red',
         opacity: 0.5
     });
+
     layer.add(shadow);
     layer.add(unit);
     stage.add(layer);

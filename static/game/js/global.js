@@ -4,7 +4,7 @@ MAP_WIDTH = 10
 
 var stage = new Kinetic.Stage({
         container: 'container',
-        width: 578,
-        height: 200
+        width: 640,
+        height: 480
 });
 
