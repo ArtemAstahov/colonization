@@ -17,5 +17,6 @@ def load_game(request):
 
 
 def move_unit(request):
-    
-    load_game(request)
+    units = Game.objects.all()[5].map_set.all()[0].unit_set.all()
+    data = serializers.serialize('json', units, use_natural_keys=True)
+    return http.HttpResponse(data, content_type='application/json')

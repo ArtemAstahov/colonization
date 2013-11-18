@@ -1,4 +1,5 @@
-function Unit(pk, player, type, left, top) {
+function Unit(map, pk, player, type, left, top) {
+    this.map = map
     this.pk = pk
     this.player = player
     this.unit_type = type
@@ -10,6 +11,7 @@ Unit.prototype.show = function() {
     var layer = new Kinetic.Layer();
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
+    var that = this
 
     var border = new Kinetic.Rect({
         x: x - FIELD_SIZE,
@@ -47,10 +49,12 @@ Unit.prototype.show = function() {
         layer.destroyChildren()
         layer.destroy()
         var absolutePosition = stage.getPointerPosition()
-        var left = parseInt(absolutePosition.x / FIELD_SIZE) + 1
-        var top = parseInt(absolutePosition.y / FIELD_SIZE) + 1
-        new Unit(this.pk, this.player, this.unit_type, left, top).show()
-        delete this
+        that.left = parseInt(absolutePosition.x / FIELD_SIZE) + 1
+        that.top = parseInt(absolutePosition.y / FIELD_SIZE) + 1
+        //new Unit(this.pk, this.player, this.unit_type, left, top).show()
+        that.move()
+        //delete this
+
     });
 
     unit.on('mousedown', function() {
@@ -69,4 +73,14 @@ Unit.prototype.show = function() {
     layer.add(shadow);
     layer.add(unit);
     stage.add(layer);
+}
+
+Unit.prototype.move = function() {
+    var url = 'move_unit/' + this.pk + "/" + this.left + '/' + this.top
+    $.ajax({
+        url : url,
+        success : function() {
+            loadGame();
+        }
+    });
 }
