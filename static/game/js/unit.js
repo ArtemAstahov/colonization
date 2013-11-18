@@ -1,4 +1,4 @@
-function Unit(map, pk, player, type, left, top) {
+function Unit(pk, map, player, type, left, top) {
     this.map = map
     this.pk = pk
     this.player = player
@@ -51,10 +51,8 @@ Unit.prototype.show = function() {
         var absolutePosition = stage.getPointerPosition()
         that.left = parseInt(absolutePosition.x / FIELD_SIZE) + 1
         that.top = parseInt(absolutePosition.y / FIELD_SIZE) + 1
-        //new Unit(this.pk, this.player, this.unit_type, left, top).show()
         that.move()
-        //delete this
-
+        delete that
     });
 
     unit.on('mousedown', function() {
@@ -76,9 +74,9 @@ Unit.prototype.show = function() {
 }
 
 Unit.prototype.move = function() {
-    var url = 'move_unit/' + this.pk + "/" + this.left + '/' + this.top
     $.ajax({
-        url : url,
+        url : 'move_unit',
+        data: {'pk':  this.pk, 'left': this.left, 'top': this.top},
         success : function() {
             loadGame();
         }

@@ -2,7 +2,7 @@ from django import http
 from django.shortcuts import render
 from django.core import serializers
 
-from game.models import Game
+from game.models import Game, Unit
 
 
 def game(request):
@@ -17,6 +17,13 @@ def load_game(request):
 
 
 def move_unit(request):
+    pk = int(request.GET['pk'])
+    left = int(request.GET['left'])
+    top = int(request.GET['top'])
+    unit = Unit.objects.get(pk=pk)
+    unit.left = left
+    unit.top = top
+    unit.save()
     units = Game.objects.all()[5].map_set.all()[0].unit_set.all()
     data = serializers.serialize('json', units, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
