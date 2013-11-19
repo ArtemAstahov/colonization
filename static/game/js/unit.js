@@ -1,3 +1,11 @@
+var TYPE = {
+    1 : {name: "Settler", code: "S", steps: "1"},
+    2 : {name: 'Militiaman', code: "M", steps: "1"},
+    3 : {name: 'Scout', code: "C", steps: "2"},
+    4 : {name: 'Officer', code: "O", steps: "1"},
+    5 : {name: 'Dragoon', code: "D", steps: "2"}
+};
+
 function Unit(pk, map, player, type, left, top) {
     this.map = map
     this.pk = pk
@@ -8,16 +16,17 @@ function Unit(pk, map, player, type, left, top) {
 }
 
 Unit.prototype.show = function() {
+    var type = TYPE[this.unit_type]
     var layer = new Kinetic.Layer();
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
     var that = this
 
     var border = new Kinetic.Rect({
-        x: x - FIELD_SIZE,
-        y: y - FIELD_SIZE,
-        width: 3 * FIELD_SIZE,
-        height: 3 * FIELD_SIZE,
+        x: x - (type.steps) * FIELD_SIZE,
+        y: y - (type.steps) * FIELD_SIZE,
+        width: (2 * type.steps  + 1) * FIELD_SIZE,
+        height: (2 * type.steps  + 1) * FIELD_SIZE,
         stroke: 'red',
         strokeWidth: 2.5,
         listening: false
@@ -30,11 +39,12 @@ Unit.prototype.show = function() {
         height: FIELD_SIZE,
         fill: 'red',
         stroke: 'yellow',
+        fillText: type.code,
         draggable: true,
         dragBoundFunc: function(pos) {
             var border = function(pos, rectPos) {
-                if(pos < rectPos - FIELD_SIZE) return rectPos - FIELD_SIZE;
-                else if(pos > rectPos + FIELD_SIZE) return rectPos + FIELD_SIZE;
+                if(pos < rectPos - (type.steps) * FIELD_SIZE) return rectPos - (type.steps) * FIELD_SIZE;
+                else if(pos > rectPos + (type.steps) * FIELD_SIZE) return rectPos + (type.steps) * FIELD_SIZE;
                 else return pos
             };
 
@@ -43,6 +53,16 @@ Unit.prototype.show = function() {
                 y: border(pos.y, y)
             };
         }
+    });
+
+    var unitText = new Kinetic.Text({
+        x: unit.getX() + 10,
+        y: unit.getY(),
+        text: type.code,
+        fontSize: 50,
+        fontFamily: 'Calibri',
+        fill: 'white',
+        listening: false
     });
 
     unit.on('mouseup', function() {
@@ -55,7 +75,7 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mousedown', function() {
-        if (layer.children.length == 2) layer.add(border)
+        if (layer.children.length == 3) layer.add(border)
     });
 
     var shadow = new Kinetic.Rect({
@@ -69,6 +89,7 @@ Unit.prototype.show = function() {
 
     layer.add(shadow);
     layer.add(unit);
+    layer.add(unitText);
     stage.add(layer);
 }
 
