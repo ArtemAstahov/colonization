@@ -56,11 +56,10 @@ Unit.prototype.show = function() {
     });
 
     var unitText = new Kinetic.Text({
-        x: unit.getX() + 10,
+        x: unit.getX() + 5,
         y: unit.getY(),
         text: type.code,
         fontSize: 50,
-        fontFamily: 'Calibri',
         fill: 'white',
         listening: false
     });
