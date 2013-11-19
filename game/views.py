@@ -26,6 +26,6 @@ def move_unit(request):
     unit.left = left
     unit.top = top
     unit.save()
-    units = Game.objects.all()[0].map_set.all()[0].unit_set.all()
-    data = serializers.serialize('json', units, use_natural_keys=True)
+    unit = Unit.objects.filter(pk=pk)
+    data = serializers.serialize('json', unit, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')

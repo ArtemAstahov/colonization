@@ -46,10 +46,12 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mouseup', function() {
+        layer.destroy()
         var absolutePosition = stage.getPointerPosition()
         that.left = parseInt(absolutePosition.x / FIELD_SIZE) + 1
         that.top = parseInt(absolutePosition.y / FIELD_SIZE) + 1
         that.move()
+        delete that
     });
 
     unit.on('mousedown', function() {
@@ -71,13 +73,14 @@ Unit.prototype.show = function() {
 }
 
 Unit.prototype.move = function() {
-    var that = this
     $.ajax({
         url : 'move_unit',
         data: {'pk':  this.pk, 'left': this.left, 'top': this.top},
-        success : function() {
-            loadGame();
-            delete that
+        success : function(records) {
+            var pk = records[0].pk
+            var field = records[0].fields
+            var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top)
+            unit.show()
         }
     });
 }
