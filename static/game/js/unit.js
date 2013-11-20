@@ -64,12 +64,20 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mouseup', function() {
-        layer.destroy()
-        var absolutePosition = stage.getPointerPosition()
-        that.left = parseInt(absolutePosition.x / FIELD_SIZE) + 1
-        that.top = parseInt(absolutePosition.y / FIELD_SIZE) + 1
-        that.move()
-        delete that
+        if (layer.children.length == 4) {
+            layer.children[3].destroy();
+            layer.draw();
+        }
+        var absolutePosition = stage.getPointerPosition();
+        var left = parseInt(absolutePosition.x / FIELD_SIZE) + 1;
+        var top = parseInt(absolutePosition.y / FIELD_SIZE) + 1;
+        if (that.left != left || that.top != top) {
+            layer.destroy();
+            that.left = left;
+            that.top = top;
+            that.move()
+            delete that
+        }
     });
 
     unit.on('mousedown', function() {
