@@ -88,7 +88,7 @@ class Settlement(models.Model):
     settlement_type = models.IntegerField()
 
 
-def create_colony(game_map, left, top, player, settlement_type):
+def create_settlement(game_map, left, top, player, settlement_type):
     settlement = Settlement(map=game_map, left=left, top=top, player=player, settlement_type=settlement_type)
     settlement.save()
     return settlement
