@@ -64,19 +64,16 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mouseup', function() {
-        if (layer.children.length == 4) {
-            layer.children[3].destroy();
-            layer.draw();
-        }
+        layer.destroy();
         var absolutePosition = stage.getPointerPosition();
         var left = parseInt(absolutePosition.x / FIELD_SIZE) + 1;
         var top = parseInt(absolutePosition.y / FIELD_SIZE) + 1;
         if (that.left != left || that.top != top) {
-            layer.destroy();
             that.left = left;
             that.top = top;
             that.move()
-            delete that
+        } else {
+            that.show();
         }
     });
 
@@ -100,21 +97,22 @@ Unit.prototype.show = function() {
 }
 
 Unit.prototype.move = function() {
+    var that = this
     $.ajax({
-        url : 'move_unit',
+        url : 'move_unit/',
         data: {'pk':  this.pk, 'left': this.left, 'top': this.top},
         success : function(records) {
-            var pk = records[0].pk
             var field = records[0].fields
-            var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top)
-            unit.show()
+            that.left = field.left;
+            that.top = field.top;
+            that.show()
         }
     });
 }
 
 function loadUnits() {
     $.ajax({
-        url : 'load_units',
+        url : 'load_units/',
         success : function(records) {
             stage.clear()
             createMap()

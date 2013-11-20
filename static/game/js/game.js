@@ -1,7 +1,5 @@
 function drawGame() {
-    createMap()
     loadUnits()
-    loadSettlements()
 }
 
 function createMap() {

@@ -45,7 +45,7 @@ Settlement.prototype.show = function() {
 
 function loadSettlements() {
     $.ajax({
-        url : 'load_settlements',
+        url : 'load_settlements/',
         success : function(records) {
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
