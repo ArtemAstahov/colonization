@@ -106,10 +106,11 @@ Unit.prototype.move = function() {
 
 function loadUnits() {
     $.ajax({
-        url : 'load_game',
+        url : 'load_units',
         success : function(records) {
             stage.clear()
             createMap()
+            loadSettlements()
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields

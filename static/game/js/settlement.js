@@ -15,7 +15,7 @@ function Settlement(pk, map, player, type, left, top) {
 
 Settlement.prototype.show = function() {
     var type = SETTLEMENT_TYPE[this.settlement_type]
-    var layer = new Kinetic.Group();
+    var layer = new Kinetic.Layer();
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
 
@@ -47,7 +47,6 @@ function loadSettlements() {
     $.ajax({
         url : 'load_settlements',
         success : function(records) {
-            stage.clear()
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields

@@ -7,13 +7,19 @@ from game.models import Game, Unit, create_game
 
 def game(request):
     #create_game('ilya')
-    context = {'game': Game.objects.all()[0]}
+    context = {'game': Game.objects.get(pk=1)}
     return render(request, 'game/game.html', context)
 
 
-def load_game(request):
-    units = Game.objects.all()[0].map_set.all()[0].unit_set.all()
+def load_units(request):
+    units = Game.objects.get(pk=1).map_set.all()[0].unit_set.all()
     data = serializers.serialize('json', units, use_natural_keys=True)
+    return http.HttpResponse(data, content_type='application/json')
+
+
+def load_settlements(request):
+    settlements = Game.objects.get(pk=1).map_set.all()[0].settlement_set.all()
+    data = serializers.serialize('json', settlements, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
 
 

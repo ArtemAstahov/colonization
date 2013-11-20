@@ -1,7 +1,7 @@
 function drawGame() {
     createMap()
     loadUnits()
-    //loadSettlements()
+    loadSettlements()
 }
 
 function createMap() {
