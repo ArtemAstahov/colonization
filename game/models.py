@@ -51,11 +51,11 @@ class Map(models.Model):
 
 
 UNIT_TYPE = {
-    1: {'name': 'Settler', 'steps': '1', 'damage': 0},
-    2: {'name': 'Militiaman', 'steps': '1', 'damage': 1},
-    3: {'name': 'Scout', 'steps': '2'}, 'damage': 1,
-    4: {'name': 'Officer', 'steps': '1', 'damage': 2},
-    5: {'name': 'Dragoon', 'steps': '2', 'damage': 2}
+    1: {'name': 'Settler', 'steps': 1, 'damage': 0},
+    2: {'name': 'Militiaman', 'steps': 1, 'damage': 1},
+    3: {'name': 'Scout', 'steps': 2}, 'damage': 1,
+    4: {'name': 'Officer', 'steps': 1, 'damage': 2},
+    5: {'name': 'Dragoon', 'steps': 2, 'damage': 2}
 }
 
 
@@ -71,12 +71,6 @@ def create_unit(game_map, left, top, player, unit_type):
     unit = Unit(map=game_map, left=left, top=top, player=player, unit_type=unit_type)
     unit.save()
     return unit
-
-
-class SettlementType(Enum):
-    colony = 1
-    fort = 2
-    castle = 3
 
 
 SETTLEMENT_TYPE = {
