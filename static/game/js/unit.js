@@ -1,9 +1,9 @@
 var TYPE = {
-    1 : {name: "Settler", code: "S", steps: "1"},
-    2 : {name: 'Militiaman', code: "M", steps: "1"},
-    3 : {name: 'Scout', code: "C", steps: "2"},
-    4 : {name: 'Officer', code: "O", steps: "1"},
-    5 : {name: 'Dragoon', code: "D", steps: "2"}
+    1 : {name: 'Settler', code: 'S', steps: '1'},
+    2 : {name: 'Militiaman', code: 'M', steps: '1'},
+    3 : {name: 'Scout', code: 'C', steps: '2'},
+    4 : {name: 'Officer', code: 'O', steps: '1'},
+    5 : {name: 'Dragoon', code: 'D', steps: '2'}
 };
 
 function Unit(pk, map, player, type, left, top) {

@@ -4,7 +4,31 @@ from django.db import models
 from django.utils import timezone
 
 
+class Game(models.Model):
+    # user
+    creation_date = models.DateTimeField(default=timezone.now())
+
+
+def create_game(player_name):
+    game = Game()
+    game.save()
+
+    player = create_player(player_name, game)
+
+    game_map = Map(game=game)
+    game_map.save()
+
+    create_unit(game_map, 3, 2, player, 1)
+    create_unit(game_map, 1, 5, player, 2)
+    create_unit(game_map, 7, 4, player, 3)
+    create_unit(game_map, 3, 2, player, 4)
+    create_unit(game_map, 1, 1, player, 5)
+
+    return game
+
+
 class Player(models.Model):
+    game = models.ForeignKey(Game)
     name = models.CharField(max_length=100)
     money = models.IntegerField(default=10)
 
@@ -12,30 +36,10 @@ class Player(models.Model):
         return "name: " + self.name + " money: " + str(self.money)
 
 
-def create_player(name):
-    player = Player(name=name)
+def create_player(name, game):
+    player = Player(name=name, game=game)
     player.save()
     return player
-
-
-class Game(models.Model):
-    player = models.ForeignKey(Player)
-    creation_date = models.DateTimeField(default=timezone.now())
-
-
-def create_game(player):
-    game = Game(player=player)
-    game.save()
-
-    game_map = Map(game=game)
-    game_map.save()
-
-    create_unit(game_map, 3, 2, player, UnitType.settler)
-    create_unit(game_map, 1, 5, player, UnitType.settler)
-    create_unit(game_map, 7, 4, player, UnitType.settler)
-    create_unit(game_map, 3, 2, player, UnitType.settler)
-
-    return game
 
 
 class Map(models.Model):
@@ -47,12 +51,13 @@ class Map(models.Model):
         return "height: " + str(self.height) + " width: " + str(self.width)
 
 
-class UnitType(Enum):
-    settler = 1
-    militiaman = 2
-    scout = 3
-    officer = 4
-    dragoon = 5
+UNIT_TYPE = {
+    1: {'name': 'Settler', 'steps': '1', 'damage': 0},
+    2: {'name': 'Militiaman', 'steps': '1', 'damage': 1},
+    3: {'name': 'Scout', 'steps': '2'}, 'damage': 1,
+    4: {'name': 'Officer', 'steps': '1', 'damage': 2},
+    5: {'name': 'Dragoon', 'steps': '2', 'damage': 2}
+}
 
 
 class Unit(models.Model):
@@ -64,7 +69,33 @@ class Unit(models.Model):
 
 
 def create_unit(game_map, left, top, player, unit_type):
-    unit = Unit(map=game_map, left=left, top=top, player=player)
-    unit.unit_type = UnitType(unit_type).value
+    unit = Unit(map=game_map, left=left, top=top, player=player, unit_type=unit_type)
     unit.save()
     return unit
+
+
+class SettlementType(Enum):
+    colony = 1
+    fort = 2
+    castle = 3
+
+
+SETTLEMENT_TYPE = {
+    1: {'name': 'Colony', 'income': 1, 'defense': 0},
+    2: {'name': 'Fort', 'income': 2, 'defense': 1},
+    3: {'name': 'Castle', 'income': 3, 'defense': 2}
+}
+
+
+class Settlement(models.Model):
+    map = models.ForeignKey(Map)
+    left = models.IntegerField()
+    top = models.IntegerField()
+    player = models.ForeignKey(Player)
+    settlement_type = models.IntegerField()
+
+
+def create_colony(game_map, left, top, player, settlement_type):
+    settlement = Settlement(map=game_map, left=left, top=top, player=player, settlement_type=settlement_type)
+    settlement.save()
+    return settlement
