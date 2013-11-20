@@ -1,6 +1,7 @@
 function drawGame() {
     createMap()
-    loadGame()
+    loadUnits()
+    //loadSettlements()
 }
 
 function createMap() {
@@ -20,22 +21,6 @@ function createMap() {
     }
 
     stage.add(layer);
-}
-
-function loadGame() {
-    $.ajax({
-        url : 'load_game',
-        success : function(records) {
-            stage.clear()
-            createMap()
-            for (var i = 0; i < records.length; i++) {
-                var pk = records[i].pk
-                var field = records[i].fields
-                var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top)
-                unit.show()
-            }
-        }
-    });
 }
 
 drawGame();

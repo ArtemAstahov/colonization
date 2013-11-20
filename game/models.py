@@ -14,7 +14,7 @@ def create_game(player_name):
 
     player = create_player(player_name, game)
 
-    game_map = Map(game=game)
+    game_map = Map(game=game).save()
     game_map.save()
 
     create_unit(game_map, 3, 2, player, 1)

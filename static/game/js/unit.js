@@ -1,9 +1,9 @@
-var TYPE = {
-    1 : {name: 'Settler', code: 'S', steps: '1'},
-    2 : {name: 'Militiaman', code: 'M', steps: '1'},
-    3 : {name: 'Scout', code: 'C', steps: '2'},
-    4 : {name: 'Officer', code: 'O', steps: '1'},
-    5 : {name: 'Dragoon', code: 'D', steps: '2'}
+var UNIT_TYPE = {
+    1 : {name: 'Settler', code: 'S', steps: 1},
+    2 : {name: 'Militiaman', code: 'M', steps: 1},
+    3 : {name: 'Scout', code: 'C', steps: 2},
+    4 : {name: 'Officer', code: 'O', steps: 1},
+    5 : {name: 'Dragoon', code: 'D', steps: 2}
 };
 
 function Unit(pk, map, player, type, left, top) {
@@ -16,7 +16,7 @@ function Unit(pk, map, player, type, left, top) {
 }
 
 Unit.prototype.show = function() {
-    var type = TYPE[this.unit_type]
+    var type = UNIT_TYPE[this.unit_type]
     var layer = new Kinetic.Layer();
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
@@ -39,7 +39,6 @@ Unit.prototype.show = function() {
         height: FIELD_SIZE,
         fill: 'red',
         stroke: 'yellow',
-        fillText: type.code,
         draggable: true,
         dragBoundFunc: function(pos) {
             var border = function(pos, rectPos) {
@@ -101,6 +100,22 @@ Unit.prototype.move = function() {
             var field = records[0].fields
             var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top)
             unit.show()
+        }
+    });
+}
+
+function loadUnits() {
+    $.ajax({
+        url : 'load_game',
+        success : function(records) {
+            stage.clear()
+            createMap()
+            for (var i = 0; i < records.length; i++) {
+                var pk = records[i].pk
+                var field = records[i].fields
+                var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top)
+                unit.show()
+            }
         }
     });
 }

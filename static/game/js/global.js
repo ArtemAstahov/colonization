@@ -7,4 +7,3 @@ var stage = new Kinetic.Stage({
         width: 640,
         height: 480
 });
-
