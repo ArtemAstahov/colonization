@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     url(r'^load_units', views.load_units, name='load_units'),
     url(r'^load_settlements', views.load_settlements, name='load_settlements'),
     url(r'^move_unit', views.move_unit, name='move_unit'),
-    url(r'^finish_stroke', views.move_unit, name='move_unit'),
+    url(r'^finish_stroke', views.finish_stroke, name='finish_stroke'),
 )

@@ -34,3 +34,8 @@ def move_unit(request):
     unit = Unit.objects.filter(pk=pk)
     data = serializers.serialize('json', unit, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
+
+
+def finish_stroke(request):
+    player = int(request.GET['player'])
+    return http.HttpResponse(content_type='application/json')

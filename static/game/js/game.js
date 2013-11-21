@@ -25,14 +25,8 @@ function createMap() {
 
 $("#finish_stroke").click(function(){
     $.ajax({
-        url : 'move_unit',
-        data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
-        success : function(records) {
-            var field = records[0].fields
-            that.left = field.left;
-            that.top = field.top;
-            that.show()
-        }
+        url : 'finish_stroke',
+        data : {'player':  1}
     });
 });
 
