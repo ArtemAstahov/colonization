@@ -5,6 +5,13 @@ function drawGame() {
     loadPlayer()
 }
 
+function clearGame() {
+    delete Unit
+    delete Settlement
+    delete Player
+    stage.clear()
+}
+
 function createMap() {
     var layer = new Kinetic.Layer();
 
@@ -29,7 +36,7 @@ $("#finish_stroke").click(function(){
         url : 'finish_stroke',
         data : {'player':  1},
         success : function() {
-            stage.clear()
+            clearGame();
             drawGame();
         }
     });

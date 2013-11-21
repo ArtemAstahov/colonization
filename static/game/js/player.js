@@ -15,7 +15,6 @@ function loadPlayer() {
         url : 'load_player',
         data : {'pk': 1},
         success : function(records) {
-            delete Player
             var pk = records[0].pk
             var field = records[0].fields
             var player = new Player(pk, field.name, field.money, field.color, field.active)
