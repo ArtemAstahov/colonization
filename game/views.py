@@ -32,13 +32,12 @@ def load_player(request):
 
 
 def move_unit(request):
-    active = json.loads(request.GET['active'])
-    if not active:
-        return http.HttpResponse()
     pk = int(request.GET['pk'])
+    unit = Unit.objects.get(pk=pk)
+    if not unit.active:
+        return http.HttpResponse()
     left = int(request.GET['left'])
     top = int(request.GET['top'])
-    unit = Unit.objects.get(pk=pk)
     unit.left = left
     unit.top = top
     unit.active = False
