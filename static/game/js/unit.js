@@ -103,7 +103,7 @@ Unit.prototype.move = function() {
     var that = this
     $.ajax({
         url : 'move_unit',
-        data : {'pk':  this.pk, 'left': this.left, 'top': this.top, 'active': this.active},
+        data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
         success : function(records) {
             var field = records[0].fields
             that.left = field.left;
