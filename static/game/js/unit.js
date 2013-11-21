@@ -99,8 +99,8 @@ Unit.prototype.show = function() {
 Unit.prototype.move = function() {
     var that = this
     $.ajax({
-        url : 'move_unit/',
-        data: {'pk':  this.pk, 'left': this.left, 'top': this.top},
+        url : 'move_unit',
+        data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
         success : function(records) {
             var field = records[0].fields
             that.left = field.left;
@@ -112,11 +112,8 @@ Unit.prototype.move = function() {
 
 function loadUnits() {
     $.ajax({
-        url : 'load_units/',
+        url : 'load_units',
         success : function(records) {
-            stage.clear()
-            createMap()
-            loadSettlements()
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
