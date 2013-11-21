@@ -1,28 +1,26 @@
 <html>
 <head>
-{% load staticfiles %}
-<script type="text/javascript" charset="utf-8" src="{% static "game/js/lib/jquery-2.0.3.js" %}" ></script>
-<script type="text/javascript" charset="utf-8" src="{% static "game/js/lib/kinetic-v4.7.4.min.js" %}" ></script>
+    {% load staticfiles %}
+    <script type="text/javascript" charset="utf-8" src="{% static "game/js/lib/jquery-2.0.3.js" %}" ></script>
+    <script type="text/javascript" charset="utf-8" src="{% static "game/js/lib/kinetic-v4.7.4.min.js" %}" ></script>
 </head>
 <body>
+    <h2>Game</h2>
 
-<h2>Game</h2>
+    <ul>
+        <li>Player: <span id="player"></span></li>
+        <li>Creation date: {{game.creation_date}}</li>
+        <li>Map: {{game.map_set.all.0}}</li>
+        <input type="submit" id="finish_stroke" value="Завершить ход">
+    </ul>
 
-<ul>
-    <li>Player: <span id="player"></span></li>
-    <li>Creation date: {{game.creation_date}}</li>
-    <li>Map: {{game.map_set.all.0}}</li>
-    <input type="submit" id="finish_stroke" value="Завершить ход">
-</ul>
+    <div id="container"></div>
 
-<div id="container"></div>
-
-{% load staticfiles %}
-<script type="text/javascript" charset="utf-8" src="{% static "game/js/global.js" %}" ></script>
-<script type="text/javascript" charset="utf-8" src="{% static "game/js/player.js" %}" ></script>
-<script type="text/javascript" charset="utf-8" src="{% static "game/js/unit.js" %}" ></script>
-<script type="text/javascript" charset="utf-8" src="{% static "game/js/settlement.js" %}" ></script>
-<script type="text/javascript" charset="utf-8" src="{% static "game/js/play.js" %}" ></script>
-
+    {% load staticfiles %}
+    <script type="text/javascript" charset="utf-8" src="{% static "game/js/global.js" %}" ></script>
+    <script type="text/javascript" charset="utf-8" src="{% static "game/js/player.js" %}" ></script>
+    <script type="text/javascript" charset="utf-8" src="{% static "game/js/unit.js" %}" ></script>
+    <script type="text/javascript" charset="utf-8" src="{% static "game/js/settlement.js" %}" ></script>
+    <script type="text/javascript" charset="utf-8" src="{% static "game/js/play.js" %}" ></script>
 </body>
 </html>
