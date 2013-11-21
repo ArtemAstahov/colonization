@@ -2,6 +2,7 @@ function drawGame() {
     createMap()
     loadSettlements()
     loadUnits()
+    loadPlayer()
 }
 
 function createMap() {
@@ -26,7 +27,11 @@ function createMap() {
 $("#finish_stroke").click(function(){
     $.ajax({
         url : 'finish_stroke',
-        data : {'player':  1}
+        data : {'player':  1},
+        success : function() {
+            stage.clear()
+            drawGame();
+        }
     });
 });
 

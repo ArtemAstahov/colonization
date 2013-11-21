@@ -12,7 +12,7 @@ def create_game(player_name):
     game = Game()
     game.save()
 
-    player = create_player(player_name, game)
+    player = create_player(player_name, game, "red")
 
     game_map = Map(game=game)
     game_map.save()
@@ -34,13 +34,12 @@ class Player(models.Model):
     game = models.ForeignKey(Game)
     name = models.CharField(max_length=100)
     money = models.IntegerField(default=10)
+    color = models.CharField(max_length=100)
+    active = models.BooleanField(default=True)
 
-    def __unicode__(self):
-        return "name: " + self.name + " money: " + str(self.money)
 
-
-def create_player(name, game):
-    player = Player(name=name, game=game)
+def create_player(name, game, color):
+    player = Player(name=name, game=game, color=color)
     player.save()
     return player
 
@@ -69,6 +68,7 @@ class Unit(models.Model):
     top = models.IntegerField()
     player = models.ForeignKey(Player)
     unit_type = models.IntegerField()
+    active = models.BooleanField(default=True)
 
 
 def create_unit(game_map, left, top, player, unit_type):

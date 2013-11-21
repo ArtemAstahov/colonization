@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     url(r'^$', views.game, name='game'),
     url(r'^load_units', views.load_units, name='load_units'),
     url(r'^load_settlements', views.load_settlements, name='load_settlements'),
+    url(r'^load_player', views.load_player, name='load_player'),
     url(r'^move_unit', views.move_unit, name='move_unit'),
     url(r'^finish_stroke', views.finish_stroke, name='finish_stroke'),
 )

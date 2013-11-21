@@ -6,13 +6,14 @@ var UNIT_TYPE = {
     5 : {name: 'Dragoon', code: 'D', steps: 2}
 };
 
-function Unit(pk, map, player, type, left, top) {
+function Unit(pk, map, player, type, left, top, active) {
     this.map = map
     this.pk = pk
     this.player = player
     this.unit_type = type
     this.left = left
     this.top = top
+    this.active = active
 }
 
 Unit.prototype.show = function() {
@@ -20,6 +21,7 @@ Unit.prototype.show = function() {
     var layer = new Kinetic.Layer();
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
+    var opacity = this.active ? 1 : 0.5
     var that = this
 
     var border = new Kinetic.Rect({
@@ -39,7 +41,8 @@ Unit.prototype.show = function() {
         height: FIELD_SIZE,
         fill: 'red',
         stroke: 'yellow',
-        draggable: true,
+        opacity: opacity,
+        draggable: this.active,
         dragBoundFunc: function(pos) {
             var border = function(pos, rectPos) {
                 if(pos < rectPos - (type.steps) * FIELD_SIZE) return rectPos - (type.steps) * FIELD_SIZE;
@@ -100,11 +103,12 @@ Unit.prototype.move = function() {
     var that = this
     $.ajax({
         url : 'move_unit',
-        data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
+        data : {'pk':  this.pk, 'left': this.left, 'top': this.top, 'active': this.active},
         success : function(records) {
             var field = records[0].fields
             that.left = field.left;
             that.top = field.top;
+            that.active = field.active;
             that.show()
         }
     });
@@ -117,7 +121,7 @@ function loadUnits() {
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
-                var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top)
+                var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
                 unit.show()
             }
         }
