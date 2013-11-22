@@ -49,7 +49,7 @@ def move_unit(request):
 def finish_stroke(request):
     player_pk = int(request.GET['player'])
     player = Player.objects.get(pk=player_pk)
-    player.calculate_money_for_day()
+    player.increase_money_for_day()
     player.save()
     Unit.objects.filter(player=player_pk).update(active=True)
     return http.HttpResponse()
