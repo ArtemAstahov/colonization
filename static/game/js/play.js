@@ -31,7 +31,7 @@ function createMap() {
     stage.add(layer);
 }
 
-$("#finish_stroke").click(function(){
+$("#finishStroke").click(function(){
     $.ajax({
         url : 'finish_stroke',
         data : {'player':  1},
@@ -42,4 +42,10 @@ $("#finish_stroke").click(function(){
     });
 });
 
+
+$("#buySettler").click(function(){
+    buyUnit(1)
+});
+
 drawGame();
+

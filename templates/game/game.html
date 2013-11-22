@@ -7,12 +7,23 @@
 <body>
     <h2>Game</h2>
 
-    <ul>
-        <li>Player: <span id="player"></span></li>
-        <li>Creation date: {{game.creation_date}}</li>
-        <li>Map: {{game.map_set.all.0}}</li>
-        <input type="submit" id="finish_stroke" value="Завершить ход">
-    </ul>
+    <div style="width: 500px;">
+        <ul style="float: left;">
+            <li>Player: <span id="player"></span></li>
+            <li>Creation date: {{game.creation_date}}</li>
+            <li>Map: {{game.map_set.all.0}}</li>
+            <input type="submit" id="finishStroke" value="Завершить ход">
+        </ul>
+
+        <div style="float: right;">
+            <p>Купить:</p>
+            <input type="submit" id="buySettler" value="S">
+            <input type="submit" id="buyMilitiaman" value="M">
+            <input type="submit" id="buyScout" value="C">
+            <input type="submit" id="buyOfficer" value="O">
+            <input type="submit" id="buyDragoon" value="D">
+        </div>
+    </div>
 
     <div id="container"></div>
 

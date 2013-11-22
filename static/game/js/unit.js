@@ -127,3 +127,17 @@ function loadUnits() {
         }
     });
 }
+
+function buyUnit(type) {
+    $.ajax({
+        url : 'buy_unit',
+        data : {'player':  1, 'type': type, 'settlement_id': id},
+        success : function(records) {
+            var field = records[0].fields
+            that.left = field.left;
+            that.top = field.top;
+            that.active = field.active;
+            that.show()
+        }
+    });
+}
