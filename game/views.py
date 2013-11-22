@@ -1,13 +1,12 @@
-import json
 from django import http
 from django.shortcuts import render
 from django.core import serializers
 
-from game.models import Game, Unit, create_game
+from game.models import Game, Unit, create_game, Player
 
 
 def game(request):
-    create_game('ilya')
+    #create_game('ilya')
     context = {'game': Game.objects.get(pk=1)}
     return render(request, 'game/game.html', context)
 
@@ -48,6 +47,9 @@ def move_unit(request):
 
 
 def finish_stroke(request):
-    player = int(request.GET['player'])
-    Unit.objects.filter(player=player).update(active=True)
+    player_pk = int(request.GET['player'])
+    player = Player.objects.get(pk=player_pk)
+    player.calculate_money_for_day()
+    player.save()
+    Unit.objects.filter(player=player_pk).update(active=True)
     return http.HttpResponse()

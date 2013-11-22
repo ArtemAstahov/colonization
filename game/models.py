@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 
 from django.utils import timezone
 
@@ -36,6 +37,10 @@ class Player(models.Model):
     money = models.IntegerField(default=10)
     color = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
+
+    def calculate_money_for_day(self):
+        aggregate = Settlement.objects.filter(player=self.pk).aggregate(Sum('id'))
+        self.money = self.money + aggregate['id__sum']
 
 
 def create_player(name, game, color):
