@@ -68,8 +68,7 @@ def buy_unit(request):
 
     player.money = money - cost
     settlement = Settlement.objects.get(pk=settlement_pk)
-    unit = create_unit(game_map, settlement.left, settlement.top, player, unit_type)
+    create_unit(game_map, settlement.left, settlement.top, player, unit_type)
     player.save()
-    unit_set = Unit.objects.filter(pk=unit.pk)
-    data = serializers.serialize('json', unit_set, use_natural_keys=True)
-    return http.HttpResponse(data, content_type='application/json')
+
+    return http.HttpResponse()
