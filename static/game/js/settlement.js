@@ -1,3 +1,5 @@
+var checked_settlement;
+
 var SETTLEMENT_TYPE = {
     1 : {name: 'Colony', code: 'S'},
     2 : {name: 'Fort', code: 'F'},
@@ -18,6 +20,7 @@ Settlement.prototype.show = function() {
     var layer = new Kinetic.Layer();
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
+    var that = this
 
     var settlement = new Kinetic.Rect({
         x: x,
@@ -25,8 +28,14 @@ Settlement.prototype.show = function() {
         width: FIELD_SIZE,
         height: FIELD_SIZE,
         fill: 'red',
-        stroke: 'blue',
-        listening: false
+        stroke: 'blue'
+    });
+
+    settlement.off("mouseup")
+
+    settlement.on('click', function() {
+        $('#buyPanel').css({visibility: 'visible'})
+        checked_settlement = that.pk
     });
 
     var settlementText = new Kinetic.Text({
@@ -56,3 +65,18 @@ function loadSettlements() {
         }
     });
 }
+
+$('.buyUnit').click(function(){
+    var that = this
+    $.ajax({
+        url : 'buy_unit',
+        data : {'player':  1, 'type': that.name, 'settlement_pk': checked_settlement, 'map': '1'},
+        success : function(records) {
+            var pk = records[0].pk
+            var field = records[0].fields
+            var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
+            unit.show()
+            loadPlayer()
+        }
+    });
+});

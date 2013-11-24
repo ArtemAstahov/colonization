@@ -59,11 +59,11 @@ class Map(models.Model):
 
 
 UNIT_TYPE = {
-    1: {'name': 'Settler', 'steps': 1, 'damage': 0},
-    2: {'name': 'Militiaman', 'steps': 1, 'damage': 1},
-    3: {'name': 'Scout', 'steps': 2}, 'damage': 1,
-    4: {'name': 'Officer', 'steps': 1, 'damage': 2},
-    5: {'name': 'Dragoon', 'steps': 2, 'damage': 2}
+    1: {'name': 'Settler', 'steps': 1, 'damage': 0, 'cost': 10},
+    2: {'name': 'Militiaman', 'steps': 1, 'damage': 1, 'cost': 2},
+    3: {'name': 'Scout', 'steps': 2, 'damage': 1, 'cost': 4},
+    4: {'name': 'Officer', 'steps': 1, 'damage': 2, 'cost': 4},
+    5: {'name': 'Dragoon', 'steps': 2, 'damage': 2, 'cost': 6}
 }
 
 

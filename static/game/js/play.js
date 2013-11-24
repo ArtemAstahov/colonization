@@ -42,10 +42,5 @@ $("#finishStroke").click(function(){
     });
 });
 
-
-$("#buySettler").click(function(){
-    buyUnit(1)
-});
-
 drawGame();
 

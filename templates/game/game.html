@@ -7,7 +7,7 @@
 <body>
     <h2>Game</h2>
 
-    <div style="width: 500px;">
+    <div style="width: 700px;">
         <ul style="float: left;">
             <li>Player: <span id="player"></span></li>
             <li>Creation date: {{game.creation_date}}</li>
@@ -15,16 +15,16 @@
             <input type="submit" id="finishStroke" value="Завершить ход">
         </ul>
 
-        <div style="float: right;">
+        <div id="buyPanel" style="float: right; visibility: hidden;">
             <p>Купить:</p>
-            <input type="submit" id="buySettler" value="S">
-            <input type="submit" id="buyMilitiaman" value="M">
-            <input type="submit" id="buyScout" value="C">
-            <input type="submit" id="buyOfficer" value="O">
-            <input type="submit" id="buyDragoon" value="D">
+            <input type="submit" name="1" class="buyUnit" id="buySettler" value="S">
+            <input type="submit" name="2" class="buyUnit" id="buyMilitiaman" value="M">
+            <input type="submit" name="3" class="buyUnit" id="buyScout" value="C">
+            <input type="submit" name="4" class="buyUnit" id="buyOfficer" value="O">
+            <input type="submit" name="5" class="buyUnit" id="buyDragoon" value="D">
         </div>
     </div>
-
+    <div style="clear: both;" />
     <div id="container"></div>
 
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/global.js" %}" ></script>
