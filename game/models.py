@@ -95,6 +95,7 @@ class Settlement(models.Model):
     top = models.IntegerField()
     player = models.ForeignKey(Player)
     settlement_type = models.IntegerField()
+    active = models.BooleanField(default=True)
 
 
 def create_settlement(game_map, left, top, player, settlement_type):

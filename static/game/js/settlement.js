@@ -6,13 +6,14 @@ var SETTLEMENT_TYPE = {
     3 : {name: 'Castle', code: 'C'}
 };
 
-function Settlement(pk, map, player, type, left, top) {
+function Settlement(pk, map, player, type, left, top, active) {
     this.map = map
     this.pk = pk
     this.player = player
     this.settlement_type = type
     this.left = left
     this.top = top
+    this.active = active
 }
 
 Settlement.prototype.show = function() {
@@ -34,6 +35,8 @@ Settlement.prototype.show = function() {
     settlement.off("mouseup")
 
     settlement.on('click', function() {
+        if (that.active) $('#buyPanel').children().prop('disabled', false)
+        else $('#buyPanel').children().prop('disabled', true)
         $('#buyPanel').css({visibility: 'visible'})
         checked_settlement = that.pk
     });
@@ -59,7 +62,8 @@ function loadSettlements() {
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
-                var settlement = new Settlement(pk, field.map, field.player, field.settlement_type, field.left, field.top)
+                var settlement =
+                    new Settlement(pk, field.map, field.player, field.settlement_type, field.left, field.top, field.active)
                 settlement.show()
             }
         }
