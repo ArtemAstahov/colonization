@@ -35,6 +35,7 @@ Settlement.prototype.show = function() {
     settlement.off("mouseup")
 
     settlement.on('click', function() {
+        //TODO: checking active per time from server
         if (that.active) $('#buyPanel').children().prop('disabled', false)
         else $('#buyPanel').children().prop('disabled', true)
         $('#buyPanel').css({visibility: 'visible'})
@@ -76,6 +77,7 @@ $('.buyUnit').click(function(){
         url : 'buy_unit',
         data : {'player':  1, 'type': that.name, 'settlement_pk': checked_settlement, 'map': '1'},
         success : function(records) {
+            $('#buyPanel').css({visibility: 'hidden'})
             var pk = records[0].pk
             var field = records[0].fields
             var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
