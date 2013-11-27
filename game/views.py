@@ -6,7 +6,8 @@ from game.models import Game, Unit, create_game, Player, create_unit, Settlement
 
 
 def game(request):
-    #create_game('ilya')
+    if not Game.objects.all().count():
+        create_game('ilya')
     context = {'game': Game.objects.get(pk=1)}
     return render(request, 'game/game.html', context)
 
