@@ -35,7 +35,8 @@ Settlement.prototype.show = function() {
     settlement.off("mouseup")
 
     settlement.on('click', function() {
-        //TODO: checking active per time from server
+        //TODO: checking active per time from server and ask nekit!!!
+        that.checkActive()
         if (that.active) $('#buyPanel').children().prop('disabled', false)
         else $('#buyPanel').children().prop('disabled', true)
         $('#buyPanel').css({visibility: 'visible'})
@@ -54,6 +55,17 @@ Settlement.prototype.show = function() {
     layer.add(settlement);
     layer.add(settlementText);
     stage.add(layer);
+}
+
+Settlement.prototype.checkActive = function() {
+    var that = this
+    $.ajax({
+        url : 'check_settlement_active',
+        data : {'pk': this.pk},
+        success : function(active) {
+            that.active = new Boolean(active).valueOf()
+        }
+    });
 }
 
 function loadSettlements() {

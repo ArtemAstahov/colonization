@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^move_unit', views.move_unit, name='move_unit'),
     url(r'^finish_stroke', views.finish_stroke, name='finish_stroke'),
     url(r'^buy_unit', views.buy_unit, name='buy_unit'),
+    url(r'^check_settlement_active', views.check_settlement_active, name='check_settlement_active'),
 )

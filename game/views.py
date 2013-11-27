@@ -79,3 +79,8 @@ def buy_unit(request):
     unit_set = Unit.objects.filter(pk=unit.pk)
     data = serializers.serialize('json', unit_set, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
+
+
+def check_settlement_active(request):
+    settlement = Settlement.objects.get(pk=int(request.GET['pk']))
+    return http.HttpResponse(settlement.active)
