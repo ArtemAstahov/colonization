@@ -35,12 +35,7 @@ Settlement.prototype.show = function() {
     settlement.off("mouseup")
 
     settlement.on('click', function() {
-        //TODO: checking active per time from server and ask nekit!!!
-        that.checkActive()
-        if (that.active) $('#buyPanel').children().prop('disabled', false)
-        else $('#buyPanel').children().prop('disabled', true)
-        $('#buyPanel').css({visibility: 'visible'})
-        checked_settlement = that.pk
+        that.setPurchasesPanel()
     });
 
     var settlementText = new Kinetic.Text({
@@ -57,13 +52,17 @@ Settlement.prototype.show = function() {
     stage.add(layer);
 }
 
-Settlement.prototype.checkActive = function() {
+Settlement.prototype.setPurchasesPanel = function() {
     var that = this
     $.ajax({
         url : 'check_settlement_active',
         data : {'pk': this.pk},
-        success : function(active) {
-            that.active = new Boolean(active).valueOf()
+        success : function(response) {
+            that.active = response['active']
+            if (that.active) $('#purchasesPanel').children().prop('disabled', false)
+            else $('#purchasesPanel').children().prop('disabled', true)
+            $('#purchasesPanel').css({visibility: 'visible'})
+            checked_settlement = that.pk
         }
     });
 }
@@ -83,13 +82,17 @@ function loadSettlements() {
     });
 }
 
+function hiddenPurchasesPanel() {
+    $('#purchasesPanel').css({visibility: 'hidden'})
+}
+
 $('.buyUnit').click(function(){
     var that = this
     $.ajax({
         url : 'buy_unit',
         data : {'player':  1, 'type': that.name, 'settlement_pk': checked_settlement, 'map': '1'},
         success : function(records) {
-            $('#buyPanel').css({visibility: 'hidden'})
+            hiddenPurchasesPanel()
             var pk = records[0].pk
             var field = records[0].fields
             var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)

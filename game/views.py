@@ -1,3 +1,4 @@
+import json
 from django import http
 from django.shortcuts import render
 from django.core import serializers
@@ -83,4 +84,4 @@ def buy_unit(request):
 
 def check_settlement_active(request):
     settlement = Settlement.objects.get(pk=int(request.GET['pk']))
-    return http.HttpResponse(settlement.active)
+    return http.HttpResponse(json.dumps({'active': settlement.active}), mimetype="application/json")

@@ -6,6 +6,7 @@ function drawGame() {
 }
 
 function clearGame() {
+    hiddenPurchasesPanel()
     delete Unit
     delete Settlement
     delete Player
