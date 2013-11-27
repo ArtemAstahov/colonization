@@ -82,6 +82,7 @@ Unit.prototype.show = function() {
 
     unit.on('mousedown', function() {
         if (layer.children.length == 3) layer.add(border)
+        layer.moveToTop()
     });
 
     var shadow = new Kinetic.Rect({
