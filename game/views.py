@@ -73,7 +73,7 @@ def buy_unit(request):
 
     player.money = money - cost
     game_map = Map.objects.get(pk=int(request.GET['map']))
-    unit = create_unit(game_map, settlement.left, settlement.top, player, unit_type)
+    unit = create_unit(game_map, settlement.left, settlement.top, player, unit_type, False)
     settlement.active = False
     settlement.save()
     player.save()
@@ -94,7 +94,7 @@ def create_colony(request):
         return http.HttpResponseBadRequest
 
     colony_type = 1
-    settlement = create_settlement(unit.map, unit.left, unit.top, unit.player, colony_type)
+    settlement = create_settlement(unit.map, unit.left, unit.top, unit.player, colony_type, False)
     Unit.objects.filter(pk=unit.pk).delete()
     settlement = Settlement.objects.filter(pk=settlement.pk)
     data = serializers.serialize('json', settlement, use_natural_keys=True)

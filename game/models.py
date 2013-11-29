@@ -18,15 +18,15 @@ def create_game(player_name):
     game_map = Map(game=game)
     game_map.save()
 
-    create_unit(game_map, 3, 2, player, 1)
-    create_unit(game_map, 1, 5, player, 2)
-    create_unit(game_map, 7, 4, player, 3)
-    create_unit(game_map, 3, 2, player, 4)
-    create_unit(game_map, 1, 1, player, 5)
+    create_unit(game_map, 3, 2, player, 1, True)
+    create_unit(game_map, 1, 5, player, 2, True)
+    create_unit(game_map, 7, 4, player, 3, True)
+    create_unit(game_map, 3, 2, player, 4, True)
+    create_unit(game_map, 1, 1, player, 5, True)
 
-    create_settlement(game_map, 3, 3, player, 1)
-    create_settlement(game_map, 4, 5, player, 2)
-    create_settlement(game_map, 6, 3, player, 3)
+    create_settlement(game_map, 3, 3, player, 1, True)
+    create_settlement(game_map, 4, 5, player, 2, True)
+    create_settlement(game_map, 6, 3, player, 3, True)
 
     return game
 
@@ -76,8 +76,8 @@ class Unit(models.Model):
     active = models.BooleanField(default=True)
 
 
-def create_unit(game_map, left, top, player, unit_type):
-    unit = Unit(map=game_map, left=left, top=top, player=player, unit_type=unit_type)
+def create_unit(game_map, left, top, player, unit_type, active):
+    unit = Unit(map=game_map, left=left, top=top, player=player, unit_type=unit_type, active=active)
     unit.save()
     return unit
 
@@ -98,7 +98,8 @@ class Settlement(models.Model):
     active = models.BooleanField(default=True)
 
 
-def create_settlement(game_map, left, top, player, settlement_type):
-    settlement = Settlement(map=game_map, left=left, top=top, player=player, settlement_type=settlement_type)
+def create_settlement(game_map, left, top, player, settlement_type, active):
+    settlement =\
+        Settlement(map=game_map, left=left, top=top, player=player, settlement_type=settlement_type, active=active)
     settlement.save()
     return settlement

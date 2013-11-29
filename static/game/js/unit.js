@@ -67,7 +67,6 @@ Unit.prototype.show = function() {
 
     unit.on('mouseup', function() {
         that.layer.destroyChildren()
-        that.layer.add(border)
         var absolutePosition = stage.getPointerPosition();
         var left = parseInt(absolutePosition.x / FIELD_SIZE) + 1;
         var top = parseInt(absolutePosition.y / FIELD_SIZE) + 1;
@@ -81,6 +80,7 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mousedown', function() {
+        that.layer.add(border)
         $('#missStroke').off('click')
         $('#createColony').off('click')
         that.layer.moveToTop()
@@ -93,6 +93,8 @@ Unit.prototype.show = function() {
                 $('#createColony').off('click')
                 that.createColony()
             });
+        } else {
+            $('#createColony').css({visibility: 'hidden'})
         }
 
         $('#missStroke').click(function() {
