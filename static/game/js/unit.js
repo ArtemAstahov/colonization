@@ -81,12 +81,20 @@ Unit.prototype.show = function() {
 
     unit.on('mousedown', function() {
         that.layer.add(border)
-        $('#missStroke').off('click')
-        $('#createColony').off('click')
         that.layer.moveToTop()
 
+        $('#missStroke').off('click')
         $('#missStroke').css({visibility: 'visible'})
+
+        $('#missStroke').click(function() {
+            $('#missStroke').css({visibility: 'hidden'})
+            $('#missStroke').off('click')
+            that.layer.destroyChildren()
+            that.move()
+        });
+
         if(that.unit_type == 1) {
+            $('#createColony').off('click')
             $('#createColony').css({visibility: 'visible'})
             $('#createColony').click(function() {
                 $('#createColony').css({visibility: 'hidden'})
@@ -96,13 +104,6 @@ Unit.prototype.show = function() {
         } else {
             $('#createColony').css({visibility: 'hidden'})
         }
-
-        $('#missStroke').click(function() {
-            $('#missStroke').css({visibility: 'hidden'})
-            $('#missStroke').off('click')
-            that.layer.destroyChildren()
-            that.move()
-        });
     });
 
     var shadow = new Kinetic.Rect({
