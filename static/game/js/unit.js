@@ -82,10 +82,19 @@ Unit.prototype.show = function() {
 
     unit.on('mousedown', function() {
         $('#missStroke').off('click')
+        $('#createColony').off('click')
         that.layer.moveToTop()
 
         $('#missStroke').css({visibility: 'visible'})
-        $('#missStroke').prop('disabled', false)
+        if(that.unit_type == 1) {
+            $('#createColony').css({visibility: 'visible'})
+            $('#createColony').click(function() {
+                $('#createColony').css({visibility: 'hidden'})
+                $('#createColony').off('click')
+                that.createColony()
+            });
+        }
+
         $('#missStroke').click(function() {
             $('#missStroke').css({visibility: 'hidden'})
             $('#missStroke').off('click')
@@ -114,9 +123,27 @@ Unit.prototype.show = function() {
     this.layer.draw()
 }
 
+Unit.prototype.createColony = function() {
+    var that = this
+    this.layer.destroy()
+    $.ajax({
+        url : 'create_colony',
+        data : {'pk':  that.pk},
+        success : function(records) {
+            var pk = records[0].pk
+            var field = records[0].fields
+            var settlement =
+                new Settlement(pk, field.map, field.player, field.settlement_type, field.left, field.top, field.active)
+            settlement.show()
+            delete that
+        }
+    });
+}
+
 Unit.prototype.move = function() {
     this.layer.destroyChildren()
     $('#missStroke').css({visibility: 'hidden'})
+    $('#createColony').css({visibility: 'hidden'})
     var that = this
     $.ajax({
         url : 'move_unit',

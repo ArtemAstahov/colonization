@@ -3,7 +3,7 @@ from django import http
 from django.shortcuts import render
 from django.core import serializers
 
-from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE
+from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement, SETTLEMENT_TYPE
 
 
 def game(request):
@@ -36,7 +36,7 @@ def move_unit(request):
     pk = int(request.GET['pk'])
     unit = Unit.objects.get(pk=pk)
     if not unit.active:
-        return http.HttpResponse()
+        return http.HttpResponseBadRequest()
     left = int(request.GET['left'])
     top = int(request.GET['top'])
     unit.left = left
@@ -69,7 +69,7 @@ def buy_unit(request):
     cost = UNIT_TYPE[unit_type]['cost']
 
     if money < cost:
-        return http.HttpResponse()
+        return http.HttpResponseBadRequest()
 
     player.money = money - cost
     game_map = Map.objects.get(pk=int(request.GET['map']))
@@ -85,3 +85,17 @@ def buy_unit(request):
 def check_settlement_active(request):
     settlement = Settlement.objects.get(pk=int(request.GET['pk']))
     return http.HttpResponse(json.dumps({'active': settlement.active}), mimetype="application/json")
+
+
+def create_colony(request):
+    settlers_type = 1
+    unit = Unit.objects.get(pk=int(request.GET['pk']))
+    if not unit and unit.unit_type == settlers_type:
+        return http.HttpResponseBadRequest
+
+    colony_type = 1
+    settlement = create_settlement(unit.map, unit.left, unit.top, unit.player, colony_type)
+    Unit.objects.filter(pk=unit.pk).delete()
+    settlement = Settlement.objects.filter(pk=settlement.pk)
+    data = serializers.serialize('json', settlement, use_natural_keys=True)
+    return http.HttpResponse(data, content_type='application/json')

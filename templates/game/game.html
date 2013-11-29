@@ -7,13 +7,14 @@
 <body>
     <h2>Game</h2>
 
-    <div style="width: 800px;">
+    <div style="width: 900px;">
         <ul style="float: left;">
             <li>Player: <span id="player"></span></li>
             <li>Creation date: {{game.creation_date}}</li>
             <li>Map: {{game.map_set.all.0}}</li>
             <input type="submit" id="finishStroke" value="Завершить ход">
             <input type="submit" id="missStroke" value="Пропустить ход" style="visibility: hidden;">
+            <input type="submit" id="createColony" value="Основать колонию" style="visibility: hidden;">
         </ul>
 
         <div id="purchasesPanel" style="float: right; visibility: hidden;">
