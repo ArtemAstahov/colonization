@@ -3,7 +3,7 @@ from django import http
 from django.shortcuts import render
 from django.core import serializers
 
-from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement, SETTLEMENT_TYPE
+from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement
 
 
 def game(request):
