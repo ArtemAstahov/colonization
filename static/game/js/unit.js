@@ -14,14 +14,14 @@ function Unit(pk, map, player, type, left, top, active) {
     this.left = left
     this.top = top
     this.active = active
+    this.layer = new Kinetic.Layer()
+    stage.add(this.layer);
 }
 
 Unit.prototype.show = function() {
     var type = UNIT_TYPE[this.unit_type]
-    var layer = new Kinetic.Layer();
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
-    var opacity = this.active ? 1 : 0.5
     var that = this
 
     var border = new Kinetic.Rect({
@@ -41,7 +41,6 @@ Unit.prototype.show = function() {
         height: FIELD_SIZE,
         fill: 'red',
         stroke: 'yellow',
-        opacity: opacity,
         draggable: this.active,
         dragBoundFunc: function(pos) {
             var border = function(pos, rectPos) {
@@ -67,7 +66,8 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mouseup', function() {
-        layer.destroy();
+        that.layer.destroyChildren()
+        that.layer.add(border)
         var absolutePosition = stage.getPointerPosition();
         var left = parseInt(absolutePosition.x / FIELD_SIZE) + 1;
         var top = parseInt(absolutePosition.y / FIELD_SIZE) + 1;
@@ -81,8 +81,18 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mousedown', function() {
-        if (layer.children.length == 3) layer.add(border)
-        layer.moveToTop()
+        $('#missStroke').off('click')
+        that.layer.add(border)
+        that.layer.moveToTop()
+
+        $('#missStroke').css({visibility: 'visible'})
+        $('#missStroke').prop('disabled', false)
+        $('#missStroke').click(function() {
+            $('#missStroke').css({visibility: 'hidden'})
+            $('#missStroke').off('click')
+            that.layer.destroyChildren()
+            that.move()
+        });
     });
 
     var shadow = new Kinetic.Rect({
@@ -91,16 +101,23 @@ Unit.prototype.show = function() {
         width: FIELD_SIZE,
         height: FIELD_SIZE,
         fill: 'red',
+        listening: false,
         opacity: 0.5
     });
 
-    layer.add(shadow);
-    layer.add(unit);
-    layer.add(unitText);
-    stage.add(layer);
+    if(this.active) this.layer.add(unit)
+
+    this.layer.add(shadow)
+    this.layer.add(unitText)
+
+    if(!this.active) this.layer.moveToBottom()
+
+    this.layer.draw()
 }
 
 Unit.prototype.move = function() {
+    this.layer.destroyChildren()
+    $('#missStroke').css({visibility: 'hidden'})
     var that = this
     $.ajax({
         url : 'move_unit',

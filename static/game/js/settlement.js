@@ -34,7 +34,7 @@ Settlement.prototype.show = function() {
 
     settlement.off("mouseup")
 
-    settlement.on('click', function() {
+    settlement.on('mousedown', function() {
         that.setPurchasesPanel()
     });
 
