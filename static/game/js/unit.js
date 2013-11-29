@@ -82,7 +82,6 @@ Unit.prototype.show = function() {
 
     unit.on('mousedown', function() {
         $('#missStroke').off('click')
-        that.layer.add(border)
         that.layer.moveToTop()
 
         $('#missStroke').css({visibility: 'visible'})
