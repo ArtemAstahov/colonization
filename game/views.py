@@ -87,11 +87,23 @@ def check_settlement_active(request):
     return http.HttpResponse(json.dumps({'active': settlement.active}), mimetype="application/json")
 
 
+def check_settlements_margins(request):
+    unit = Unit.objects.get(pk=int(request.GET['pk']))
+    settlements = Settlement.objects.all()
+    for settlement in settlements:
+        if settlement.check_margins(unit.left, unit.top):
+            return http.HttpResponse(json.dumps({'available': False}), mimetype="application/json")
+    return http.HttpResponse(json.dumps({'available': True}), mimetype="application/json")
+
+
 def create_colony(request):
     settlers_type = 1
     unit = Unit.objects.get(pk=int(request.GET['pk']))
     if not unit and unit.unit_type == settlers_type:
         return http.HttpResponseBadRequest
+
+    #TODO: do it on db
+    check_settlements_margins(request)
 
     colony_type = 1
     settlement = create_settlement(unit.map, unit.left, unit.top, unit.player, colony_type, False)

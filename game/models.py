@@ -97,6 +97,9 @@ class Settlement(models.Model):
     settlement_type = models.IntegerField()
     active = models.BooleanField(default=True)
 
+    def check_margins(self, left, top):
+        return self.left - 3 < left < self.left + 3 and self.top - 3 < top < self.top + 3
+
 
 def create_settlement(game_map, left, top, player, settlement_type, active):
     settlement =\

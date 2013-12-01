@@ -35,6 +35,7 @@ Settlement.prototype.show = function() {
     settlement.on('mousedown', function() {
         $('.buyUnit').off('click')
         that.setPurchasesPanel()
+        hiddenUnitPanel()
         $('.buyUnit').click(function(){
             var unit_type = this.name
             $.ajax({

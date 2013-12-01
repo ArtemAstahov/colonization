@@ -85,6 +85,7 @@ Unit.prototype.show = function() {
 
         $('#missStroke').off('click')
         $('#missStroke').css({visibility: 'visible'})
+        hiddenPurchasesPanel()
 
         $('#missStroke').click(function() {
             $('#missStroke').css({visibility: 'hidden'})
@@ -94,13 +95,7 @@ Unit.prototype.show = function() {
         });
 
         if(that.unit_type == 1) {
-            $('#createColony').off('click')
-            $('#createColony').css({visibility: 'visible'})
-            $('#createColony').click(function() {
-                $('#createColony').css({visibility: 'hidden'})
-                $('#createColony').off('click')
-                that.createColony()
-            });
+            that.setCreateColony()
         } else {
             $('#createColony').css({visibility: 'hidden'})
         }
@@ -128,11 +123,11 @@ Unit.prototype.show = function() {
 
 Unit.prototype.createColony = function() {
     var that = this
-    this.layer.destroy()
     $.ajax({
         url : 'create_colony',
         data : {'pk':  that.pk},
         success : function(records) {
+            that.layer.destroy()
             var pk = records[0].pk
             var field = records[0].fields
             var settlement =
@@ -161,6 +156,28 @@ Unit.prototype.move = function() {
     });
 }
 
+Unit.prototype.setCreateColony = function() {
+    var that = this
+    $.ajax({
+        url : 'check_settlements_margins',
+        data : {'pk': this.pk},
+        success : function(response) {
+            var available = response['available']
+            if (response['available']) {
+                $('#createColony').off('click')
+                $('#createColony').css({visibility: 'visible'})
+                $('#createColony').click(function() {
+                    $('#createColony').css({visibility: 'hidden'})
+                    $('#createColony').off('click')
+                    that.createColony()
+                });
+            } else {
+                $('#createColony').css({visibility: 'hidden'})
+            }
+        }
+    });
+}
+
 function loadUnits() {
     $.ajax({
         url : 'load_units',
@@ -173,4 +190,9 @@ function loadUnits() {
             }
         }
     });
+}
+
+function hiddenUnitPanel() {
+    $('#createColony').css({visibility: 'hidden'})
+    $('#missStroke').css({visibility: 'hidden'})
 }
