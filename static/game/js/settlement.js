@@ -35,14 +35,14 @@ Settlement.prototype.show = function() {
     settlement.on('mousedown', function() {
         $('.buyUnit').off('click')
         that.setPurchasesPanel()
-        hiddenUnitPanel()
+        hideUnitPanel()
         $('.buyUnit').click(function(){
             var unit_type = this.name
             $.ajax({
                 url : 'buy_unit',
                 data : {'player':  1, 'type': unit_type, 'settlement_pk': that.pk, 'map': '1'},
                 success : function(records) {
-                    hiddenPurchasesPanel()
+                    hidePurchasesPanel()
                     var pk = records[0].pk
                     var field = records[0].fields
                     var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
@@ -96,6 +96,6 @@ function loadSettlements() {
     });
 }
 
-function hiddenPurchasesPanel() {
+function hidePurchasesPanel() {
     $('#purchasesPanel').css({visibility: 'hidden'})
 }

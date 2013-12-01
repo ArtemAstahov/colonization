@@ -80,12 +80,12 @@ Unit.prototype.show = function() {
     });
 
     unit.on('mousedown', function() {
-        that.layer.add(border)
         that.layer.moveToTop()
+        if (that.layer.children.length == 3) that.layer.add(border)
 
         $('#missStroke').off('click')
         $('#missStroke').css({visibility: 'visible'})
-        hiddenPurchasesPanel()
+        hidePurchasesPanel()
 
         $('#missStroke').click(function() {
             $('#missStroke').css({visibility: 'hidden'})
@@ -94,10 +94,9 @@ Unit.prototype.show = function() {
             that.move()
         });
 
+        $('#createColony').css({visibility: 'hidden'})
         if(that.unit_type == 1) {
             that.setCreateColony()
-        } else {
-            $('#createColony').css({visibility: 'hidden'})
         }
     });
 
@@ -140,8 +139,7 @@ Unit.prototype.createColony = function() {
 
 Unit.prototype.move = function() {
     this.layer.destroyChildren()
-    $('#missStroke').css({visibility: 'hidden'})
-    $('#createColony').css({visibility: 'hidden'})
+    hideUnitPanel()
     var that = this
     $.ajax({
         url : 'move_unit',
@@ -192,7 +190,7 @@ function loadUnits() {
     });
 }
 
-function hiddenUnitPanel() {
+function hideUnitPanel() {
     $('#createColony').css({visibility: 'hidden'})
     $('#missStroke').css({visibility: 'hidden'})
 }
