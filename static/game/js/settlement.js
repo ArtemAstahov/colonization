@@ -21,13 +21,16 @@ Settlement.prototype.show = function() {
     var y = (this.top - 1) * FIELD_SIZE
     var that = this
 
-    var settlement = new Kinetic.Rect({
+    var image = new Image();
+
+    var settlement = new Kinetic.Image({
         x: x,
         y: y,
+        image: image,
         width: FIELD_SIZE,
         height: FIELD_SIZE,
         fill: 'red',
-        stroke: 'blue'
+        stroke: 'red'
     });
 
     settlement.off("mouseup")
@@ -68,17 +71,12 @@ Settlement.prototype.show = function() {
         });
     });
 
-    var settlementText = new Kinetic.Text({
-        x: settlement.getX() + 5,
-        y: settlement.getY(),
-        text: type.code,
-        fontSize: 50,
-        fill: 'white',
-        listening: false
-    });
+    image.onload = function() {
+        layer.add(settlement);
+        layer.draw()
+    };
+    image.src = "/static/game/img/" + type.icon
 
-    layer.add(settlement);
-    layer.add(settlementText);
     stage.add(layer);
 }
 

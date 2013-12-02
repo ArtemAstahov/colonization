@@ -19,7 +19,6 @@ function Unit(pk, map, player, type, left, top, active) {
 }
 
 Unit.prototype.show = function() {
-    var unit;
     var type = UNIT_TYPE[this.unit_type]
     var x = (this.left - 1) * FIELD_SIZE + UNIT_DELTA
     var y = (this.top - 1) * FIELD_SIZE + UNIT_DELTA
@@ -37,16 +36,15 @@ Unit.prototype.show = function() {
 
     var image = new Image();
 
-    unit = new Kinetic.Image({
+    var unit = new Kinetic.Image({
         x: x,
         y: y,
         image: image,
         fill: 'red',
-        stroke: 'orange',
-        strokeWidth: 3,
+        stroke: 'red',
         width: UNIT_SIZE,
         height: UNIT_SIZE,
-        draggable: that.active,
+        draggable: true,
         dragBoundFunc: function (pos) {
             var border = function (pos, rectPos) {
                 if (pos < rectPos - (type.steps) * FIELD_SIZE) return rectPos - (type.steps) * FIELD_SIZE;
@@ -117,7 +115,7 @@ Unit.prototype.show = function() {
         }
         that.layer.draw()
     };
-    image.src = "/static/game/img/" + UNIT_TYPE[this.unit_type].icon
+    image.src = "/static/game/img/" + type.icon
 }
 
 Unit.prototype.createColony = function() {
