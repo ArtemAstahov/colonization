@@ -3,7 +3,7 @@ from django import http
 from django.shortcuts import render
 from django.core import serializers
 
-from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement
+from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement, SETTLEMENT_TYPE
 
 
 def game(request):
@@ -61,7 +61,7 @@ def finish_stroke(request):
 def buy_unit(request):
     settlement = Settlement.objects.get(pk=int(request.GET['settlement_pk']))
     if not settlement.active:
-        return http.HttpResponse()
+        return http.HttpResponseBadRequest()
 
     player = Player.objects.get(pk=int(request.GET['player']))
     unit_type = int(request.GET['type'])
@@ -79,6 +79,29 @@ def buy_unit(request):
     player.save()
     unit_set = Unit.objects.filter(pk=unit.pk)
     data = serializers.serialize('json', unit_set, use_natural_keys=True)
+    return http.HttpResponse(data, content_type='application/json')
+
+
+def upgrade_settlement(request):
+    settlement = Settlement.objects.get(pk=int(request.GET['settlement_pk']))
+    if not settlement.active:
+        return http.HttpResponseBadRequest()
+
+    player = Player.objects.get(pk=int(request.GET['player']))
+    settlement_type = int(request.GET['type'])
+    money = player.money
+    settlement_cost = 25
+
+    if money < settlement_cost or settlement_type > len(SETTLEMENT_TYPE):
+        return http.HttpResponseBadRequest()
+
+    player.money = money - settlement_cost
+    settlement.settlement_type = settlement_type
+    settlement.active = False
+    settlement.save()
+    player.save()
+    settlement_set = Settlement.objects.filter(pk=settlement.pk)
+    data = serializers.serialize('json', settlement_set, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
 
 

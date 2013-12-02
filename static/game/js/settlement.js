@@ -34,6 +34,7 @@ Settlement.prototype.show = function() {
 
     settlement.on('mousedown', function() {
         $('.buyUnit').off('click')
+        $('#upgradeSettlement').off('click')
         that.setPurchasesPanel()
         hideUnitPanel()
         $('.buyUnit').click(function(){
@@ -47,6 +48,20 @@ Settlement.prototype.show = function() {
                     var field = records[0].fields
                     var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
                     unit.show()
+                    loadPlayer()
+                }
+            });
+        });
+        $('#upgradeSettlement').click(function(){
+            $.ajax({
+                url : 'upgrade_settlement',
+                data : {'player':  1, 'type': that.settlement_type + 1, 'settlement_pk': that.pk, 'map': '1'},
+                success : function(records) {
+                    hidePurchasesPanel()
+                    var field = records[0].fields
+                    that.settlement_type = field.settlement_type
+                    that.active = field.active
+                    that.show()
                     loadPlayer()
                 }
             });
