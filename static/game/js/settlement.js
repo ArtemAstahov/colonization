@@ -1,7 +1,7 @@
 var SETTLEMENT_TYPE = {
     1 : {name: 'Colony', code: 'S', icon: 'icon-house.png'},
-    2 : {name: 'Fort', code: 'F', icon: 'icon-fort.png'},
-    3 : {name: 'Castle', code: 'C', icon: 'icon-temple.png'}
+    2 : {name: 'Fort', code: 'F', icon: 'icon-temple.png'},
+    3 : {name: 'Castle', code: 'C', icon: 'icon-fort.png'}
 };
 
 function Settlement(pk, map, player, type, left, top, active) {
