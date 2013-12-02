@@ -1,9 +1,9 @@
 var UNIT_TYPE = {
-    1 : {name: 'Settler', code: 'S', steps: 1},
-    2 : {name: 'Militiaman', code: 'M', steps: 1},
-    3 : {name: 'Scout', code: 'C', steps: 2},
-    4 : {name: 'Officer', code: 'O', steps: 1},
-    5 : {name: 'Dragoon', code: 'D', steps: 2}
+    1 : {name: 'Settler', code: 'S', steps: 1, icon: 'icon-men.png'},
+    2 : {name: 'Militiaman', code: 'M', steps: 1, icon: 'icon-bow.png'},
+    3 : {name: 'Scout', code: 'C', steps: 2, icon: 'icon-knight.png'},
+    4 : {name: 'Officer', code: 'O', steps: 1, icon: 'icon-sword.png'},
+    5 : {name: 'Dragoon', code: 'D', steps: 2, icon: 'icon-quake.png'}
 };
 
 function Unit(pk, map, player, type, left, top, active) {
@@ -19,14 +19,15 @@ function Unit(pk, map, player, type, left, top, active) {
 }
 
 Unit.prototype.show = function() {
+    var unit;
     var type = UNIT_TYPE[this.unit_type]
-    var x = (this.left - 1) * FIELD_SIZE
-    var y = (this.top - 1) * FIELD_SIZE
+    var x = (this.left - 1) * FIELD_SIZE + UNIT_DELTA
+    var y = (this.top - 1) * FIELD_SIZE + UNIT_DELTA
     var that = this
 
     var border = new Kinetic.Rect({
-        x: x - (type.steps) * FIELD_SIZE,
-        y: y - (type.steps) * FIELD_SIZE,
+        x: x - UNIT_DELTA - (type.steps) * FIELD_SIZE,
+        y: y - UNIT_DELTA - (type.steps) * FIELD_SIZE,
         width: (2 * type.steps  + 1) * FIELD_SIZE,
         height: (2 * type.steps  + 1) * FIELD_SIZE,
         stroke: 'red',
@@ -34,18 +35,22 @@ Unit.prototype.show = function() {
         listening: false
     });
 
-    var unit = new Kinetic.Rect({
+    var image = new Image();
+
+    unit = new Kinetic.Image({
         x: x,
         y: y,
-        width: FIELD_SIZE,
-        height: FIELD_SIZE,
+        image: image,
         fill: 'red',
-        stroke: 'yellow',
-        draggable: this.active,
-        dragBoundFunc: function(pos) {
-            var border = function(pos, rectPos) {
-                if(pos < rectPos - (type.steps) * FIELD_SIZE) return rectPos - (type.steps) * FIELD_SIZE;
-                else if(pos > rectPos + (type.steps) * FIELD_SIZE) return rectPos + (type.steps) * FIELD_SIZE;
+        stroke: 'orange',
+        strokeWidth: 3,
+        width: UNIT_SIZE,
+        height: UNIT_SIZE,
+        draggable: that.active,
+        dragBoundFunc: function (pos) {
+            var border = function (pos, rectPos) {
+                if (pos < rectPos - (type.steps) * FIELD_SIZE) return rectPos - (type.steps) * FIELD_SIZE;
+                else if (pos > rectPos + (type.steps) * FIELD_SIZE) return rectPos + (type.steps) * FIELD_SIZE;
                 else return pos
             };
 
@@ -54,15 +59,6 @@ Unit.prototype.show = function() {
                 y: border(pos.y, y)
             };
         }
-    });
-
-    var unitText = new Kinetic.Text({
-        x: unit.getX() + 5,
-        y: unit.getY(),
-        text: type.code,
-        fontSize: 50,
-        fill: 'white',
-        listening: false
     });
 
     unit.on('mouseup', function() {
@@ -81,7 +77,7 @@ Unit.prototype.show = function() {
 
     unit.on('mousedown', function() {
         that.layer.moveToTop()
-        if (that.layer.children.length == 3) that.layer.add(border)
+        if (that.layer.children.length == 2) that.layer.add(border)
 
         $('#missStroke').off('click')
         $('#missStroke').css({visibility: 'visible'})
@@ -100,24 +96,28 @@ Unit.prototype.show = function() {
         }
     });
 
-    var shadow = new Kinetic.Rect({
+    var shadow = new Kinetic.Image({
         x: x,
         y: y,
-        width: FIELD_SIZE,
-        height: FIELD_SIZE,
+        image: image,
         fill: 'red',
-        listening: false,
-        opacity: 0.5
+        opacity: 0.5,
+        width: UNIT_SIZE,
+        height: UNIT_SIZE,
+        listening: false
     });
 
-    if(this.active) this.layer.add(unit)
+    image.onload = function() {
+        that.layer.add(shadow);
 
-    this.layer.add(shadow)
-    this.layer.add(unitText)
-
-    if(!this.active) this.layer.moveToBottom()
-
-    this.layer.draw()
+        if(that.active) {
+            that.layer.add(unit);
+        } else {
+            that.layer.moveToBottom()
+        }
+        that.layer.draw()
+    };
+    image.src = "/static/game/img/" + UNIT_TYPE[this.unit_type].icon
 }
 
 Unit.prototype.createColony = function() {
