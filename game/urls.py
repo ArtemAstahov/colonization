@@ -3,7 +3,6 @@ from django.conf.urls import patterns, url
 from game import views
 
 urlpatterns = patterns('',
-    # ex: /game/
     url(r'^$', views.game, name='game'),
     url(r'^load_units', views.load_units, name='load_units'),
     url(r'^load_settlements', views.load_settlements, name='load_settlements'),
