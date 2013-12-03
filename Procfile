@@ -1,1 +1,1 @@
-web: gunicorn game.wsgi
+web: django game.wsgi
