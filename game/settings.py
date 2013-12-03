@@ -1,5 +1,6 @@
 import os
 # Django settings for colonization project.
+from django.conf.global_settings import DATABASES
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
