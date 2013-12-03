@@ -1,1 +1,1 @@
-web: gunicorn colonization.wsgi
+web: gunicorn game.wsgi
