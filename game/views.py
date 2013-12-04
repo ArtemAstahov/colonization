@@ -3,7 +3,8 @@ from django import http
 from django.shortcuts import render
 from django.core import serializers
 
-from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement, SETTLEMENT_TYPE
+from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
+    SETTLEMENT_TYPE, check_margins
 
 
 def game(request):
@@ -112,11 +113,8 @@ def check_settlement_active(request):
 
 def check_settlements_margins(request):
     unit = Unit.objects.get(pk=int(request.GET['pk']))
-    settlements = Settlement.objects.all()
-    for settlement in settlements:
-        if settlement.check_margins(unit.left, unit.top):
-            return http.HttpResponse(json.dumps({'available': False}), mimetype="application/json")
-    return http.HttpResponse(json.dumps({'available': True}), mimetype="application/json")
+    return http.HttpResponse(json.dumps({'available': check_margins(unit.left, unit.top)}),
+                             mimetype="application/json")
 
 
 def create_colony(request):
@@ -125,8 +123,8 @@ def create_colony(request):
     if not unit and unit.unit_type == settlers_type:
         return http.HttpResponseBadRequest
 
-    #TODO: do it on db
-    check_settlements_margins(request)
+    if not check_margins(unit.left, unit.top):
+        return http.HttpResponseBadRequest
 
     colony_type = 1
     settlement = create_settlement(unit.map, unit.left, unit.top, unit.player, colony_type, False)

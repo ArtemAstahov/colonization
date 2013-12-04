@@ -97,8 +97,10 @@ class Settlement(models.Model):
     settlement_type = models.IntegerField()
     active = models.BooleanField(default=True)
 
-    def check_margins(self, left, top):
-        return self.left - 3 < left < self.left + 3 and self.top - 3 < top < self.top + 3
+
+def check_margins(left, top):
+    settlements = Settlement.objects.filter(left__gt=left-3, left__lt=left+3, top__gt=top-3, top__lt=top+3)
+    return settlements.count() == 0
 
 
 def create_settlement(game_map, left, top, player, settlement_type, active):
