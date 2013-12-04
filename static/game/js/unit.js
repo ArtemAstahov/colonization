@@ -20,16 +20,15 @@ function Unit(pk, map, player, type, left, top, active) {
 
 Unit.prototype.show = function() {
     var type = UNIT_TYPE[this.unit_type]
-    var x = (this.left - 1) * FIELD_SIZE + UNIT_DELTA
-    var y = (this.top - 1) * FIELD_SIZE + UNIT_DELTA
+    var x = (this.left - 1) * FIELD_SIZE
+    var y = (this.top - 1) * FIELD_SIZE
     var that = this
 
     var border = new Kinetic.Rect({
-        x: x - UNIT_DELTA - (type.steps) * FIELD_SIZE,
-        y: y - UNIT_DELTA - (type.steps) * FIELD_SIZE,
+        x: x - (type.steps) * FIELD_SIZE,
+        y: y - (type.steps) * FIELD_SIZE,
         width: (2 * type.steps  + 1) * FIELD_SIZE,
         height: (2 * type.steps  + 1) * FIELD_SIZE,
-        stroke: 'red',
         strokeWidth: 2.5,
         listening: false
     });
@@ -40,10 +39,8 @@ Unit.prototype.show = function() {
         x: x,
         y: y,
         image: image,
-        fill: 'red',
-        stroke: 'red',
-        width: UNIT_SIZE,
-        height: UNIT_SIZE,
+        width: FIELD_SIZE,
+        height: FIELD_SIZE,
         draggable: true,
         dragBoundFunc: function (pos) {
             var border = function (pos, rectPos) {
@@ -98,10 +95,9 @@ Unit.prototype.show = function() {
         x: x,
         y: y,
         image: image,
-        fill: 'red',
         opacity: 0.5,
-        width: UNIT_SIZE,
-        height: UNIT_SIZE,
+        width: FIELD_SIZE,
+        height: FIELD_SIZE,
         listening: false
     });
 
@@ -111,7 +107,7 @@ Unit.prototype.show = function() {
         if(that.active) {
             that.layer.add(unit);
         } else {
-            that.layer.moveToBottom()
+            that.layer.moveDown()
         }
         that.layer.draw()
     };

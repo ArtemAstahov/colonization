@@ -1,3 +1,5 @@
+var SETTLEMENT_OFFSET = 5
+
 var SETTLEMENT_TYPE = {
     1 : {name: 'Colony', code: 'S', icon: 'icon-house.png'},
     2 : {name: 'Fort', code: 'F', icon: 'icon-temple.png'},
@@ -24,13 +26,11 @@ Settlement.prototype.show = function() {
     var image = new Image();
 
     var settlement = new Kinetic.Image({
-        x: x,
-        y: y,
+        x: x - SETTLEMENT_OFFSET,
+        y: y - SETTLEMENT_OFFSET,
         image: image,
-        width: FIELD_SIZE,
-        height: FIELD_SIZE,
-        fill: 'red',
-        stroke: 'red'
+        width: FIELD_SIZE + 2 * SETTLEMENT_OFFSET,
+        height: FIELD_SIZE + 2 * SETTLEMENT_OFFSET
     });
 
     settlement.off("mouseup")
@@ -64,6 +64,7 @@ Settlement.prototype.show = function() {
                     var field = records[0].fields
                     that.settlement_type = field.settlement_type
                     that.active = field.active
+                    layer.clear()
                     that.show()
                     loadPlayer()
                 }

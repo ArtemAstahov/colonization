@@ -15,20 +15,21 @@ function clearGame() {
 
 function createMap() {
     var layer = new Kinetic.Layer();
-
-    for (var i = 0; i < MAP_WIDTH; i++) {
-        for(var j = 0; j < MAP_HEIGHT; j++) {
-            var field = new Kinetic.Rect({
-                x: i * FIELD_SIZE,
-                y: j * FIELD_SIZE,
-                width: FIELD_SIZE,
-                height: FIELD_SIZE,
-                stroke: 'black'
-            });
-            layer.add(field);
-        }
-    }
-
+    var image = new Image()
+    var map = new Kinetic.Image({
+        x: 0,
+        y: 0,
+        image: image,
+        width: 1300,
+        height: 600,
+        listening: false
+    });
+    image.onload = function() {
+        layer.add(map)
+        layer.moveToBottom()
+        layer.draw()
+    };
+    image.src = "/static/game/img/map.png"
     stage.add(layer);
 }
 
