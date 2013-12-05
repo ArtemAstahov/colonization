@@ -1,6 +1,4 @@
-FIELD_SIZE = 50
-MAP_HEIGHT = 5
-MAP_WIDTH = 10
+FIELD_SIZE = 40
 
 var stage = new Kinetic.Stage({
         container: 'container',

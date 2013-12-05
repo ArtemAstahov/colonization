@@ -29,7 +29,8 @@ Unit.prototype.show = function() {
         y: y - (type.steps) * FIELD_SIZE,
         width: (2 * type.steps  + 1) * FIELD_SIZE,
         height: (2 * type.steps  + 1) * FIELD_SIZE,
-        strokeWidth: 2.5,
+        fill: 'yellow',
+        opacity: 0.1,
         listening: false
     });
 
@@ -42,6 +43,9 @@ Unit.prototype.show = function() {
         width: FIELD_SIZE,
         height: FIELD_SIZE,
         draggable: true,
+        fill: 'red',
+        shadowColor: 'yellow',
+        shadowBlur: 20,
         dragBoundFunc: function (pos) {
             var border = function (pos, rectPos) {
                 if (pos < rectPos - (type.steps) * FIELD_SIZE) return rectPos - (type.steps) * FIELD_SIZE;
@@ -98,6 +102,8 @@ Unit.prototype.show = function() {
         opacity: 0.5,
         width: FIELD_SIZE,
         height: FIELD_SIZE,
+        fill: 'red',
+        shadowColor: 'white',
         listening: false
     });
 

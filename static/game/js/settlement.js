@@ -29,6 +29,9 @@ Settlement.prototype.show = function() {
         x: x - SETTLEMENT_OFFSET,
         y: y - SETTLEMENT_OFFSET,
         image: image,
+        fill: 'red',
+        shadowColor: 'white',
+        shadowBlur: 15,
         width: FIELD_SIZE + 2 * SETTLEMENT_OFFSET,
         height: FIELD_SIZE + 2 * SETTLEMENT_OFFSET
     });
