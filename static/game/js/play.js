@@ -9,7 +9,6 @@ function clearGame() {
     hidePurchasesPanel()
     hideUnitPanel()
     stage.clear()
-    stage.clearCache()
 }
 
 function createMap() {
