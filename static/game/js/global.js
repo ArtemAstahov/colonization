@@ -1,4 +1,4 @@
-FIELD_SIZE = 40
+var FIELD_SIZE = 40
 
 var stage = new Kinetic.Stage({
         container: 'container',

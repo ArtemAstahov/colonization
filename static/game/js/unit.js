@@ -1,3 +1,5 @@
+var GLOBAL_UNIT = this
+
 var UNIT_TYPE = {
     1 : {name: 'Settler', code: 'S', steps: 1, icon: 'icon-men.png'},
     2 : {name: 'Militiaman', code: 'M', steps: 1, icon: 'icon-bow.png'},
@@ -45,7 +47,7 @@ Unit.prototype.show = function() {
         draggable: true,
         fill: 'red',
         shadowColor: 'yellow',
-        shadowBlur: 20,
+        shadowBlur: 15,
         dragBoundFunc: function (pos) {
             var border = function (pos, rectPos) {
                 if (pos < rectPos - (type.steps) * FIELD_SIZE) return rectPos - (type.steps) * FIELD_SIZE;
@@ -132,7 +134,7 @@ Unit.prototype.createColony = function() {
             var settlement =
                 new Settlement(pk, field.map, field.player, field.settlement_type, field.left, field.top, field.active)
             settlement.show()
-            delete that
+            delete settlement.show()
         }
     });
 }
@@ -150,6 +152,7 @@ Unit.prototype.move = function() {
             that.top = field.top;
             that.active = field.active;
             that.show()
+            delete that.show()
         }
     });
 }
@@ -180,11 +183,16 @@ function loadUnits() {
     $.ajax({
         url : 'load_units',
         success : function(records) {
+            var that = this
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
                 var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
                 unit.show()
+                unit = null
+                delete unit
+                that = null
+                delete that
             }
         }
     });

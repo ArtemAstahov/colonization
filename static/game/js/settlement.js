@@ -81,7 +81,7 @@ Settlement.prototype.show = function() {
     };
     image.src = "/static/game/img/" + type.icon
 
-    stage.add(layer);
+    stage.add(layer)
 }
 
 Settlement.prototype.setPurchasesPanel = function() {
@@ -108,6 +108,9 @@ function loadSettlements() {
                 var settlement =
                     new Settlement(pk, field.map, field.player, field.settlement_type, field.left, field.top, field.active)
                 settlement.show()
+                settlement = null
+                delete settlement
+                delete this
             }
         }
     });

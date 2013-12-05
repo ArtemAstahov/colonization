@@ -1,16 +1,15 @@
 function drawGame() {
     createMap()
+    loadPlayer()
     loadSettlements()
     loadUnits()
-    loadPlayer()
 }
 
 function clearGame() {
     hidePurchasesPanel()
-    delete Unit
-    delete Settlement
-    delete Player
+    hideUnitPanel()
     stage.clear()
+    stage.clearCache()
 }
 
 function createMap() {
