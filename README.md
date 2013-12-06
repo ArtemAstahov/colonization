@@ -1,5 +1,3 @@
 colonization
 ============
-Old game - colonization. Python, Django, Jquery, KineticJS
-
-See app: http://glacial-sea-4090.herokuapp.com/
+Old game - colonization/civilization 1. Python, Django, Jquery, KineticJS
