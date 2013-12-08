@@ -54,6 +54,7 @@ Settlement.prototype.show = function() {
                     var field = records[0].fields
                     var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
                     unit.show()
+                    units[pk] = unit
                     loadPlayer()
                 }
             });
