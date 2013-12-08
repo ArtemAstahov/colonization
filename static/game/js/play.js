@@ -1,5 +1,3 @@
-var units = {}
-
 function drawGame() {
     createMap()
     loadPlayer()
