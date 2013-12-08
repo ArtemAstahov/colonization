@@ -19,6 +19,8 @@ function Unit(pk, map, player, type, left, top, active) {
 }
 
 Unit.prototype.show = function() {
+    this.layer.destroyChildren()
+    this.layer.clear()
     var type = UNIT_TYPE[this.unit_type]
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
@@ -183,10 +185,21 @@ function loadUnits() {
                 var pk = records[i].pk
                 var field = records[i].fields
                 var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
+                units[pk] = unit
                 unit.show()
             }
         }
     });
+}
+
+function updateUnits() {
+    for (var pk in units) {
+        var unit = units[pk]
+        if (!unit.active) {
+            unit.active = true
+            unit.show()
+        }
+    }
 }
 
 function hideUnitPanel() {

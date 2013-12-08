@@ -1,3 +1,5 @@
+var units = {}
+
 function drawGame() {
     createMap()
     loadPlayer()
@@ -8,7 +10,6 @@ function drawGame() {
 function clearGame() {
     hidePurchasesPanel()
     hideUnitPanel()
-    stage.clear()
 }
 
 function createMap() {
@@ -37,7 +38,8 @@ $("#finishStroke").click(function(){
         data : {'player':  1},
         success : function() {
             clearGame();
-            drawGame();
+            loadPlayer();
+            updateUnits();
         }
     });
 });
