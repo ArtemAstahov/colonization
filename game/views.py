@@ -2,7 +2,7 @@ import json
 from django import http
 from django.shortcuts import render
 from django.core import serializers
-
+from django.contrib.auth import authenticate, login
 from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
     SETTLEMENT_TYPE, check_margins
 
@@ -10,8 +10,10 @@ from game.models import Game, Unit, create_game, Player, create_unit, Settlement
 def game(request):
     if not Game.objects.all().count():
         create_game('ilya')
-    context = {'game': Game.objects.get(pk=1)}
-    return render(request, 'game/game.html', context)
+
+    if request.user.is_authenticated():
+        return render(request, 'game/game.html', {'user': request.user})
+    return render(request, 'game/game.html')
 
 
 def load_units(request):
