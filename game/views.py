@@ -11,9 +11,9 @@ def game(request):
     if not Game.objects.all().count():
         create_game('ilya')
 
-    if request.user.is_authenticated():
-        return render(request, 'game/game.html', {'user': request.user})
-    return render(request, 'game/game.html')
+    if request.user.is_active:
+        return render(request, 'game/layout.html', {'username': request.user.username})
+    return render(request, 'game/layout.html')
 
 
 def load_units(request):

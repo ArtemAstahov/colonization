@@ -1,38 +1,27 @@
-<html>
-<head>
-    <title>Колонизация</title>
-    {% load staticfiles %}
-    <script type="text/javascript" charset="utf-8" src="{% static "game/js/lib/jquery-2.0.3.js" %}" ></script>
-    <script type="text/javascript" charset="utf-8" src="{% static "game/js/lib/kinetic-v4.7.4.min.js" %}" ></script>
-</head>
-<body>
-    Колонизация
+<game>
+    <ul style="float: left;">
+        <span id="username" style="visibility: hidden">{{ username }}</span> <span id="player"></span>
+        <input type="submit" id="finishStroke" value="Завершить ход">
+        <input type="submit" id="missStroke" value="Пропустить ход" style="visibility: hidden;">
+        <input type="submit" id="createColony" value="Основать колонию" style="visibility: hidden;">
+    </ul>
 
-    <div style="width: 1200px;">
-        <ul style="float: left;">
-            <li>user: {{user}}, <span id="player"></span></li>
-            <input type="submit" id="finishStroke" value="Завершить ход">
-            <input type="submit" id="missStroke" value="Пропустить ход" style="visibility: hidden;">
-            <input type="submit" id="createColony" value="Основать колонию" style="visibility: hidden;">
-        </ul>
-
-        <div id="purchasesPanel" style="float: right; visibility: hidden;">
-            <p>Купить:</p>
-            10 coins <input type="submit" name="1" class="buyUnit" id="buySettler" value="S">
-            2 coins <input type="submit" name="2" class="buyUnit" id="buyMilitiaman" value="M">
-            4 coins <input type="submit" name="3" class="buyUnit" id="buyScout" value="C">
-            4 coins <input type="submit" name="4" class="buyUnit" id="buyOfficer" value="O">
-            6 coins <input type="submit" name="5" class="buyUnit" id="buyDragoon" value="D">
-            25 coins <input type="submit" id="upgradeSettlement" value="^UP^">
-        </div>
+    <div id="purchasesPanel" style="float: right; visibility: hidden;">
+        <p>Купить:</p>
+        10 coins <input type="submit" name="1" class="buyUnit" id="buySettler" value="S">
+        2 coins <input type="submit" name="2" class="buyUnit" id="buyMilitiaman" value="M">
+        4 coins <input type="submit" name="3" class="buyUnit" id="buyScout" value="C">
+        4 coins <input type="submit" name="4" class="buyUnit" id="buyOfficer" value="O">
+        6 coins <input type="submit" name="5" class="buyUnit" id="buyDragoon" value="D">
+        25 coins <input type="submit" id="upgradeSettlement" value="^UP^">
     </div>
+
     <div style="clear: both;" />
     <div id="container"></div>
-
+    {% load staticfiles %}
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/global.js" %}" ></script>
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/player.js" %}" ></script>
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/unit.js" %}" ></script>
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/settlement.js" %}" ></script>
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/play.js" %}" ></script>
-</body>
-</html>
+</game>
