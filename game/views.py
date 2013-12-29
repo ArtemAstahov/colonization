@@ -1,8 +1,10 @@
 import json
 from django import http
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 from django.core import serializers
 from django.contrib.auth import authenticate, login
+from game.forms import RegisterForm
 from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
     SETTLEMENT_TYPE, check_margins
 
@@ -12,8 +14,25 @@ def game(request):
         create_game('ilya')
 
     if request.user.is_active:
-        return render(request, 'game/layout.html', {'username': request.user.username})
-    return render(request, 'game/layout.html')
+        return render(request, 'game/game.html', {'username': request.user.username})
+    return render(request, 'game/game.html')
+
+
+def login(request):
+    return render(request, 'game/login.html')
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'game/game.html')
+        else:
+            errors = ["There is an error"]
+            return render(request, 'game/register.html', {'form':  UserCreationForm(), 'errors': errors})
+    else:
+        return render(request, 'game/register.html', {'form':  UserCreationForm()})
 
 
 def load_units(request):

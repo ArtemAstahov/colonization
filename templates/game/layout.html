@@ -8,6 +8,10 @@
 </head>
 <body>
     {% include "game/header.html" %}
-    {% include "game/game.html" %}
+    {% block content %}{% endblock %}
+    {% block footer %}
+    <hr>
+    <p>@2013</p>
+    {% endblock %}
 </body>
 </html>

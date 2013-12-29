@@ -1,4 +1,6 @@
-<game>
+{% extends "game/layout.html" %}
+
+{% block content %}
     <ul style="float: left;">
         <span id="username" style="visibility: hidden">{{ username }}</span> <span id="player"></span>
         <input type="submit" id="finishStroke" value="Завершить ход">
@@ -24,4 +26,4 @@
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/unit.js" %}" ></script>
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/settlement.js" %}" ></script>
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/play.js" %}" ></script>
-</game>
+{% endblock %}
