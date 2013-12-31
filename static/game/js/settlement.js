@@ -94,7 +94,7 @@ Settlement.prototype.setPurchasesPanel = function() {
             that.active = response['active']
             if (that.active) $('#purchasesPanel').children().prop('disabled', false)
             else $('#purchasesPanel').children().prop('disabled', true)
-            $('#purchasesPanel').css({visibility: 'visible'})
+            $('#purchasesPanel').css({display: 'block'})
         }
     });
 }
@@ -115,5 +115,5 @@ function loadSettlements() {
 }
 
 function hidePurchasesPanel() {
-    $('#purchasesPanel').css({visibility: 'hidden'})
+    $('#purchasesPanel').css({display: 'none'})
 }

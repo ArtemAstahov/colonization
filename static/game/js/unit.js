@@ -81,17 +81,17 @@ Unit.prototype.show = function() {
         if (that.layer.children.length == 2) that.layer.add(border)
 
         $('#missStroke').off('click')
-        $('#missStroke').css({visibility: 'visible'})
+        $('#missStroke').css({display: 'block'})
         hidePurchasesPanel()
 
         $('#missStroke').click(function() {
-            $('#missStroke').css({visibility: 'hidden'})
+            $('#missStroke').css({display: 'none'})
             $('#missStroke').off('click')
             that.layer.destroyChildren()
             that.move()
         });
 
-        $('#createColony').css({visibility: 'hidden'})
+        $('#createColony').css({display: 'none'})
         if(that.unit_type == 1) {
             that.setCreateColony()
         }
@@ -164,14 +164,14 @@ Unit.prototype.setCreateColony = function() {
             var available = response['available']
             if (response['available']) {
                 $('#createColony').off('click')
-                $('#createColony').css({visibility: 'visible'})
+                $('#createColony').css({display: 'block'})
                 $('#createColony').click(function() {
-                    $('#createColony').css({visibility: 'hidden'})
+                    $('#createColony').css({display: 'none'})
                     $('#createColony').off('click')
                     that.createColony()
                 });
             } else {
-                $('#createColony').css({visibility: 'hidden'})
+                $('#createColony').css({display: 'none'})
             }
         }
     });
@@ -203,6 +203,6 @@ function updateUnits() {
 }
 
 function hideUnitPanel() {
-    $('#createColony').css({visibility: 'hidden'})
-    $('#missStroke').css({visibility: 'hidden'})
+    $('#createColony').css({display: 'none'})
+    $('#missStroke').css({display: 'none'})
 }
