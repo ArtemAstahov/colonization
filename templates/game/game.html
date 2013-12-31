@@ -1,15 +1,14 @@
 {% extends "game/layout.html" %}
 
 {% block content %}
-    <ul style="float: left;">
-        <span id="username" style="visibility: hidden">{{ username }}</span> <span id="player"></span>
+    <div style="float: left; width: 50%">
+        <span id="player"></span>
         <input type="submit" id="finishStroke" value="Завершить ход">
         <input type="submit" id="missStroke" value="Пропустить ход" style="visibility: hidden;">
         <input type="submit" id="createColony" value="Основать колонию" style="visibility: hidden;">
-    </ul>
+    </div>
 
-    <div id="purchasesPanel" style="float: right; visibility: hidden;">
-        <p>Купить:</p>
+    <div id="purchasesPanel" style="float: right; visibility: hidden; width: 50%">
         10 coins <input type="submit" name="1" class="buyUnit" id="buySettler" value="S">
         2 coins <input type="submit" name="2" class="buyUnit" id="buyMilitiaman" value="M">
         4 coins <input type="submit" name="3" class="buyUnit" id="buyScout" value="C">
@@ -18,7 +17,6 @@
         25 coins <input type="submit" id="upgradeSettlement" value="^UP^">
     </div>
 
-    <div style="clear: both;" />
     <div id="container"></div>
     {% load staticfiles %}
     <script type="text/javascript" charset="utf-8" src="{% static "game/js/global.js" %}" ></script>
