@@ -1,5 +1,4 @@
 function drawGame() {
-    $("#gameContext").css()
     createMap()
     loadPlayer()
     loadSettlements()
@@ -43,8 +42,6 @@ $("#finishStroke").click(function(){
     });
 });
 
-if (checkUser()) {
-    drawGame();
-}
+drawGame();
 
 

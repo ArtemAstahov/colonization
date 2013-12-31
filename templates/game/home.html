@@ -1,0 +1,12 @@
+{% extends "game/layout.html" %}
+
+{% block content %}
+    <h1 style="text-align: center">It is home page
+        <br>
+        {% if user.is_authenticated %}
+            <a href="game">Go to Fire!</a>
+        {%  else  %}
+            <a href="login">Just Login!</a>
+        {% endif %}
+    </h1>
+{% endblock %}
