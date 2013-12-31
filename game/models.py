@@ -7,6 +7,7 @@ from django.utils import timezone
 
 class Game(models.Model):
     user = models.ForeignKey(User)
+    result = models.IntegerField(default=0)
     creation_date = models.DateTimeField(default=timezone.now())
 
 
@@ -30,6 +31,11 @@ def create_game(user):
     create_settlement(game_map, 6, 3, player, 3, True)
 
     return game
+
+
+def get_active_game(username):
+    user = User.objects.filter(username=username)
+    return Game.objects.filter(user=user, result=0)
 
 
 class Player(models.Model):
