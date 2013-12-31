@@ -1,10 +1,11 @@
 import json
 from django import http
+from django.contrib import auth
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core import serializers
-from django.contrib.auth import authenticate, login
-from game.forms import RegisterForm
 from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
     SETTLEMENT_TYPE, check_margins
 
@@ -13,8 +14,6 @@ def game(request):
     if not Game.objects.all().count():
         create_game('ilya')
 
-    if request.user.is_active:
-        return render(request, 'game/game.html', {'username': request.user.username})
     return render(request, 'game/game.html')
 
 
@@ -22,12 +21,21 @@ def login(request):
     return render(request, 'game/login.html')
 
 
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect("/")
+
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'game/game.html')
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            new_user = authenticate(username=username, password=password)
+            auth.login(request, new_user)
+            return HttpResponseRedirect("/")
         else:
             errors = ["There is an error"]
             return render(request, 'game/register.html', {'form':  UserCreationForm(), 'errors': errors})

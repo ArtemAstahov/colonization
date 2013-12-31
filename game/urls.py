@@ -5,6 +5,7 @@ from game import views
 urlpatterns = patterns('',
     url(r'^$', views.game),
     url(r'^login', views.login),
+    url(r'^logout', views.logout),
     url(r'^register', views.register),
     url(r'^load_units', views.load_units),
     url(r'^load_settlements', views.load_settlements),
