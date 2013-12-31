@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
 
@@ -5,15 +6,15 @@ from django.utils import timezone
 
 
 class Game(models.Model):
-    # user
+    user = models.ForeignKey(User)
     creation_date = models.DateTimeField(default=timezone.now())
 
 
-def create_game(player_name):
-    game = Game()
+def create_game(user):
+    game = Game(user=user)
     game.save()
 
-    player = create_player(player_name, game, "red")
+    player = create_player(game, "red")
 
     game_map = Map(game=game)
     game_map.save()
@@ -33,7 +34,6 @@ def create_game(player_name):
 
 class Player(models.Model):
     game = models.ForeignKey(Game)
-    name = models.CharField(max_length=100)
     money = models.IntegerField(default=10)
     color = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
@@ -43,8 +43,8 @@ class Player(models.Model):
         self.money = self.money + aggregate['settlement_type__sum']
 
 
-def create_player(name, game, color):
-    player = Player(name=name, game=game, color=color)
+def create_player(game, color):
+    player = Player(game=game, color=color)
     player.save()
     return player
 

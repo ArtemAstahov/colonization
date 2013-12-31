@@ -2,6 +2,7 @@ import json
 from django import http
 from django.contrib import auth
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -14,10 +15,9 @@ def home(request):
     return render(request, 'game/home.html')
 
 
+@login_required
 def game(request):
-    if not Game.objects.all().count():
-        create_game('ilya')
-
+    create_game(request.user)
     return render(request, 'game/game.html')
 
 
@@ -26,7 +26,7 @@ def login(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             auth.login(request, form.get_user())
-            return HttpResponseRedirect("game")
+            return HttpResponseRedirect("/game")
         else:
             errors = ["There is an error"]
             return render(request, 'game/login.html', {'form':  AuthenticationForm(), 'errors': errors})
@@ -48,7 +48,7 @@ def register(request):
             password = form.cleaned_data['password1']
             new_user = authenticate(username=username, password=password)
             auth.login(request, new_user)
-            return HttpResponseRedirect("game")
+            return HttpResponseRedirect("/game")
         else:
             errors = ["There is an error"]
             return render(request, 'game/register.html', {'form':  UserCreationForm(), 'errors': errors})
