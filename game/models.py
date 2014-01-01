@@ -5,9 +5,26 @@ from django.db.models import Sum
 from django.utils import timezone
 
 
-class Game(models.Model):
+class Player(models.Model):
     user = models.ForeignKey(User)
-    result = models.IntegerField(default=0)
+    game = models.ForeignKey(Game)
+    money = models.IntegerField(default=10)
+    color = models.CharField(max_length=100)
+    active = models.BooleanField(default=True)
+
+    def increase_money_for_day(self):
+        aggregate = Settlement.objects.filter(player=self.pk).aggregate(Sum('settlement_type'))
+        self.money = self.money + aggregate['settlement_type__sum']
+
+
+def create_player(game, color):
+    player = Player(game=game, color=color)
+    player.save()
+    return player
+
+
+class Game(models.Model):
+    active = models.BooleanField(default=True)
     creation_date = models.DateTimeField(default=timezone.now())
 
 
@@ -34,24 +51,7 @@ def create_game(user):
 
 
 def get_active_game(user):
-    return Game.objects.filter(user=user, result=0).first()
-
-
-class Player(models.Model):
-    game = models.ForeignKey(Game)
-    money = models.IntegerField(default=10)
-    color = models.CharField(max_length=100)
-    active = models.BooleanField(default=True)
-
-    def increase_money_for_day(self):
-        aggregate = Settlement.objects.filter(player=self.pk).aggregate(Sum('settlement_type'))
-        self.money = self.money + aggregate['settlement_type__sum']
-
-
-def create_player(game, color):
-    player = Player(game=game, color=color)
-    player.save()
-    return player
+    return Game.objects.filter(user=user, active=True).first()
 
 
 class Map(models.Model):
