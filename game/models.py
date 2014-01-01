@@ -33,9 +33,9 @@ def create_game(user):
     return game
 
 
-def get_active_game(username):
-    user = User.objects.filter(username=username)
-    return Game.objects.filter(user=user, result=0)
+def get_active_game(user):
+    game = Game.objects.filter(user=user, result=0)
+    return game
 
 
 class Player(models.Model):

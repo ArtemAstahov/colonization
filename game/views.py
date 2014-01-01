@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core import serializers
 from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins
+    SETTLEMENT_TYPE, check_margins, get_active_game
 
 
 def home(request):
@@ -17,7 +17,8 @@ def home(request):
 
 @login_required
 def game(request):
-    create_game(request.user)
+    if len(get_active_game(request.user)) is not 1:
+        create_game(request.user)
     return render(request, 'game/game.html')
 
 
