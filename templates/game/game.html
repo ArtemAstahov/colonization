@@ -1,13 +1,13 @@
 {% extends "game/layout.html" %}
 
 {% block content %}
-    <div style="float: left; width: 270px">
+    <div style="float: left; width: 300px; margin-bottom: 5px">
         <span id="player"></span>
         <input type="submit" id="finishStroke" value="Завершить ход">
     </div>
 
-    <input type="submit" id="missStroke" value="Пропустить ход" style="display: none; float: left;">
-    <input type="submit" id="createColony" value="Основать колонию" style="display: none;">
+    <input type="submit" id="missStroke" value="Пропустить ход" style="display: none; float: left; margin-left: 100px">
+    <input type="submit" id="createColony" value="Основать колонию" style="display: none; float: left; margin-left: 20px">
 
     <div id="purchasesPanel" style="display: none">
         <input type="submit" name="1" class="buyUnit" id="buySettler" value="S"> 10 coins
