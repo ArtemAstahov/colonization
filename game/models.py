@@ -5,6 +5,41 @@ from django.db.models import Sum
 from django.utils import timezone
 
 
+class Game(models.Model):
+    winner = models.ForeignKey(User)
+    creation_date = models.DateTimeField(default=timezone.now())
+
+
+def create_game(user1):
+    game = Game(winner=user1)
+    game.save()
+
+    player1 = create_player(user1, game, "red")
+
+    game_map = Map(game=game)
+    game_map.save()
+
+    create_unit(game_map, 3, 2, player1, 1, True)
+    create_unit(game_map, 1, 5, player1, 2, True)
+    create_unit(game_map, 7, 4, player1, 3, True)
+    create_unit(game_map, 3, 2, player1, 4, True)
+    create_unit(game_map, 1, 1, player1, 5, True)
+
+    create_settlement(game_map, 3, 3, player1, 1, True)
+    create_settlement(game_map, 4, 5, player1, 2, True)
+    create_settlement(game_map, 6, 3, player1, 3, True)
+
+    return game
+
+
+def get_active_game(user):
+    return Player.objects.filter(user=user).first().game
+
+
+def is_created_game(user):
+    return Player.objects.filter(user=user).exists()
+
+
 class Player(models.Model):
     user = models.ForeignKey(User)
     game = models.ForeignKey(Game)
@@ -17,41 +52,10 @@ class Player(models.Model):
         self.money = self.money + aggregate['settlement_type__sum']
 
 
-def create_player(game, color):
-    player = Player(game=game, color=color)
+def create_player(user, game, color):
+    player = Player(game=game, color=color, user=user)
     player.save()
     return player
-
-
-class Game(models.Model):
-    active = models.BooleanField(default=True)
-    creation_date = models.DateTimeField(default=timezone.now())
-
-
-def create_game(user):
-    game = Game(user=user)
-    game.save()
-
-    player = create_player(game, "red")
-
-    game_map = Map(game=game)
-    game_map.save()
-
-    create_unit(game_map, 3, 2, player, 1, True)
-    create_unit(game_map, 1, 5, player, 2, True)
-    create_unit(game_map, 7, 4, player, 3, True)
-    create_unit(game_map, 3, 2, player, 4, True)
-    create_unit(game_map, 1, 1, player, 5, True)
-
-    create_settlement(game_map, 3, 3, player, 1, True)
-    create_settlement(game_map, 4, 5, player, 2, True)
-    create_settlement(game_map, 6, 3, player, 3, True)
-
-    return game
-
-
-def get_active_game(user):
-    return Game.objects.filter(user=user, active=True).first()
 
 
 class Map(models.Model):

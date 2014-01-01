@@ -33,7 +33,6 @@ function createMap() {
 $("#finishStroke").click(function(){
     $.ajax({
         url : 'finish_stroke',
-        data : {'player':  1},
         success : function() {
             clearGame();
             loadPlayer();

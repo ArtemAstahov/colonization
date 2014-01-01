@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core import serializers
 from game.models import Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_active_game, get_game_map
+    SETTLEMENT_TYPE, check_margins, get_game_map, is_created_game
 
 
 def home(request):
@@ -17,7 +17,7 @@ def home(request):
 
 @login_required
 def game(request):
-    if get_active_game(request.user) is None:
+    if is_created_game(request.user) is not None:
         create_game(request.user)
     return render(request, 'game/game.html')
 
@@ -70,8 +70,7 @@ def load_settlements(request):
 
 
 def load_player(request):
-    pk = int(request.GET['pk'])
-    player = get_active_game(request.user).player_set.filter(pk=pk)
+    player = Player.objects.filter(user=request.user)
     data = serializers.serialize('json', player, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
 
@@ -93,12 +92,11 @@ def move_unit(request):
 
 
 def finish_stroke(request):
-    player_pk = int(request.GET['player'])
-    player = Player.objects.get(pk=player_pk)
+    player = Player.objects.filter(user=request.user).first()
     player.increase_money_for_day()
     player.save()
-    Unit.objects.filter(player=player_pk).update(active=True)
-    Settlement.objects.filter(player=player_pk).update(active=True)
+    Unit.objects.filter(player=player).update(active=True)
+    Settlement.objects.filter(player=player).update(active=True)
     return http.HttpResponse()
 
 
@@ -107,7 +105,7 @@ def buy_unit(request):
     if not settlement.active:
         return http.HttpResponseBadRequest()
 
-    player = Player.objects.get(pk=int(request.GET['player']))
+    player = Player.objects.filter(user=request.user).first()
     unit_type = int(request.GET['type'])
     money = player.money
     cost = UNIT_TYPE[unit_type]['cost']
@@ -116,7 +114,7 @@ def buy_unit(request):
         return http.HttpResponseBadRequest()
 
     player.money = money - cost
-    game_map = Map.objects.get(pk=int(request.GET['map']))
+    game_map = get_game_map(request.user)
     unit = create_unit(game_map, settlement.left, settlement.top, player, unit_type, False)
     settlement.active = False
     settlement.save()
@@ -131,7 +129,7 @@ def upgrade_settlement(request):
     if not settlement.active:
         return http.HttpResponseBadRequest()
 
-    player = Player.objects.get(pk=int(request.GET['player']))
+    player = Player.objects.filter(user=request.user).first()
     settlement_type = int(request.GET['type'])
     money = player.money
     settlement_cost = 25
