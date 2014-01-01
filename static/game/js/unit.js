@@ -6,10 +6,8 @@ var UNIT_TYPE = {
     5 : {name: 'Dragoon', code: 'D', steps: 2, icon: 'icon-quake.png'}
 };
 
-function Unit(pk, map, player, type, left, top, active) {
-    this.map = map
+function Unit(pk, type, left, top, active) {
     this.pk = pk
-    this.player = player
     this.unit_type = type
     this.left = left
     this.top = top
@@ -132,7 +130,7 @@ Unit.prototype.createColony = function() {
             var pk = records[0].pk
             var field = records[0].fields
             var settlement =
-                new Settlement(pk, field.map, field.player, field.settlement_type, field.left, field.top, field.active)
+                new Settlement(pk, field.settlement_type, field.left, field.top, field.active)
             settlement.show()
         }
     });
@@ -184,7 +182,7 @@ function loadUnits() {
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
-                var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
+                var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active)
                 units[pk] = unit
                 unit.show()
             }

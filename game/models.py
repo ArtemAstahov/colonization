@@ -34,8 +34,7 @@ def create_game(user):
 
 
 def get_active_game(user):
-    game = Game.objects.filter(user=user, result=0)
-    return game
+    return Game.objects.filter(user=user, result=0).first()
 
 
 class Player(models.Model):
@@ -60,8 +59,9 @@ class Map(models.Model):
     height = models.IntegerField(default=10)
     width = models.IntegerField(default=5)
 
-    def __unicode__(self):
-        return "height: " + str(self.height) + " width: " + str(self.width)
+
+def get_game_map(user):
+    return get_active_game(user).map_set.all().first()
 
 
 UNIT_TYPE = {

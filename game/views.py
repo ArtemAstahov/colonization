@@ -7,8 +7,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core import serializers
-from game.models import Game, Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_active_game
+from game.models import Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
+    SETTLEMENT_TYPE, check_margins, get_active_game, get_game_map
 
 
 def home(request):
@@ -17,7 +17,7 @@ def home(request):
 
 @login_required
 def game(request):
-    if len(get_active_game(request.user)) is not 1:
+    if get_active_game(request.user) is None:
         create_game(request.user)
     return render(request, 'game/game.html')
 
@@ -58,20 +58,20 @@ def register(request):
 
 
 def load_units(request):
-    units = Game.objects.get(pk=1).map_set.all()[0].unit_set.all()
+    units = get_game_map(request.user).unit_set.all()
     data = serializers.serialize('json', units, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
 
 
 def load_settlements(request):
-    settlements = Game.objects.get(pk=1).map_set.all()[0].settlement_set.all()
+    settlements = get_game_map(request.user).settlement_set.all()
     data = serializers.serialize('json', settlements, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
 
 
 def load_player(request):
     pk = int(request.GET['pk'])
-    player = Game.objects.get(pk=1).player_set.filter(pk=pk)
+    player = get_active_game(request.user).player_set.filter(pk=pk)
     data = serializers.serialize('json', player, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
 

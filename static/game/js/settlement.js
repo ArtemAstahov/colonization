@@ -6,10 +6,8 @@ var SETTLEMENT_TYPE = {
     3 : {name: 'Castle', code: 'C', icon: 'icon-fort.png'}
 };
 
-function Settlement(pk, map, player, type, left, top, active) {
-    this.map = map
+function Settlement(pk, type, left, top, active) {
     this.pk = pk
-    this.player = player
     this.settlement_type = type
     this.left = left
     this.top = top
@@ -47,12 +45,12 @@ Settlement.prototype.show = function() {
             var unit_type = this.name
             $.ajax({
                 url : 'buy_unit',
-                data : {'player':  1, 'type': unit_type, 'settlement_pk': that.pk, 'map': '1'},
+                data : {'type': unit_type, 'settlement_pk': that.pk},
                 success : function(records) {
                     hidePurchasesPanel()
                     var pk = records[0].pk
                     var field = records[0].fields
-                    var unit = new Unit(pk, field.map, field.player, field.unit_type, field.left, field.top, field.active)
+                    var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active)
                     unit.show()
                     units[pk] = unit
                     loadPlayer()
@@ -62,7 +60,7 @@ Settlement.prototype.show = function() {
         $('#upgradeSettlement').click(function(){
             $.ajax({
                 url : 'upgrade_settlement',
-                data : {'player':  1, 'type': that.settlement_type + 1, 'settlement_pk': that.pk, 'map': '1'},
+                data : {'type': that.settlement_type + 1, 'settlement_pk': that.pk},
                 success : function(records) {
                     hidePurchasesPanel()
                     var field = records[0].fields
@@ -107,7 +105,7 @@ function loadSettlements() {
                 var pk = records[i].pk
                 var field = records[i].fields
                 var settlement =
-                    new Settlement(pk, field.map, field.player, field.settlement_type, field.left, field.top, field.active)
+                    new Settlement(pk, field.settlement_type, field.left, field.top, field.active)
                 settlement.show()
             }
         }
