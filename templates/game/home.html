@@ -1,12 +1,20 @@
 {% extends "game/layout.html" %}
 
 {% block content %}
-    <h1 style="text-align: center">It is Colonization
-        <br>
+    <h1 style="text-align: center">It is Colonization!!!</h1>
+    <div>
         {% if user.is_authenticated %}
-            <a href="game">Go to Fire!</a>
+            {% if game %}
+                <a href="/game">Go to Fire!</a>
+            {% else %}
+                <a href="/create_game">Create Game!</a>
+            {% endif %}
+            {% if host_game %}
+                <br>
+                <a href="/join_to_game">Join to Game!</a>
+            {% endif %}
         {%  else  %}
             <a href="/accounts/register">Just Register</a> or <a href="/accounts/login">Login</a>
         {% endif %}
-    </h1>
+    </div>
 {% endblock %}

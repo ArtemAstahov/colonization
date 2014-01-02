@@ -5,29 +5,31 @@ from django.db.models import Sum
 from django.utils import timezone
 
 
+GAME_STATE = {
+    0: 'CREATED',
+    1: 'STARTED',
+    2: 'FINISHED'
+}
+
+
 class Game(models.Model):
+    state = models.IntegerField(default=0)
     winner = models.ForeignKey(User)
     creation_date = models.DateTimeField(default=timezone.now())
 
 
-def create_game(user1):
-    game = Game(winner=user1)
+def create_game(user):
+    game = Game(winner=user)
     game.save()
 
-    player1 = create_player(user1, game, "red")
+    player = create_player(user, game, "red")
+    player.active = False
+    player.save()
 
     game_map = Map(game=game)
     game_map.save()
 
-    create_unit(game_map, 3, 2, player1, 1, True)
-    create_unit(game_map, 1, 5, player1, 2, True)
-    create_unit(game_map, 7, 4, player1, 3, True)
-    create_unit(game_map, 3, 2, player1, 4, True)
-    create_unit(game_map, 1, 1, player1, 5, True)
-
-    create_settlement(game_map, 3, 3, player1, 1, True)
-    create_settlement(game_map, 4, 5, player1, 2, True)
-    create_settlement(game_map, 6, 3, player1, 3, True)
+    create_unit(game_map, 3, 2, player, 1, True)
 
     return game
 
@@ -40,6 +42,19 @@ def is_created_game(user):
     return Player.objects.filter(user=user).exists()
 
 
+def get_host_game():
+    return Game.objects.filter(state=0).first()
+
+
+def join_to_game(user):
+    game = get_host_game()
+    player = create_player(user, game, "blue")
+    player.active = True
+    player.save()
+    game_map = game.map_set.all().first()
+    create_unit(game_map, 15, 10, player, 1, True)
+
+
 class Player(models.Model):
     user = models.ForeignKey(User)
     game = models.ForeignKey(Game)
@@ -49,13 +64,18 @@ class Player(models.Model):
 
     def increase_money_for_day(self):
         aggregate = Settlement.objects.filter(player=self.pk).aggregate(Sum('settlement_type'))
-        self.money = self.money + aggregate['settlement_type__sum']
+        if aggregate['settlement_type__sum'] is not None:
+            self.money = self.money + aggregate['settlement_type__sum']
 
 
 def create_player(user, game, color):
     player = Player(game=game, color=color, user=user)
     player.save()
     return player
+
+
+def get_player(user):
+    return Player.objects.filter(user=user).first()
 
 
 class Map(models.Model):

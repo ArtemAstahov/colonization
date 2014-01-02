@@ -6,6 +6,7 @@ function Player(money, color, active) {
 
 Player.prototype.show = function() {
     $('#player').html("money: " + this.money + ", active: " + this.active)
+    player = this
 }
 
 function loadPlayer() {
@@ -15,6 +16,7 @@ function loadPlayer() {
             var field = records[0].fields
             var player = new Player(field.money, field.color, field.active)
             player.show()
+            playerDeferred.resolve()
         }
     });
 }

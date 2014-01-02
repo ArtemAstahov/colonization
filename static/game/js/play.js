@@ -1,8 +1,11 @@
 function drawGame() {
     createMap()
     loadPlayer()
-    loadSettlements()
-    loadUnits()
+
+    $.when(playerDeferred).done(function(){
+        loadSettlements()
+        loadUnits()
+    });
 }
 
 function clearGame() {

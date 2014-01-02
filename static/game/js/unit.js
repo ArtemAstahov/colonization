@@ -43,7 +43,7 @@ Unit.prototype.show = function() {
         width: FIELD_SIZE,
         height: FIELD_SIZE,
         draggable: true,
-        fill: 'red',
+        fill: player.color,
         shadowColor: 'yellow',
         shadowBlur: 18,
         dragBoundFunc: function (pos) {
@@ -102,7 +102,7 @@ Unit.prototype.show = function() {
         opacity: 0.5,
         width: FIELD_SIZE,
         height: FIELD_SIZE,
-        fill: 'red',
+        fill: player.color,
         shadowColor: 'white',
         listening: false
     });

@@ -7,19 +7,33 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core import serializers
-from game.models import Unit, create_game, Player, create_unit, Settlement, Map, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_game_map, is_created_game
+from game import models
+from game.models import Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
+    SETTLEMENT_TYPE, check_margins, get_game_map, is_created_game, get_active_game, get_host_game, get_player
 
 
 def home(request):
-    return render(request, 'game/home.html')
+    if request.user.is_authenticated() and is_created_game(request.user):
+        return render(request, 'game/home.html', {'game': get_active_game(request.user)})
+    else:
+        return render(request, 'game/home.html', {'host_game': get_host_game()})
 
 
 @login_required
 def game(request):
-    if is_created_game(request.user) is not None:
-        create_game(request.user)
     return render(request, 'game/game.html')
+
+
+@login_required()
+def create_game(request):
+    models.create_game(request.user)
+    return HttpResponseRedirect("/game")
+
+
+@login_required()
+def join_to_game(request):
+    models.join_to_game(request.user)
+    return HttpResponseRedirect("/game")
 
 
 def login(request):
@@ -27,7 +41,7 @@ def login(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             auth.login(request, form.get_user())
-            return HttpResponseRedirect("/game")
+            return HttpResponseRedirect("/")
         else:
             errors = ["There is an error"]
             return render(request, 'game/login.html', {'form':  AuthenticationForm(), 'errors': errors})
@@ -49,7 +63,7 @@ def register(request):
             password = form.cleaned_data['password1']
             new_user = authenticate(username=username, password=password)
             auth.login(request, new_user)
-            return HttpResponseRedirect("/game")
+            return HttpResponseRedirect("/")
         else:
             errors = ["There is an error"]
             return render(request, 'game/register.html', {'form':  UserCreationForm(), 'errors': errors})
@@ -58,13 +72,13 @@ def register(request):
 
 
 def load_units(request):
-    units = get_game_map(request.user).unit_set.all()
+    units = get_player(request.user).unit_set.all()
     data = serializers.serialize('json', units, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
 
 
 def load_settlements(request):
-    settlements = get_game_map(request.user).settlement_set.all()
+    settlements = get_player(request.user).settlement_set.all()
     data = serializers.serialize('json', settlements, use_natural_keys=True)
     return http.HttpResponse(data, content_type='application/json')
 

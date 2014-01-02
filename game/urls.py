@@ -5,6 +5,8 @@ from game import views
 urlpatterns = patterns('',
     url(r'^$', views.home),
     url(r'^game', views.game),
+    url(r'^create_game', views.create_game),
+    url(r'^join_to_game', views.join_to_game),
     url(r'^accounts/login', views.login),
     url(r'^accounts/logout', views.logout),
     url(r'^accounts/register', views.register),
