@@ -8,10 +8,10 @@
                 <a href="/game">Go to Fire!</a>
             {% else %}
                 <a href="/create_game">Create Game!</a>
-            {% endif %}
-            {% if host_game %}
-                <br>
-                <a href="/join_to_game">Join to Game!</a>
+                {% if host_game %}
+                    <br>
+                    <a href="/join_to_game">Join to Game!</a>
+                {% endif %}
             {% endif %}
         {%  else  %}
             <a href="/accounts/register">Just Register</a> or <a href="/accounts/login">Login</a>
