@@ -7,5 +7,3 @@ var stage = new Kinetic.Stage({
 });
 
 var units = {}
-var player = null
-var playerDeferred = $.Deferred();

@@ -107,10 +107,19 @@ def move_unit(request):
 
 def finish_stroke(request):
     player = Player.objects.filter(user=request.user).first()
-    player.increase_money_for_day()
+    player.active = False
     player.save()
-    Unit.objects.filter(player=player).update(active=True)
-    Settlement.objects.filter(player=player).update(active=True)
+    Unit.objects.filter(player=player).update(active=False)
+    Settlement.objects.filter(player=player).update(active=False)
+
+    active_game = get_active_game(user=request.user)
+    opponent = Player.objects.filter(game=active_game).exclude(user=request.user).first()
+    opponent.increase_money_for_day()
+    opponent.active = True
+    opponent.save()
+    Unit.objects.filter(player=opponent).update(active=True)
+    Settlement.objects.filter(player=opponent).update(active=True)
+
     return http.HttpResponse()
 
 
@@ -168,7 +177,7 @@ def check_settlement_active(request):
 
 def check_settlements_margins(request):
     unit = Unit.objects.get(pk=int(request.GET['pk']))
-    return http.HttpResponse(json.dumps({'available': check_margins(unit.left, unit.top)}),
+    return http.HttpResponse(json.dumps({'available': check_margins(get_game_map(request.user), unit.left, unit.top)}),
                              mimetype="application/json")
 
 
@@ -178,7 +187,7 @@ def create_colony(request):
     if not unit and unit.unit_type == settlers_type:
         return http.HttpResponseBadRequest
 
-    if not check_margins(unit.left, unit.top):
+    if not check_margins(get_game_map(request.user), unit.left, unit.top):
         return http.HttpResponseBadRequest
 
     colony_type = 1

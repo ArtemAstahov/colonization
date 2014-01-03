@@ -1,4 +1,6 @@
-function drawGame() {
+var interval = null
+
+function initGame() {
     createMap()
     loadPlayer()
 
@@ -11,6 +13,16 @@ function drawGame() {
 function clearGame() {
     hidePurchasesPanel()
     hideUnitPanel()
+}
+
+function updateGame() {
+    loadPlayer();
+    $.when(playerDeferred).done(function(){
+        if (player.active) {
+            clearInterval(interval)
+            activateUnits();
+        }
+    });
 }
 
 function createMap() {
@@ -37,13 +49,13 @@ $("#finishStroke").click(function(){
     $.ajax({
         url : 'finish_stroke',
         success : function() {
+            player.active = false
             clearGame();
-            loadPlayer();
-            updateUnits();
+            activateUnits();
+            updateGame();
+            interval = setInterval(updateGame, 1000);
         }
     });
 });
 
-drawGame();
-
-
+initGame();

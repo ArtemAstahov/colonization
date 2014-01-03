@@ -109,7 +109,7 @@ Unit.prototype.show = function() {
 
     image.onload = function() {
         that.layer.add(shadow);
-
+        that.layer.moveToTop()
         if(that.active) {
             that.layer.add(unit);
         } else {
@@ -190,13 +190,11 @@ function loadUnits() {
     });
 }
 
-function updateUnits() {
+function activateUnits() {
     for (var pk in units) {
         var unit = units[pk]
-        if (!unit.active) {
-            unit.active = true
-            unit.show()
-        }
+        unit.active = player.active
+        unit.show()
     }
 }
 

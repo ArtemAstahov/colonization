@@ -128,8 +128,8 @@ class Settlement(models.Model):
     active = models.BooleanField(default=True)
 
 
-def check_margins(left, top):
-    return Settlement.objects.filter(left__gt=left-4, left__lt=left+4, top__gt=top-4, top__lt=top+4).count() == 0
+def check_margins(game_map, left, top):
+    return Settlement.objects.filter(map=game_map, left__gt=left-4, left__lt=left+4, top__gt=top-4, top__lt=top+4).count() == 0
 
 
 def create_settlement(game_map, left, top, player, settlement_type, active):
