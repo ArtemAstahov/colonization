@@ -83,6 +83,7 @@ def load_settlements(request):
     return http.HttpResponse(data, content_type='application/json')
 
 
+@login_required
 def load_player(request):
     player = Player.objects.filter(user=request.user)
     data = serializers.serialize('json', player, use_natural_keys=True)

@@ -7,6 +7,7 @@ function initGame() {
     $.when(playerDeferred).done(function(){
         loadSettlements()
         loadUnits()
+        interval = setInterval(updateGame, 1000)
     });
 }
 

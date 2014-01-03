@@ -29,7 +29,7 @@ def create_game(user):
     game_map = Map(game=game)
     game_map.save()
 
-    create_unit(game_map, 3, 2, player, 1, True)
+    create_unit(game_map, 3, 2, player, 1, False)
 
     return game
 
@@ -53,6 +53,8 @@ def join_to_game(user):
     player.save()
     game_map = game.map_set.all().first()
     create_unit(game_map, 15, 10, player, 1, True)
+    game.state = 1
+    game.save()
 
 
 class Player(models.Model):
