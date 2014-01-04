@@ -1,3 +1,4 @@
+var opponentSettlements = {}
 var SETTLEMENT_OFFSET = 5
 
 var SETTLEMENT_TYPE = {
@@ -6,12 +7,13 @@ var SETTLEMENT_TYPE = {
     3 : {name: 'Castle', code: 'C', icon: 'icon-fort.png'}
 };
 
-function Settlement(pk, type, left, top, active) {
+function Settlement(pk, type, left, top, active, color) {
     this.pk = pk
     this.settlement_type = type
     this.left = left
     this.top = top
     this.active = active
+    this.color = color
 }
 
 Settlement.prototype.show = function() {
@@ -27,7 +29,7 @@ Settlement.prototype.show = function() {
         x: x - SETTLEMENT_OFFSET,
         y: y - SETTLEMENT_OFFSET,
         image: image,
-        fill: player.color,
+        fill: that.color,
         shadowColor: 'white',
         shadowBlur: 15,
         width: FIELD_SIZE + 2 * SETTLEMENT_OFFSET,
@@ -50,7 +52,7 @@ Settlement.prototype.show = function() {
                     hidePurchasesPanel()
                     var pk = records[0].pk
                     var field = records[0].fields
-                    var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active)
+                    var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, player.color)
                     unit.show()
                     units[pk] = unit
                     loadPlayer()
@@ -105,7 +107,7 @@ function loadSettlements() {
                 var pk = records[i].pk
                 var field = records[i].fields
                 var settlement =
-                    new Settlement(pk, field.settlement_type, field.left, field.top, field.active)
+                    new Settlement(pk, field.settlement_type, field.left, field.top, field.active, player.color)
                 settlement.show()
             }
         }
@@ -114,4 +116,22 @@ function loadSettlements() {
 
 function hidePurchasesPanel() {
     $('#purchasesPanel').css({display: 'none'})
+}
+
+function loadOpponentSettlements() {
+    $.ajax({
+        url : '/ajax/load_opponent_settlements',
+        success : function(records) {
+            for (var i = 0; i < records.length; i++) {
+                var pk = records[i].pk
+                var field = records[i].fields
+                var opponentSettlement = opponentSettlements[pk]
+                if (opponentSettlement == undefined || opponentSettlement.settlement_type != field.settlement_type) {
+                    var settlement = new Settlement(pk, field.settlement_type, field.left, field.top, false, 'black')
+                    opponentSettlement = settlement
+                    settlement.show()
+                }
+            }
+        }
+    });
 }

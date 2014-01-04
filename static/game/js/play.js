@@ -5,6 +5,7 @@ function initGame() {
     loadPlayer()
 
     $.when(playerDeferred).done(function(){
+        loadOpponentSettlements()
         loadSettlements()
         loadOpponentUnits()
         loadUnits()
@@ -25,6 +26,7 @@ function updateGame() {
         if (player.active) {
             clearInterval(interval)
             loadOpponentUnits();
+            loadOpponentSettlements();
             activateUnits();
         }
     });

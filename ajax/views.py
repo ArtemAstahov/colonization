@@ -3,7 +3,7 @@ from django import http
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseBadRequest
 from game.models import Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_game_map, get_active_game, get_player, is_created_game, get_opponent
+    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, is_created_game, get_opponent
 
 
 def game_required(function):
@@ -32,6 +32,13 @@ def load_opponent_units(request):
 @game_required
 def load_settlements(request):
     settlements = get_player(request.user).settlement_set.all()
+    data = serializers.serialize('json', settlements, use_natural_keys=True)
+    return HttpResponse(data, content_type='application/json')
+
+
+@game_required
+def load_opponent_settlements(request):
+    settlements = get_opponent(request.user).settlement_set.all()
     data = serializers.serialize('json', settlements, use_natural_keys=True)
     return HttpResponse(data, content_type='application/json')
 
