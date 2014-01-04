@@ -18,7 +18,7 @@ Player.prototype.show = function() {
 
 function loadPlayer() {
     $.ajax({
-        url : 'load_player',
+        url : '/ajax/load_player',
         success : function(records) {
             var field = records[0].fields
             player = new Player(field.money, field.color, field.active)

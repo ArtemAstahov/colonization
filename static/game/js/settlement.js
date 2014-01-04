@@ -44,7 +44,7 @@ Settlement.prototype.show = function() {
         $('.buyUnit').click(function(){
             var unit_type = this.name
             $.ajax({
-                url : 'buy_unit',
+                url : '/ajax/buy_unit',
                 data : {'type': unit_type, 'settlement_pk': that.pk},
                 success : function(records) {
                     hidePurchasesPanel()
@@ -59,7 +59,7 @@ Settlement.prototype.show = function() {
         });
         $('#upgradeSettlement').click(function(){
             $.ajax({
-                url : 'upgrade_settlement',
+                url : '/ajax/upgrade_settlement',
                 data : {'type': that.settlement_type + 1, 'settlement_pk': that.pk},
                 success : function(records) {
                     hidePurchasesPanel()
@@ -86,7 +86,7 @@ Settlement.prototype.show = function() {
 Settlement.prototype.setPurchasesPanel = function() {
     var that = this
     $.ajax({
-        url : 'check_settlement_active',
+        url : '/ajax/check_settlement_active',
         data : {'pk': this.pk},
         success : function(response) {
             that.active = response['active']
@@ -99,7 +99,7 @@ Settlement.prototype.setPurchasesPanel = function() {
 
 function loadSettlements() {
     $.ajax({
-        url : 'load_settlements',
+        url : '/ajax/load_settlements',
         success : function(records) {
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk

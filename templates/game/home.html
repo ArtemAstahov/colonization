@@ -5,12 +5,12 @@
     <div>
         {% if user.is_authenticated %}
             {% if game %}
-                <a href="/game">Go to Fire!</a>
+                <a href="/game/game">Go to Fire!</a>
             {% else %}
-                <a href="/create_game">Create Game!</a>
+                <a href="/game/create_game">Create Game!</a>
                 {% if host_game %}
                     <br>
-                    <a href="/join_to_game">Join to Game!</a>
+                    <a href="/game/join_to_game">Join to Game!</a>
                 {% endif %}
             {% endif %}
         {%  else  %}

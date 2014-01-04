@@ -48,7 +48,7 @@ function createMap() {
 
 $("#finishStroke").click(function(){
     $.ajax({
-        url : 'finish_stroke',
+        url : '/ajax/finish_stroke',
         success : function() {
             player.active = false
             clearGame();

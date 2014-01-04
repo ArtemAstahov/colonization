@@ -123,7 +123,7 @@ Unit.prototype.show = function() {
 Unit.prototype.createColony = function() {
     var that = this
     $.ajax({
-        url : 'create_colony',
+        url : '/ajax/create_colony',
         data : {'pk':  that.pk},
         success : function(records) {
             that.layer.destroy()
@@ -141,7 +141,7 @@ Unit.prototype.move = function() {
     hideUnitPanel()
     var that = this
     $.ajax({
-        url : 'move_unit',
+        url : '/ajax/move_unit',
         data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
         success : function(records) {
             var field = records[0].fields
@@ -156,7 +156,7 @@ Unit.prototype.move = function() {
 Unit.prototype.setCreateColony = function() {
     var that = this
     $.ajax({
-        url : 'check_settlements_margins',
+        url : '/ajax/check_settlements_margins',
         data : {'pk': this.pk},
         success : function(response) {
             var available = response['available']
@@ -177,7 +177,7 @@ Unit.prototype.setCreateColony = function() {
 
 function loadUnits() {
     $.ajax({
-        url : 'load_units',
+        url : '/ajax/load_units',
         success : function(records) {
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
