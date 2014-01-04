@@ -17,9 +17,9 @@ def register(request):
             return HttpResponseRedirect("/")
         else:
             errors = ["There is an error"]
-            return render(request, 'game/register.html', {'form':  UserCreationForm(), 'errors': errors})
+            return render(request, 'accounts/register.html', {'form':  UserCreationForm(), 'errors': errors})
     else:
-        return render(request, 'game/register.html', {'form':  UserCreationForm()})
+        return render(request, 'accounts/register.html', {'form':  UserCreationForm()})
 
 
 def login(request):
@@ -30,9 +30,9 @@ def login(request):
             return HttpResponseRedirect("/")
         else:
             errors = ["There is an error"]
-            return render(request, 'game/login.html', {'form':  AuthenticationForm(), 'errors': errors})
+            return render(request, 'accounts/login.html', {'form':  AuthenticationForm(), 'errors': errors})
     else:
-        return render(request, 'game/login.html', {'form':  AuthenticationForm()})
+        return render(request, 'accounts/login.html', {'form':  AuthenticationForm()})
 
 
 def logout(request):
