@@ -5,5 +5,3 @@ var stage = new Kinetic.Stage({
         width: 1300,
         height: 600
 });
-
-var units = {}

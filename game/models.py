@@ -80,6 +80,10 @@ def get_player(user):
     return Player.objects.filter(user=user).first()
 
 
+def get_opponent(user):
+    return Player.objects.filter(game=get_active_game(user)).exclude(user=user).first()
+
+
 class Map(models.Model):
     game = models.ForeignKey(Game)
     height = models.IntegerField(default=10)

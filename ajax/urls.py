@@ -4,6 +4,7 @@ from ajax import views
 
 urlpatterns = patterns('',
     url(r'^load_units', views.load_units),
+    url(r'^load_opponent_units', views.load_opponent_units),
     url(r'^load_settlements', views.load_settlements),
     url(r'^load_player', views.load_player),
     url(r'^move_unit', views.move_unit),

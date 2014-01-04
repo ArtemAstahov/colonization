@@ -6,8 +6,11 @@ function initGame() {
 
     $.when(playerDeferred).done(function(){
         loadSettlements()
+        loadOpponentUnits()
         loadUnits()
-        interval = setInterval(updateGame, 1000)
+        if (!player.active) {
+            interval = setInterval(updateGame, 1000)
+        }
     });
 }
 
@@ -21,6 +24,7 @@ function updateGame() {
     $.when(playerDeferred).done(function(){
         if (player.active) {
             clearInterval(interval)
+            loadOpponentUnits();
             activateUnits();
         }
     });
@@ -53,7 +57,6 @@ $("#finishStroke").click(function(){
             player.active = false
             clearGame();
             activateUnits();
-            updateGame();
             interval = setInterval(updateGame, 1000);
         }
     });

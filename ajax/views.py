@@ -3,7 +3,7 @@ from django import http
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseBadRequest
 from game.models import Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_game_map, get_active_game, get_player, is_created_game
+    SETTLEMENT_TYPE, check_margins, get_game_map, get_active_game, get_player, is_created_game, get_opponent
 
 
 def game_required(function):
@@ -18,6 +18,13 @@ def game_required(function):
 @game_required
 def load_units(request):
     units = get_player(request.user).unit_set.all()
+    data = serializers.serialize('json', units, use_natural_keys=True)
+    return HttpResponse(data, content_type='application/json')
+
+
+@game_required
+def load_opponent_units(request):
+    units = get_opponent(request.user).unit_set.all()
     data = serializers.serialize('json', units, use_natural_keys=True)
     return HttpResponse(data, content_type='application/json')
 
@@ -61,8 +68,7 @@ def finish_stroke(request):
     Unit.objects.filter(player=player).update(active=False)
     Settlement.objects.filter(player=player).update(active=False)
 
-    active_game = get_active_game(user=request.user)
-    opponent = Player.objects.filter(game=active_game).exclude(user=request.user).first()
+    opponent = get_opponent(request.user)
     opponent.increase_money_for_day()
     opponent.active = True
     opponent.save()

@@ -1,3 +1,6 @@
+var units = {}
+var opponentUnits = {}
+
 var UNIT_TYPE = {
     1 : {name: 'Settler', code: 'S', steps: 1, icon: 'icon-men.png'},
     2 : {name: 'Militiaman', code: 'M', steps: 1, icon: 'icon-bow.png'},
@@ -6,12 +9,13 @@ var UNIT_TYPE = {
     5 : {name: 'Dragoon', code: 'D', steps: 2, icon: 'icon-quake.png'}
 };
 
-function Unit(pk, type, left, top, active) {
+function Unit(pk, type, left, top, active, color) {
     this.pk = pk
     this.unit_type = type
     this.left = left
     this.top = top
     this.active = active
+    this.color = color
     this.layer = new Kinetic.Layer()
     stage.add(this.layer);
 }
@@ -43,7 +47,7 @@ Unit.prototype.show = function() {
         width: FIELD_SIZE,
         height: FIELD_SIZE,
         draggable: true,
-        fill: player.color,
+        fill: that.color,
         shadowColor: 'yellow',
         shadowBlur: 18,
         dragBoundFunc: function (pos) {
@@ -102,19 +106,19 @@ Unit.prototype.show = function() {
         opacity: 0.5,
         width: FIELD_SIZE,
         height: FIELD_SIZE,
-        fill: player.color,
+        fill: that.color,
         shadowColor: 'white',
         listening: false
     });
 
     image.onload = function() {
         that.layer.add(shadow);
-        that.layer.moveToTop()
+
         if(that.active) {
             that.layer.add(unit);
-        } else {
-            that.layer.moveDown()
+            that.layer.moveToTop()
         }
+
         that.layer.draw()
     };
     image.src = "/static/game/img/" + type.icon
@@ -182,8 +186,24 @@ function loadUnits() {
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
-                var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active)
+                var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, player.color)
                 units[pk] = unit
+                unit.show()
+            }
+        }
+    });
+}
+
+function loadOpponentUnits() {
+    $.ajax({
+        url : '/ajax/load_opponent_units',
+        success : function(records) {
+            clearOpponentUnits()
+            for (var i = 0; i < records.length; i++) {
+                var pk = records[i].pk
+                var field = records[i].fields
+                var unit = new Unit(pk, field.unit_type, field.left, field.top, false, "black")
+                opponentUnits[pk] = unit
                 unit.show()
             }
         }
@@ -196,6 +216,17 @@ function activateUnits() {
         unit.active = player.active
         unit.show()
     }
+}
+
+function clearOpponentUnits() {
+    for (var pk in opponentUnits) {
+        var unit = opponentUnits[pk]
+        unit.layer.destroyChildren()
+        unit.layer.clear()
+        unit.layer.destroy()
+        delete unit
+    }
+    opponentUnits = {}
 }
 
 function hideUnitPanel() {
