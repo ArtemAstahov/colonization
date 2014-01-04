@@ -12,10 +12,10 @@ def game(request):
 @login_required()
 def create_game(request):
     models.create_game(request.user)
-    return HttpResponseRedirect("/game/game")
+    return HttpResponseRedirect("/game")
 
 
 @login_required()
 def join_to_game(request):
     models.join_to_game(request.user)
-    return HttpResponseRedirect("/game/game")
+    return HttpResponseRedirect("/game")
