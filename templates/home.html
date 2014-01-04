@@ -5,7 +5,7 @@
     <div>
         {% if user.is_authenticated %}
             {% if game %}
-                <a href="/game/game">Go to Fire!</a>
+                <a href="/game">Go to Fire!</a>
             {% else %}
                 <a href="/game/create_game">Create Game!</a>
                 {% if host_game %}
