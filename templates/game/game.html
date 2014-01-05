@@ -9,14 +9,20 @@
     <input type="submit" id="missStroke" value="Пропустить ход" style="display: none; float: left; margin-left: 100px">
     <input type="submit" id="createColony" value="Основать колонию" style="display: none; float: left; margin-left: 20px">
 
-    <div id="purchasesPanel" style="display: none">
-        <input type="submit" name="1" class="buyUnit" id="buySettler" value="S"> 10 coins
-        <input type="submit" name="2" class="buyUnit" id="buyMilitiaman" value="M"> 2 coins
-        <input type="submit" name="3" class="buyUnit" id="buyScout" value="C"> 4 coins
-        <input type="submit" name="4" class="buyUnit" id="buyOfficer" value="O"> 4 coins
-        <input type="submit" name="5" class="buyUnit" id="buyDragoon" value="D"> 6 coins
-        <input type="submit" id="upgradeSettlement" value="^UP^"> 25 coins
-    </div>
+    <span id="purchasesPanel" style="display: none; float: left; margin-left: 100px">
+        <img title="поселенец 10 coins" height="24" width="24" name="1" class="buyUnit" id="buySettler"
+             src="/static/game/img/icon-men.png" style="background-color: brown">
+        <img title="милиция 2 coins" height="24" width="24" name="2" class="buyUnit" id="buyMilitiaman"
+             src="/static/game/img/icon-bow.png" style="background-color: brown">
+        <img title="разведчик 4 coins" height="24" width="24" name="3" class="buyUnit" id="buyScout"
+             src="/static/game/img/icon-knight.png" style="background-color: brown">
+        <img title="офицер 4 coins" height="24" width="24" name="4" class="buyUnit" id="buyOfficer"
+             src="/static/game/img/icon-sword.png" style="background-color: brown">
+        <img title="драгун 6 coins" height="24" width="24" name="5" class="buyUnit" id="buyDragoon"
+             src="/static/game/img/icon-quake.png" style="background-color: brown">
+        <img title="замок 25 coins" height="24" width="24" id="upgradeSettlement"
+             src="/static/game/img/icon-temple.png" style="background-color: brown; color: white;">
+    </span>
 
     <div id="container"></div>
     {% load staticfiles %}
