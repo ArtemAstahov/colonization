@@ -134,7 +134,7 @@ Unit.prototype.createColony = function() {
             var pk = records[0].pk
             var field = records[0].fields
             var settlement =
-                new Settlement(pk, field.settlement_type, field.left, field.top, field.active)
+                new Settlement(pk, field.settlement_type, field.left, field.top, field.active, player.color)
             settlement.show()
         }
     });
