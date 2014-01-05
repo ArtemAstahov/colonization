@@ -56,6 +56,7 @@ Settlement.prototype.show = function() {
                     unit.show()
                     units[pk] = unit
                     loadPlayer()
+                    loadOpponentUnits()
                 }
             });
         });

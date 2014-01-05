@@ -1,3 +1,4 @@
+from random import randint
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
@@ -57,6 +58,14 @@ def join_to_game(user):
     game.save()
 
 
+def finish_game(winner, looser):
+    winner.player_set.all().delete()
+    looser.delete()
+
+    game = Game(winner=winner)
+    game.save()
+
+
 class Player(models.Model):
     user = models.ForeignKey(User)
     game = models.ForeignKey(Game)
@@ -68,6 +77,12 @@ class Player(models.Model):
         aggregate = Settlement.objects.filter(player=self.pk).aggregate(Sum('settlement_type'))
         if aggregate['settlement_type__sum'] is not None:
             self.money = self.money + aggregate['settlement_type__sum']
+
+    def is_lost(self):
+        if not Unit.objects.filter(player=self).exists() and not Settlement.objects.filter(player=self).exists():
+            return True
+        else:
+            return False
 
 
 def create_player(user, game, color):
@@ -118,6 +133,14 @@ def create_unit(game_map, left, top, player, unit_type, active):
     return unit
 
 
+def fight(unit, opponent_unit):
+    result = randint(0, 5) + UNIT_TYPE[unit.unit_type]['damage'] - randint(0, 5) - UNIT_TYPE[
+        opponent_unit.unit_type]['damage']
+    if result == 0:
+        return fight(unit, opponent_unit)
+    return result > 0
+
+
 SETTLEMENT_TYPE = {
     1: {'name': 'Colony', 'income': 1, 'defense': 0},
     2: {'name': 'Fort', 'income': 2, 'defense': 1},
@@ -135,12 +158,12 @@ class Settlement(models.Model):
 
 
 def check_margins(game_map, left, top):
-    return Settlement.objects.filter(map=game_map, left__gt=left-4, left__lt=left+4,
-                                     top__gt=top-4, top__lt=top+4).count() == 0
+    return Settlement.objects.filter(map=game_map, left__gt=left - 4, left__lt=left + 4,
+                                     top__gt=top - 4, top__lt=top + 4).exists()
 
 
 def create_settlement(game_map, left, top, player, settlement_type, active):
-    settlement =\
+    settlement = \
         Settlement(map=game_map, left=left, top=top, player=player, settlement_type=settlement_type, active=active)
     settlement.save()
     return settlement

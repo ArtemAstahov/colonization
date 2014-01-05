@@ -148,12 +148,16 @@ Unit.prototype.move = function() {
         url : '/ajax/move_unit',
         data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
         success : function(records) {
-            var field = records[0].fields
-            that.left = field.left;
-            that.top = field.top;
-            that.active = field.active;
-            that.show()
-            loadOpponentUnits()
+            if (records.length > 0) {
+                var field = records[0].fields
+                that.left = field.left;
+                that.top = field.top;
+                that.active = field.active;
+                that.show()
+                loadOpponentUnits()
+            } else {
+                that.delete()
+            }
         }
     });
 }
@@ -178,6 +182,13 @@ Unit.prototype.setCreateColony = function() {
             }
         }
     });
+}
+
+Unit.prototype.delete = function() {
+    this.layer.destroyChildren()
+    this.layer.clear()
+    this.layer.destroy()
+    delete this
 }
 
 function loadUnits() {
@@ -222,10 +233,7 @@ function activateUnits() {
 function clearOpponentUnits() {
     for (var pk in opponentUnits) {
         var unit = opponentUnits[pk]
-        unit.layer.destroyChildren()
-        unit.layer.clear()
-        unit.layer.destroy()
-        delete unit
+        unit.delete()
     }
     opponentUnits = {}
 }

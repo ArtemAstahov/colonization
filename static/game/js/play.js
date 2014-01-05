@@ -55,7 +55,11 @@ function createMap() {
 $("#finishStroke").click(function(){
     $.ajax({
         url : '/ajax/finish_stroke',
-        success : function() {
+        success : function(result) {
+            if (result['victory'] == true) {
+                alert("Victory!!!")
+                window.location.replace("/");
+            }
             player.active = false
             clearGame();
             activateUnits();

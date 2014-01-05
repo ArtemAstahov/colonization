@@ -1,10 +1,9 @@
-from collections import Set
 import json
 from django import http
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseBadRequest
 from game.models import Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, is_created_game, get_opponent
+    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, is_created_game, get_opponent, fight, finish_game
 
 
 def game_required(function):
@@ -30,7 +29,7 @@ def load_opponent_units(request):
     shown_opponents_units = []
     for unit in opponent_units:
         if Unit.objects.filter(player=player, left__gt=unit.left-4, left__lt=unit.left+4, top__gt=unit.top-4,
-                               top__lt=unit.top+4).count() != 0:
+                               top__lt=unit.top+4).exists():
             shown_opponents_units.append(unit)
 
     data = serializers.serialize('json', shown_opponents_units, use_natural_keys=True)
@@ -54,6 +53,8 @@ def load_opponent_settlements(request):
 @game_required
 def load_player(request):
     player = Player.objects.filter(user=request.user)
+    if player.first().is_lost():
+        return HttpResponse(json.dumps({'lost': True}), content_type='application/json')
     data = serializers.serialize('json', player, use_natural_keys=True)
     return HttpResponse(data, content_type='application/json')
 
@@ -64,12 +65,30 @@ def move_unit(request):
     unit = Unit.objects.get(pk=pk)
     if not unit.active:
         return http.HttpResponseBadRequest()
+    unit.active = False
     left = int(request.GET['left'])
     top = int(request.GET['top'])
-    unit.left = left
-    unit.top = top
-    unit.active = False
-    unit.save()
+
+    opponent_units = get_opponent(request.user).unit_set.all().filter(left=left, top=top)
+    opponent_unit = opponent_units.first()
+    if opponent_units.exists():
+        if fight(unit, opponent_unit):
+            if opponent_units.count() == 1:
+                unit.left = left
+                unit.top = top
+            unit.save()
+            opponent_unit.delete()
+        else:
+            unit.delete()
+    else:
+        opponent_settlement = Settlement.objects.all().filter(left=left, top=top).first()
+        if opponent_settlement is not None:
+            opponent_settlement.player = get_player(request.user)
+            opponent_settlement.save()
+        unit.left = left
+        unit.top = top
+        unit.save()
+
     unit = Unit.objects.filter(pk=pk)
     data = serializers.serialize('json', unit, use_natural_keys=True)
     return HttpResponse(data, content_type='application/json')
@@ -87,9 +106,13 @@ def finish_stroke(request):
     opponent.increase_money_for_day()
     opponent.active = True
     opponent.save()
+
+    if opponent.is_lost():
+        finish_game(request.user, opponent)
+        return HttpResponse(json.dumps({'victory': True}), content_type='application/json')
+
     Unit.objects.filter(player=opponent).update(active=True)
     Settlement.objects.filter(player=opponent).update(active=True)
-
     return HttpResponse()
 
 
@@ -157,9 +180,9 @@ def check_settlements_margins(request):
 
 @game_required
 def create_colony(request):
-    settlers_type = 1
+    settler_type = 1
     unit = Unit.objects.get(pk=int(request.GET['pk']))
-    if not unit and unit.unit_type == settlers_type:
+    if not unit and unit.unit_type == settler_type:
         return HttpResponseBadRequest
 
     if not check_margins(get_game_map(request.user), unit.left, unit.top):
