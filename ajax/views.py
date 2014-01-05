@@ -1,3 +1,4 @@
+from collections import Set
 import json
 from django import http
 from django.core import serializers
@@ -24,8 +25,15 @@ def load_units(request):
 
 @game_required
 def load_opponent_units(request):
-    units = get_opponent(request.user).unit_set.all()
-    data = serializers.serialize('json', units, use_natural_keys=True)
+    player = get_player(request.user)
+    opponent_units = get_opponent(request.user).unit_set.all()
+    shown_opponents_units = []
+    for unit in opponent_units:
+        if Unit.objects.filter(player=player, left__gt=unit.left-4, left__lt=unit.left+4, top__gt=unit.top-4,
+                               top__lt=unit.top+4).count() != 0:
+            shown_opponents_units.append(unit)
+
+    data = serializers.serialize('json', shown_opponents_units, use_natural_keys=True)
     return HttpResponse(data, content_type='application/json')
 
 

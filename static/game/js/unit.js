@@ -153,6 +153,7 @@ Unit.prototype.move = function() {
             that.top = field.top;
             that.active = field.active;
             that.show()
+            loadOpponentUnits()
         }
     });
 }

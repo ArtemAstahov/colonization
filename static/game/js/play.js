@@ -59,6 +59,7 @@ $("#finishStroke").click(function(){
             player.active = false
             clearGame();
             activateUnits();
+            updateGame();
             interval = setInterval(updateGame, 1000);
         }
     });
