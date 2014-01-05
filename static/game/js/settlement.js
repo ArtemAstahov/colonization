@@ -87,16 +87,20 @@ Settlement.prototype.show = function() {
 
 Settlement.prototype.setPurchasesPanel = function() {
     var that = this
-    $.ajax({
-        url : '/ajax/check_settlement_active',
-        data : {'pk': this.pk},
-        success : function(response) {
-            that.active = response['active']
-            if (that.active) $('#purchasesPanel').children().prop('disabled', false)
-            else $('#purchasesPanel').children().prop('disabled', true)
-            $('#purchasesPanel').css({display: 'block'})
-        }
-    });
+    if (player.active) {
+        $.ajax({
+            url : '/ajax/check_settlement_active',
+            data : {'pk': this.pk},
+            success : function(response) {
+                that.active = response['active']
+                if (that.active) {
+                    $('#purchasesPanel').css({display: 'block'})
+                } else {
+                    $('#purchasesPanel').css({display: 'none'})
+                }
+            }
+        });
+    }
 }
 
 function loadSettlements() {
