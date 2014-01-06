@@ -1,4 +1,5 @@
 var interval = null
+var INTERVAL = 2000
 
 function initGame() {
     createMap()
@@ -7,7 +8,7 @@ function initGame() {
     $.when(playerDeferred).done(function(){
         updateUnitsAndSettlements()
         if (!player.active) {
-            interval = setInterval(updateGame, 1000)
+            interval = setInterval(updateGame, INTERVAL)
         }
     });
 }
@@ -66,7 +67,7 @@ $("#finishStroke").click(function(){
             clearGame();
             updateUnits();
             loadPlayer();
-            interval = setInterval(updateGame, 1000);
+            interval = setInterval(updateGame, INTERVAL);
         }
     });
 });
