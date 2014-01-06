@@ -158,8 +158,8 @@ class Settlement(models.Model):
 
 
 def check_margins(game_map, left, top):
-    return Settlement.objects.filter(map=game_map, left__gt=left - 4, left__lt=left + 4,
-                                     top__gt=top - 4, top__lt=top + 4).exists()
+    return not Settlement.objects.filter(map=game_map, left__gt=left - 4, left__lt=left + 4,
+                                         top__gt=top - 4, top__lt=top + 4).exists()
 
 
 def create_settlement(game_map, left, top, player, settlement_type, active):
