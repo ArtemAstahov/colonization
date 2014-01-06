@@ -20,11 +20,6 @@ function loadPlayer() {
     $.ajax({
         url : '/ajax/load_player',
         success : function(records) {
-            if (records['lost'] == true) {
-                alert("Lost!!!")
-                window.location.replace("/");
-            }
-
             var field = records[0].fields
             player = new Player(field.money, field.color, field.active)
             player.show()

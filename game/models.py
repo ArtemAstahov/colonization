@@ -63,6 +63,7 @@ def finish_game(winner, looser):
     looser.delete()
 
     game = Game(winner=winner)
+    game.state = 2
     game.save()
 
 
@@ -134,8 +135,9 @@ def create_unit(game_map, left, top, player, unit_type, active):
 
 
 def fight(unit, opponent_unit):
+    settlement = Settlement.objects.filter(map=unit.map, left=opponent_unit.left, top=opponent_unit.top).first()
     result = randint(0, 5) + UNIT_TYPE[unit.unit_type]['damage'] - randint(0, 5) - UNIT_TYPE[
-        opponent_unit.unit_type]['damage']
+        opponent_unit.unit_type]['damage'] - SETTLEMENT_TYPE[settlement.settlement_type]['defense']
     if result == 0:
         return fight(unit, opponent_unit)
     return result > 0
