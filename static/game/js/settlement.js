@@ -1,3 +1,4 @@
+var settlements = {}
 var opponentSettlements = {}
 var SETTLEMENT_OFFSET = 5
 
@@ -14,11 +15,12 @@ function Settlement(pk, type, left, top, active, color) {
     this.top = top
     this.active = active
     this.color = color
+    this.layer = new Kinetic.Layer()
+    stage.add(this.layer);
 }
 
 Settlement.prototype.show = function() {
     var type = SETTLEMENT_TYPE[this.settlement_type]
-    var layer = new Kinetic.Layer();
     var x = (this.left - 1) * FIELD_SIZE
     var y = (this.top - 1) * FIELD_SIZE
     var that = this
@@ -56,7 +58,7 @@ Settlement.prototype.show = function() {
                     unit.show()
                     units[pk] = unit
                     loadPlayer()
-                    loadOpponentUnits()
+                    updateOpponentUnits()
                 }
             });
         });
@@ -69,7 +71,7 @@ Settlement.prototype.show = function() {
                     var field = records[0].fields
                     that.settlement_type = field.settlement_type
                     that.active = field.active
-                    layer.clear()
+                    that.layer.clear()
                     that.show()
                     loadPlayer()
                 }
@@ -78,12 +80,10 @@ Settlement.prototype.show = function() {
     });
 
     image.onload = function() {
-        layer.add(settlement);
-        layer.draw()
+        that.layer.add(settlement);
+        that.layer.draw()
     };
     image.src = "/static/game/img/" + type.icon
-
-    stage.add(layer);
 }
 
 Settlement.prototype.setPurchasesPanel = function() {
@@ -104,16 +104,57 @@ Settlement.prototype.setPurchasesPanel = function() {
     }
 }
 
-function loadSettlements() {
+Settlement.prototype.delete = function() {
+    this.layer.removeChildren()
+    this.layer.clear()
+    this.layer.destroy()
+    stage.remove(this.layer)
+    delete this
+}
+
+function clearOpponentSettlements() {
+    for (var pk in opponentSettlements) {
+        var settlement = opponentSettlements[pk]
+        settlement.delete()
+    }
+    opponentSettlements = {}
+}
+
+function clearSettlements() {
+    for (var pk in settlements) {
+        var settlement = settlements[pk]
+        settlement.delete()
+    }
+    settlements = {}
+}
+
+function updateSettlements() {
     $.ajax({
         url : '/ajax/load_settlements',
         success : function(records) {
+            clearSettlements()
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
-                var settlement =
-                    new Settlement(pk, field.settlement_type, field.left, field.top, field.active, player.color)
+                var settlement = new Settlement(pk, field.settlement_type, field.left, field.top, field.active, player.color)
+                settlements[pk] = settlement
                 settlement.show()
+            }
+        }
+    });
+}
+
+function updateOpponentSettlements() {
+    $.ajax({
+        url : '/ajax/load_opponent_settlements',
+        success : function(records) {
+            clearOpponentSettlements()
+            for (var i = 0; i < records.length; i++) {
+                var pk = records[i].pk
+                var field = records[i].fields
+                var opponentSettlement = new Settlement(pk, field.settlement_type, field.left, field.top, false, 'black')
+                opponentSettlements[pk] = opponentSettlement
+                opponentSettlement.show()
             }
         }
     });
@@ -121,22 +162,4 @@ function loadSettlements() {
 
 function hidePurchasesPanel() {
     $('#purchasesPanel').css({display: 'none'})
-}
-
-function loadOpponentSettlements() {
-    $.ajax({
-        url : '/ajax/load_opponent_settlements',
-        success : function(records) {
-            for (var i = 0; i < records.length; i++) {
-                var pk = records[i].pk
-                var field = records[i].fields
-                var opponentSettlement = opponentSettlements[pk]
-                if (opponentSettlement == undefined || opponentSettlement.settlement_type != field.settlement_type) {
-                    var settlement = new Settlement(pk, field.settlement_type, field.left, field.top, false, 'black')
-                    opponentSettlement = settlement
-                    settlement.show()
-                }
-            }
-        }
-    });
 }

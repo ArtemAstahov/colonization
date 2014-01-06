@@ -73,9 +73,6 @@ def move_unit(request):
     opponent_unit = opponent_units.first()
     if opponent_units.exists():
         if fight(unit, opponent_unit):
-            if opponent_units.count() == 1:
-                unit.left = left
-                unit.top = top
             unit.save()
             opponent_unit.delete()
         else:

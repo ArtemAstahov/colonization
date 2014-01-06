@@ -153,8 +153,7 @@ Unit.prototype.move = function() {
                 that.left = field.left;
                 that.top = field.top;
                 that.active = field.active;
-                that.show()
-                loadOpponentUnits()
+                updateUnitsAndSettlements()
             } else {
                 that.delete()
             }
@@ -185,16 +184,34 @@ Unit.prototype.setCreateColony = function() {
 }
 
 Unit.prototype.delete = function() {
-    this.layer.destroyChildren()
+    this.layer.removeChildren()
     this.layer.clear()
     this.layer.destroy()
+    stage.remove(this.layer)
     delete this
 }
 
-function loadUnits() {
+function clearOpponentUnits() {
+    for (var pk in opponentUnits) {
+        var unit = opponentUnits[pk]
+        unit.delete()
+    }
+    opponentUnits = {}
+}
+
+function clearUnits() {
+    for (var pk in units) {
+        var unit = units[pk]
+        unit.delete()
+    }
+    units = {}
+}
+
+function updateUnits() {
     $.ajax({
         url : '/ajax/load_units',
         success : function(records) {
+            clearUnits()
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
@@ -206,7 +223,7 @@ function loadUnits() {
     });
 }
 
-function loadOpponentUnits() {
+function updateOpponentUnits() {
     $.ajax({
         url : '/ajax/load_opponent_units',
         success : function(records) {
@@ -220,22 +237,6 @@ function loadOpponentUnits() {
             }
         }
     });
-}
-
-function activateUnits() {
-    for (var pk in units) {
-        var unit = units[pk]
-        unit.active = player.active
-        unit.show()
-    }
-}
-
-function clearOpponentUnits() {
-    for (var pk in opponentUnits) {
-        var unit = opponentUnits[pk]
-        unit.delete()
-    }
-    opponentUnits = {}
 }
 
 function hideUnitPanel() {

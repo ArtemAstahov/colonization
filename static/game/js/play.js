@@ -5,10 +5,7 @@ function initGame() {
     loadPlayer()
 
     $.when(playerDeferred).done(function(){
-        loadOpponentSettlements()
-        loadSettlements()
-        loadOpponentUnits()
-        loadUnits()
+        updateUnitsAndSettlements()
         if (!player.active) {
             interval = setInterval(updateGame, 1000)
         }
@@ -25,11 +22,16 @@ function updateGame() {
     $.when(playerDeferred).done(function(){
         if (player.active) {
             clearInterval(interval)
-            loadOpponentUnits();
-            loadOpponentSettlements();
-            activateUnits();
+            updateUnitsAndSettlements()
         }
     });
+}
+
+function updateUnitsAndSettlements() {
+    updateOpponentSettlements();
+    updateSettlements();
+    updateOpponentUnits();
+    updateUnits();
 }
 
 function createMap() {
@@ -62,8 +64,8 @@ $("#finishStroke").click(function(){
             }
             player.active = false
             clearGame();
-            activateUnits();
-            updateGame();
+            updateUnits();
+            loadPlayer();
             interval = setInterval(updateGame, 1000);
         }
     });
