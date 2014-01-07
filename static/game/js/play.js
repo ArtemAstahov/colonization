@@ -58,14 +58,9 @@ function createMap() {
 $("#finishStroke").click(function(){
     $.ajax({
         url : '/ajax/finish_stroke',
-        success : function(result) {
-            if (result['victory'] == true) {
-                alert("Victory!!!")
-                window.location.replace("/");
-            }
-            player.active = false
+        success : function() {
             clearGame();
-            updateUnits();
+            activateUnits(false);
             loadPlayer();
             interval = setInterval(updateGame, INTERVAL);
         }

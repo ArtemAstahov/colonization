@@ -15,12 +15,13 @@ GAME_STATE = {
 
 class Game(models.Model):
     state = models.IntegerField(default=0)
-    winner = models.ForeignKey(User)
+    winner = models.ForeignKey(User, related_name='winner', null=True)
+    looser = models.ForeignKey(User, related_name='looser', null=True)
     creation_date = models.DateTimeField(default=timezone.now())
 
 
 def create_game(user):
-    game = Game(winner=user)
+    game = Game()
     game.save()
 
     player = create_player(user, game, "red")
@@ -43,12 +44,16 @@ def is_created_game(user):
     return Player.objects.filter(user=user).exists()
 
 
-def get_host_game():
-    return Game.objects.filter(state=0).first()
+def get_game(game_id):
+    return Game.objects.get(pk=game_id)
 
 
-def join_to_game(user):
-    game = get_host_game()
+def get_host_games():
+    return Game.objects.filter(state=0).all()
+
+
+def join_to_game(user, game_id):
+    game = get_game(game_id)
     player = create_player(user, game, "blue")
     player.active = True
     player.save()
@@ -60,9 +65,8 @@ def join_to_game(user):
 
 def finish_game(winner, looser):
     winner.player_set.all().delete()
-    looser.delete()
-
-    game = Game(winner=winner)
+    looser.player_set.all().delete()
+    game = Game(winner=winner, looser=looser)
     game.state = 2
     game.save()
 
@@ -137,7 +141,9 @@ def create_unit(game_map, left, top, player, unit_type, active):
 def fight(unit, opponent_unit):
     settlement = Settlement.objects.filter(map=unit.map, left=opponent_unit.left, top=opponent_unit.top).first()
     result = randint(0, 5) + UNIT_TYPE[unit.unit_type]['damage'] - randint(0, 5) - UNIT_TYPE[
-        opponent_unit.unit_type]['damage'] - SETTLEMENT_TYPE[settlement.settlement_type]['defense']
+        opponent_unit.unit_type]['damage']
+    if settlement is not None:
+        result -= SETTLEMENT_TYPE[settlement.settlement_type]['defense']
     if result == 0:
         return fight(unit, opponent_unit)
     return result > 0

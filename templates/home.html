@@ -8,10 +8,11 @@
                 <a href="/game">Go to Fire!</a>
             {% else %}
                 <a href="/game/create_game">Create Game!</a>
-                {% if host_game %}
-                    <br>
-                    <a href="/game/join_to_game">Join to Game!</a>
-                {% endif %}
+                    {% for host_game in host_games %}
+                        <br>
+                        <a href="/game/join_to_game/?pk={{ host_game.pk }}">Join to Game!</a>
+                        hosted by {{ host_game.player_set.first.user.username }}
+                    {% endfor %}
             {% endif %}
         {%  else  %}
             <a href="/accounts/register">Just Register</a> or <a href="/accounts/login">Login</a>

@@ -64,8 +64,7 @@ def load_opponent_settlements(request):
 
 @game_required
 def load_player(request):
-    player = Player.objects.filter(user=request.user)
-    data = serializers.serialize('json', player, use_natural_keys=True)
+    data = serializers.serialize('json', Player.objects.filter(user=request.user), use_natural_keys=True)
     return HttpResponse(data, content_type='application/json')
 
 
@@ -103,7 +102,7 @@ def move_unit(request):
 
 @game_required
 def finish_stroke(request):
-    player = Player.objects.filter(user=request.user).first()
+    player = get_player(request.user)
     player.active = False
     player.save()
     Unit.objects.filter(player=player).update(active=False)
@@ -113,10 +112,6 @@ def finish_stroke(request):
     opponent.increase_money_for_day()
     opponent.active = True
     opponent.save()
-
-    if opponent.is_lost():
-        finish_game(request.user, opponent)
-        return HttpResponse(json.dumps({'victory': True}), content_type='application/json')
 
     Unit.objects.filter(player=opponent).update(active=True)
     Settlement.objects.filter(player=opponent).update(active=True)
@@ -157,12 +152,12 @@ def upgrade_settlement(request):
     player = Player.objects.filter(user=request.user).first()
     settlement_type = int(request.GET['type'])
     money = player.money
-    settlement_cost = 25
+    settlement_upgrade_cost = 15
 
-    if money < settlement_cost or settlement_type > len(SETTLEMENT_TYPE):
+    if money < settlement_upgrade_cost or settlement_type > len(SETTLEMENT_TYPE):
         return HttpResponseBadRequest()
 
-    player.money = money - settlement_cost
+    player.money = money - settlement_upgrade_cost
     settlement.settlement_type = settlement_type
     settlement.active = False
     settlement.save()

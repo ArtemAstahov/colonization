@@ -207,6 +207,16 @@ function clearUnits() {
     units = {}
 }
 
+function activateUnits(active) {
+    for (var pk in units) {
+        var unit = units[pk]
+        if (unit.active != active) {
+            unit.active = active
+            unit.show()
+        }
+    }
+}
+
 function updateUnits() {
     $.ajax({
         url : '/ajax/load_units',

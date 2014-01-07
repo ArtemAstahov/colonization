@@ -17,5 +17,5 @@ def create_game(request):
 
 @login_required()
 def join_to_game(request):
-    models.join_to_game(request.user)
+    models.join_to_game(request.user, request.GET.get('pk'))
     return HttpResponseRedirect("/game")
