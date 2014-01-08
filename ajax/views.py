@@ -1,18 +1,10 @@
 import json
 from django import http
 from django.core import serializers
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from game.models import Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, is_created_game, get_opponent, fight, finish_game
-
-
-def game_required(function):
-    def check(request):
-        if request.user.is_authenticated() and is_created_game(request.user):
-            return function(request)
-        else:
-            return HttpResponseBadRequest("game required")
-    return check
+    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, get_opponent, fight, finish_game
+from main.views import game_required
 
 
 @game_required
@@ -103,12 +95,21 @@ def move_unit(request):
 @game_required
 def finish_stroke(request):
     player = get_player(request.user)
+    opponent = get_opponent(request.user)
+
+    if player.is_lost():
+        finish_game(opponent.user, player.user)
+        return HttpResponseRedirect("/")
+
+    if opponent.is_lost():
+        finish_game(player.user, opponent.user)
+        return HttpResponseRedirect("/")
+
     player.active = False
     player.save()
     Unit.objects.filter(player=player).update(active=False)
     Settlement.objects.filter(player=player).update(active=False)
 
-    opponent = get_opponent(request.user)
     opponent.increase_money_for_day()
     opponent.active = True
     opponent.save()
