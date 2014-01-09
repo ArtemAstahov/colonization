@@ -130,11 +130,7 @@ function loadGame(show) {
 
             game = new Game(jQuery.parseJSON(response['game'])[0].fields, player, opponent, units, settlements,
                             opponentUnits, opponentSettlements)
-
-            if (game.player.active) {
-                clearInterval(interval)
-                game.show()
-            }
+            game.show()
         }
     });
 }
