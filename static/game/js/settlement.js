@@ -1,5 +1,3 @@
-var settlements = {}
-var opponentSettlements = {}
 var SETTLEMENT_OFFSET = 5
 
 var SETTLEMENT_TYPE = {
@@ -56,9 +54,9 @@ Settlement.prototype.show = function() {
                     var field = records[0].fields
                     var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, player.color)
                     unit.show()
-                    units[pk] = unit
-                    loadPlayer()
-                    updateOpponentUnits()
+                    game.units[pk] = unit
+                    game.player.money -= UNIT_TYPE[unit]
+                    game.player.show()
                 }
             });
         });
@@ -110,54 +108,6 @@ Settlement.prototype.delete = function() {
     this.layer.destroy()
     stage.remove(this.layer)
     delete this
-}
-
-function clearOpponentSettlements() {
-    for (var pk in opponentSettlements) {
-        var settlement = opponentSettlements[pk]
-        settlement.delete()
-    }
-    opponentSettlements = {}
-}
-
-function clearSettlements() {
-    for (var pk in settlements) {
-        var settlement = settlements[pk]
-        settlement.delete()
-    }
-    settlements = {}
-}
-
-function updateSettlements() {
-    $.ajax({
-        url : '/ajax/load_settlements',
-        success : function(records) {
-            clearSettlements()
-            for (var i = 0; i < records.length; i++) {
-                var pk = records[i].pk
-                var field = records[i].fields
-                var settlement = new Settlement(pk, field.settlement_type, field.left, field.top, field.active, player.color)
-                settlements[pk] = settlement
-                settlement.show()
-            }
-        }
-    });
-}
-
-function updateOpponentSettlements() {
-    $.ajax({
-        url : '/ajax/load_opponent_settlements',
-        success : function(records) {
-            clearOpponentSettlements()
-            for (var i = 0; i < records.length; i++) {
-                var pk = records[i].pk
-                var field = records[i].fields
-                var opponentSettlement = new Settlement(pk, field.settlement_type, field.left, field.top, false, 'black')
-                opponentSettlements[pk] = opponentSettlement
-                opponentSettlement.show()
-            }
-        }
-    });
 }
 
 function hidePurchasesPanel() {

@@ -1,12 +1,9 @@
-var units = {}
-var opponentUnits = {}
-
 var UNIT_TYPE = {
-    1 : {name: 'Settler', code: 'S', steps: 1, icon: 'icon-men.png'},
-    2 : {name: 'Militiaman', code: 'M', steps: 1, icon: 'icon-bow.png'},
-    3 : {name: 'Scout', code: 'C', steps: 2, icon: 'icon-knight.png'},
-    4 : {name: 'Officer', code: 'O', steps: 1, icon: 'icon-sword.png'},
-    5 : {name: 'Dragoon', code: 'D', steps: 2, icon: 'icon-quake.png'}
+    1 : {name: 'Settler', code: 'S', steps: 1, icon: 'icon-men.png', cost: 10},
+    2 : {name: 'Militiaman', code: 'M', steps: 1, icon: 'icon-bow.png', cost: 2},
+    3 : {name: 'Scout', code: 'C', steps: 2, icon: 'icon-knight.png', cost: 4},
+    4 : {name: 'Officer', code: 'O', steps: 1, icon: 'icon-sword.png', cost: 4},
+    5 : {name: 'Dragoon', code: 'D', steps: 2, icon: 'icon-quake.png', cost: 6}
 };
 
 function Unit(pk, type, left, top, active, color) {
@@ -135,6 +132,7 @@ Unit.prototype.createColony = function() {
             var field = records[0].fields
             var settlement =
                 new Settlement(pk, field.settlement_type, field.left, field.top, field.active, player.color)
+            game.settlements[pk] = settlement
             settlement.show()
         }
     });
@@ -191,25 +189,17 @@ Unit.prototype.delete = function() {
     delete this
 }
 
-function clearOpponentUnits() {
-    for (var pk in opponentUnits) {
-        var unit = opponentUnits[pk]
-        unit.delete()
-    }
-    opponentUnits = {}
-}
-
-function clearUnits() {
+function clearUnits(units) {
     for (var pk in units) {
         var unit = units[pk]
         unit.delete()
     }
-    units = {}
+    delete units
 }
 
-function activateUnits(active) {
+function activateUnits(active, units) {
     for (var pk in units) {
-        var unit = units[pk]
+        var unit = units[pk].show()
         if (unit.active != active) {
             unit.active = active
             unit.show()
@@ -242,7 +232,7 @@ function updateOpponentUnits() {
                 var pk = records[i].pk
                 var field = records[i].fields
                 var unit = new Unit(pk, field.unit_type, field.left, field.top, false, "black")
-                opponentUnits[pk] = unit
+                game.opponentUnits[pk] = unit
                 unit.show()
             }
         }

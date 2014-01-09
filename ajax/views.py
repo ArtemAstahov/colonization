@@ -30,7 +30,7 @@ def load_game(request):
 
     data = {'game': game, 'player': player, 'units': units, 'settlements': settlements, 'opponent': opponent,
             'opponent_units': opponent_units, 'opponent_settlements': opponent_settlements}
-    data = json.dumps({'game': data})
+    data = json.dumps(data)
     return HttpResponse(data, content_type='application/json')
 
 
