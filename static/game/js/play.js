@@ -4,6 +4,7 @@ var INTERVAL = 2000
 function initGame() {
     createMap()
     loadPlayer()
+    loadGame()
 
     $.when(playerDeferred).done(function(){
         updateUnitsAndSettlements()
@@ -66,5 +67,15 @@ $("#finishStroke").click(function(){
         }
     });
 });
+
+function loadGame() {
+    $.ajax({
+        url : '/ajax/load_game',
+        success : function(response) {
+            var game = response['game']
+            game = game[game]
+        }
+    });
+}
 
 initGame();

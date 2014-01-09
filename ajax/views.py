@@ -2,9 +2,36 @@ import json
 from django import http
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from game import models
 from game.models import Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, get_opponent, fight, finish_game
+    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, get_opponent, fight, finish_game, get_active_game
 from main.views import game_required
+
+
+@game_required
+def load_game(request):
+    game = models.Game.objects.filter(pk=get_active_game(request.user).pk)
+
+    player = Player.objects.filter(user=request.user)
+    units = player.first().unit_set.all()
+    units = serializers.serialize('json', units, use_natural_keys=True)
+    settlements = player.first().settlement_set.all()
+    settlements = serializers.serialize('json', settlements, use_natural_keys=True)
+
+    opponent = Player.objects.filter(game=game.first()).exclude(user=request.user)
+    opponent_units = opponent.first().unit_set.all()
+    opponent_units = serializers.serialize('json', opponent_units, use_natural_keys=True)
+    opponent_settlements = opponent.first().settlement_set.all()
+    opponent_settlements = serializers.serialize('json', opponent_settlements, use_natural_keys=True)
+
+    game = serializers.serialize('json', game, use_natural_keys=True)
+    player = serializers.serialize('json', player, use_natural_keys=True)
+    opponent = serializers.serialize('json', opponent, use_natural_keys=True)
+
+    data = {'game': game, 'player': player, 'units': units, 'settlements': settlements, 'opponent': opponent,
+            'opponent_units': opponent_units, 'opponent_settlements': opponent_settlements}
+    data = json.dumps({'game': data})
+    return HttpResponse(data, content_type='application/json')
 
 
 @game_required
