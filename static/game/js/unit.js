@@ -110,10 +110,11 @@ Unit.prototype.show = function() {
 
     image.onload = function() {
         that.layer.add(shadow);
+        that.layer.moveToTop()
 
         if(that.active) {
-            that.layer.add(unit);
-            that.layer.moveUp()
+            that.layer.add(unit)
+            that.layer.moveToTop()
         }
 
         that.layer.draw()
@@ -187,21 +188,6 @@ Unit.prototype.delete = function() {
     this.layer.destroy()
     stage.remove(this.layer)
     delete this
-}
-
-function updateOpponentUnits() {
-    $.ajax({
-        url : '/ajax/load_opponent_units',
-        success : function(records) {
-            for (var i = 0; i < records.length; i++) {
-                var pk = records[i].pk
-                var field = records[i].fields
-                var unit = new Unit(pk, field.unit_type, field.left, field.top, false, "black")
-                game.opponentUnits[pk] = unit
-                unit.show()
-            }
-        }
-    });
 }
 
 function hideUnitPanel() {

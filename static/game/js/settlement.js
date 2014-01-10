@@ -55,7 +55,7 @@ Settlement.prototype.show = function() {
                     var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, game.player.color)
                     unit.show()
                     game.units[pk] = unit
-                    game.player.money -= UNIT_TYPE[unit.unit_type]['cost']
+                    game.player.money -= UNIT_TYPE[unit_type]['cost']
                     game.player.show()
                 }
             });
