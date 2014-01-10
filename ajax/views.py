@@ -2,15 +2,14 @@ import json
 from django import http
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
-from game import models
-from game.models import Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, get_opponent, fight, finish_game, get_active_game
+from game.models import Game, Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
+    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, get_opponent, fight, finish_game, get_active_game, GAME_STATE, get_game
 from main.views import game_required
 
 
 @game_required
 def load_game(request):
-    game = models.Game.objects.filter(pk=get_active_game(request.user).pk)
+    game = Game.objects.filter(pk=get_active_game(request.user).pk)
 
     player = Player.objects.filter(user=request.user)
     units = player.first().unit_set.all()
@@ -32,6 +31,19 @@ def load_game(request):
             'opponent_units': opponent_units, 'opponent_settlements': opponent_settlements}
     data = json.dumps(data)
     return HttpResponse(data, content_type='application/json')
+
+
+@game_required
+def check_game(request):
+    pk = int(request.GET['game_pk'])
+    game = Game.objects.filter(pk=pk)
+
+    if GAME_STATE[game.first().state] == 'FINISHED':
+        game = serializers.serialize('json', game, use_natural_keys=True)
+        return HttpResponse(game, mimetype="application/json")
+    else:
+        player = get_player(request.user)
+        return HttpResponse(json.dumps({'player_active': player.active}), mimetype="application/json")
 
 
 @game_required

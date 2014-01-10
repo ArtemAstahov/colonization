@@ -44,8 +44,8 @@ def is_created_game(user):
     return Player.objects.filter(user=user).exists()
 
 
-def get_game(game_id):
-    return Game.objects.get(pk=game_id)
+def get_game(game_pk):
+    return Game.objects.get(pk=game_pk)
 
 
 def get_host_games():

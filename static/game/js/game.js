@@ -1,6 +1,7 @@
 var game = null
 
-function Game(game, player, opponent, units, settlements, opponentUnits, opponentSettlements) {
+function Game(pk, game, player, opponent, units, settlements, opponentUnits, opponentSettlements) {
+    this.pk = pk
     this.game = game
     this.player = player
     this.opponent = opponent
@@ -12,7 +13,14 @@ function Game(game, player, opponent, units, settlements, opponentUnits, opponen
 
 Game.prototype.show = function() {
     this.player.show()
-    this.opponent.show()
+
+    for (var pk in this.settlements) {
+        this.settlements[pk].show()
+    }
+
+    for (var pk in this.opponentSettlements) {
+        this.opponentSettlements[pk].show()
+    }
 
     for (var pk in this.units) {
         this.units[pk].show()
@@ -21,13 +29,23 @@ Game.prototype.show = function() {
     for (var pk in this.opponentUnits) {
         this.opponentUnits[pk].show()
     }
+}
 
+Game.prototype.clear = function() {
     for (var pk in this.settlements) {
-        this.settlements[pk].show()
+        this.settlements[pk].delete()
     }
 
     for (var pk in this.opponentSettlements) {
-        this.opponentSettlements[pk].show()
+        this.opponentSettlements[pk].delete()
+    }
+
+    for (var pk in this.units) {
+        this.units[pk].delete()
+    }
+
+    for (var pk in this.opponentUnits) {
+        this.opponentUnits[pk].delete()
     }
 }
 
@@ -39,15 +57,10 @@ function initGame() {
     loadGame()
 }
 
-function clearGame() {
+function clearPanels() {
     hidePurchasesPanel()
     hideUnitPanel()
 }
-
-function updateGame() {
-    loadGame(true)
-}
-
 
 function createMap() {
     var layer = new Kinetic.Layer();
@@ -73,23 +86,48 @@ $("#finishStroke").click(function(){
     $.ajax({
         url : '/ajax/finish_stroke',
         success : function() {
-            clearGame();
-            activateUnits(false);
+            clearPanels();
+
+            for (var pk in game.units) {
+                var unit = game.units[pk]
+                unit.active = false
+                unit.show()
+            }
+
             game.player.active = false
             game.player.show()
-            interval = setInterval(updateGame, INTERVAL);
+
+            interval = setInterval(checkGame, INTERVAL);
         }
     });
 });
 
-function loadGame(show) {
+function checkGame() {
+    $.ajax({
+        url : '/ajax/check_game',
+        data : {'game_pk': game.pk},
+        success : function(response) {
+            if (response['game'] != undefined && response['game'].active == false) {
+                alert("winner " + game.winner + ", looser" + game.looser)
+                window.location.replace("/")
+            }
+            if (response['player_active']) {
+                game.clear()
+                loadGame()
+                clearInterval(interval)
+            }
+        }
+    });
+}
+
+function loadGame() {
     $.ajax({
         url : '/ajax/load_game',
         success : function(response) {
-            var fields =jQuery.parseJSON(response['player'])[0].fields
+            var fields = jQuery.parseJSON(response['player'])[0].fields
             var player = new Player(fields.money, fields.color, fields.active)
 
-            fields =jQuery.parseJSON(response['opponent'])[0].fields
+            fields = jQuery.parseJSON(response['opponent'])[0].fields
             var opponent = new Player(fields.money, fields.color, fields.active)
 
             var records = jQuery.parseJSON(response['units'])
@@ -128,9 +166,12 @@ function loadGame(show) {
                 opponentSettlements[pk] = opponentSettlement
             }
 
-            game = new Game(jQuery.parseJSON(response['game'])[0].fields, player, opponent, units, settlements,
+            game = jQuery.parseJSON(response['game'])[0]
+            game = new Game(game.pk, game.fields, player, opponent, units, settlements,
                             opponentUnits, opponentSettlements)
             game.show()
+
+            if (!player.active) interval = setInterval(checkGame, INTERVAL);
         }
     });
 }

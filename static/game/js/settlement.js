@@ -52,10 +52,10 @@ Settlement.prototype.show = function() {
                     hidePurchasesPanel()
                     var pk = records[0].pk
                     var field = records[0].fields
-                    var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, player.color)
+                    var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, game.player.color)
                     unit.show()
                     game.units[pk] = unit
-                    game.player.money -= UNIT_TYPE[unit]
+                    game.player.money -= UNIT_TYPE[unit.unit_type]['cost']
                     game.player.show()
                 }
             });
@@ -66,12 +66,15 @@ Settlement.prototype.show = function() {
                 data : {'type': that.settlement_type + 1, 'settlement_pk': that.pk},
                 success : function(records) {
                     hidePurchasesPanel()
+
+                    game.player.money -= 15
+                    game.player.show()
+
                     var field = records[0].fields
                     that.settlement_type = field.settlement_type
                     that.active = field.active
                     that.layer.clear()
                     that.show()
-                    loadPlayer()
                 }
             });
         });
@@ -86,7 +89,7 @@ Settlement.prototype.show = function() {
 
 Settlement.prototype.setPurchasesPanel = function() {
     var that = this
-    if (player.active) {
+    if (game.player.active) {
         $.ajax({
             url : '/ajax/check_settlement_active',
             data : {'pk': this.pk},

@@ -113,7 +113,7 @@ Unit.prototype.show = function() {
 
         if(that.active) {
             that.layer.add(unit);
-            that.layer.moveToTop()
+            that.layer.moveUp()
         }
 
         that.layer.draw()
@@ -131,7 +131,7 @@ Unit.prototype.createColony = function() {
             var pk = records[0].pk
             var field = records[0].fields
             var settlement =
-                new Settlement(pk, field.settlement_type, field.left, field.top, field.active, player.color)
+                new Settlement(pk, field.settlement_type, field.left, field.top, field.active, game.player.color)
             game.settlements[pk] = settlement
             settlement.show()
         }
@@ -139,9 +139,9 @@ Unit.prototype.createColony = function() {
 }
 
 Unit.prototype.move = function() {
-    this.layer.destroyChildren()
-    hideUnitPanel()
     var that = this
+    that.layer.destroyChildren()
+    hideUnitPanel()
     $.ajax({
         url : '/ajax/move_unit',
         data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
@@ -151,7 +151,7 @@ Unit.prototype.move = function() {
                 that.left = field.left;
                 that.top = field.top;
                 that.active = field.active;
-                updateUnitsAndSettlements()
+                that.show()
             } else {
                 that.delete()
             }
@@ -189,45 +189,10 @@ Unit.prototype.delete = function() {
     delete this
 }
 
-function clearUnits(units) {
-    for (var pk in units) {
-        var unit = units[pk]
-        unit.delete()
-    }
-    delete units
-}
-
-function activateUnits(active, units) {
-    for (var pk in units) {
-        var unit = units[pk].show()
-        if (unit.active != active) {
-            unit.active = active
-            unit.show()
-        }
-    }
-}
-
-function updateUnits() {
-    $.ajax({
-        url : '/ajax/load_units',
-        success : function(records) {
-            clearUnits()
-            for (var i = 0; i < records.length; i++) {
-                var pk = records[i].pk
-                var field = records[i].fields
-                var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, player.color)
-                units[pk] = unit
-                unit.show()
-            }
-        }
-    });
-}
-
 function updateOpponentUnits() {
     $.ajax({
         url : '/ajax/load_opponent_units',
         success : function(records) {
-            clearOpponentUnits()
             for (var i = 0; i < records.length; i++) {
                 var pk = records[i].pk
                 var field = records[i].fields
