@@ -84,7 +84,7 @@ Settlement.prototype.show = function() {
         that.layer.add(settlement);
         that.layer.draw()
     };
-    image.src = "/static/game/img/" + type.icon
+    image.src = "/static/img/game/" + type.icon
 }
 
 Settlement.prototype.setPurchasesPanel = function() {

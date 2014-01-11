@@ -5,14 +5,16 @@
     <div>
         {% if user.is_authenticated %}
             {% if game %}
-                <a href="/game">Go to Fire!</a>
+                <h3><a href="/game" style="text-decoration: none">Go Forward</a></h3>
             {% else %}
-                <a href="/game/create_game">Create Game!</a>
-                    {% for host_game in host_games %}
-                        <br>
-                        <a href="/game/join_to_game/?pk={{ host_game.pk }}">Join to Game!</a>
-                        hosted by {{ host_game.player_set.first.user.username }}
-                    {% endfor %}
+                <h3><a href="/game/create_game" style="text-decoration: none">Create Game</a></h3>
+                <h3>Hosted Games:</h3>
+                {% for host_game in host_games %}
+                    <a href="/game/join_to_game/?pk={{ host_game.pk }}" style="text-decoration: none">Join to Game</a>
+                    hosted by {{ host_game.player_set.first.user.username }}
+                    <br>
+                {% endfor %}
+                <h4><a href="/" style="text-decoration: none">Refresh Host Games</a></h4>
             {% endif %}
         {%  else  %}
             <a href="/accounts/register">Just Register</a> or <a href="/accounts/login">Login</a>

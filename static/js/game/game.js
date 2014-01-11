@@ -77,7 +77,7 @@ function createMap() {
         layer.moveToBottom()
         layer.draw()
     };
-    image.src = "/static/game/img/map.jpg"
+    image.src = "/static/img/game/map.jpg"
     stage.add(layer);
 }
 
