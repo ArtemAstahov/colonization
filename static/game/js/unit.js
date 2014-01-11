@@ -109,8 +109,9 @@ Unit.prototype.show = function() {
     });
 
     image.onload = function() {
-        that.layer.add(shadow);
-        that.layer.moveToTop()
+        that.layer.add(shadow)
+        that.layer.moveUp()
+        that.layer.moveUp()
 
         if(that.active) {
             that.layer.add(unit)
@@ -146,13 +147,39 @@ Unit.prototype.move = function() {
     $.ajax({
         url : '/ajax/move_unit',
         data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
-        success : function(records) {
-            if (records.length > 0) {
-                var field = records[0].fields
-                that.left = field.left;
-                that.top = field.top;
-                that.active = field.active;
+        success : function(response) {
+            if (response) {
+                var unit = jQuery.parseJSON(response['unit'])[0].fields
+                that.left = unit.left;
+                that.top = unit.top;
+                that.active = unit.active;
                 that.show()
+
+                var opponent_unit = jQuery.parseJSON(response['opponent_unit'])
+                if (opponent_unit) game.opponentUnits[opponent_unit[0].pk].delete()
+
+                var opponentSettlements = jQuery.parseJSON(response['opponent_settlements'])
+                for (var i = 0; i < opponentSettlements.length; i++) {
+                    var pk = opponentSettlements[i].pk
+                    if (!game.opponentSettlements[pk]) {
+                        var field = opponentSettlements[i].fields
+                        var settlement =
+                            new Settlement(pk, field.settlement_type, field.left, field.top, field.active, game.opponent.color)
+                        game.opponentSettlements[pk] = settlement
+                        settlement.show()
+                    }
+                }
+
+                var opponentUnits = jQuery.parseJSON(response['opponent_units'])
+                for (var i = 0; i < opponentUnits.length; i++) {
+                    var pk = opponentUnits[i].pk
+                    if (!game.opponentUnits[pk]) {
+                        var field = opponentUnits[i].fields
+                        var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, game.opponent.color)
+                        game.opponentUnits[pk] = unit
+                        unit.show()
+                    }
+                }
             } else {
                 that.delete()
             }

@@ -1,25 +1,48 @@
 import json
-from django import http
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseBadRequest
-from game.models import Game, Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement,\
-    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, get_opponent, fight, finish_game, get_active_game,\
-    GAME_STATE
-from main.views import game_required
+from game.models import Game, Unit, Player, create_unit, Settlement, UNIT_TYPE, create_settlement, \
+    SETTLEMENT_TYPE, check_margins, get_game_map, get_player, get_opponent, fight, finish_game, get_active_game, \
+    GAME_STATE, is_created_game
 
 
-@game_required
+def game_required(function):
+    def check(request):
+        if request.user.is_authenticated() and is_created_game(request.user):
+            return function(request)
+        else:
+            return HttpResponseBadRequest()
+    return check
+
+
+def check_game(request):
+    player = Player.objects.filter(user=request.user)
+
+    if player.exists():
+        return HttpResponse(json.dumps({'player_active': player.first().active}), mimetype="application/json")
+
+    game_pk = request.GET['game_pk']
+    game = Game.objects.filter(pk=int(game_pk))
+    if game.exists() and GAME_STATE[game.first().state] == 'FINISHED':
+        game = serializers.serialize('json', game, use_natural_keys=True)
+        return HttpResponse(json.dumps({'game': game}), mimetype="application/json")
+
+    return HttpResponse()
+
+
 def load_game(request):
     game = Game.objects.filter(pk=get_active_game(request.user).pk)
 
     player = Player.objects.filter(user=request.user)
-    opponent = Player.objects.filter(game=game.first()).exclude(user=request.user)
-
     units = get_units(player.first())
     settlements = get_settlements(player.first())
 
-    opponent_units = get_opponent_units(player.first(), opponent.first())
-    opponent_settlements = get_opponent_settlements(player.first(), opponent.first())
+    opponent = Player.objects.filter(game=game.first()).exclude(user=request.user)
+    opponent_units = json.dumps([])
+    opponent_settlements = json.dumps([])
+    if opponent.exists():
+        opponent_units = get_opponent_units(player.first(), opponent.first())
+        opponent_settlements = get_opponent_settlements(player.first(), opponent.first())
 
     game = serializers.serialize('json', game, use_natural_keys=True)
     player = serializers.serialize('json', player, use_natural_keys=True)
@@ -31,70 +54,30 @@ def load_game(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-def check_game(request):
-    pk = int(request.GET['game_pk'])
-    game = Game.objects.filter(pk=pk)
-    if GAME_STATE[game.first().state] == 'FINISHED':
-        game = serializers.serialize('json', game, use_natural_keys=True)
-        return HttpResponse(game, mimetype="application/json")
-    else:
-        player = get_player(request.user)
-        return HttpResponse(json.dumps({'player_active': player.active}), mimetype="application/json")
-
-
-def get_units(player):
-    units = player.unit_set.all()
-    data = serializers.serialize('json', units, use_natural_keys=True)
-    return data
-
-
-def get_opponent_units(player, opponent):
-    opponent_units = opponent.unit_set.all()
-    shown_opponents_units = []
-    for unit in opponent_units:
-        if Unit.objects.filter(player=player, left__gt=unit.left-4, left__lt=unit.left+4, top__gt=unit.top-4,
-                               top__lt=unit.top+4).exists():
-            shown_opponents_units.append(unit)
-
-    data = serializers.serialize('json', shown_opponents_units, use_natural_keys=True)
-    return data
-
-
-def get_settlements(player):
-    settlements = player.settlement_set.all()
-    data = serializers.serialize('json', settlements, use_natural_keys=True)
-    return data
-
-
-def get_opponent_settlements(player, opponent):
-    opponent_settlements = opponent.settlement_set.all()
-    shown_opponents_settlements = []
-    for settlement in opponent_settlements:
-        if Unit.objects.filter(player=player, left__gt=settlement.left-4, left__lt=settlement.left+4,
-                               top__gt=settlement.top-4, top__lt=settlement.top+4).exists():
-            shown_opponents_settlements.append(settlement)
-    data = serializers.serialize('json', shown_opponents_settlements, use_natural_keys=True)
-    return data
-
-
 @game_required
 def move_unit(request):
     pk = int(request.GET['pk'])
     unit = Unit.objects.get(pk=pk)
     if not unit.active:
-        return http.HttpResponseBadRequest()
+        return HttpResponseBadRequest()
     unit.active = False
     left = int(request.GET['left'])
     top = int(request.GET['top'])
 
-    opponent_units = get_opponent(request.user).unit_set.all().filter(left=left, top=top)
+    opponent = get_opponent(request.user)
+    opponent_units = opponent.unit_set.all().filter(left=left, top=top)
     opponent_unit = opponent_units.first()
+    opponent_unit_json = None
+
     if opponent_units.exists():
         if fight(unit, opponent_unit):
             unit.save()
+            opponent_unit_json = Unit.objects.filter(pk=opponent_unit.pk)
+            opponent_unit_json = serializers.serialize('json', opponent_unit_json, use_natural_keys=True)
             opponent_unit.delete()
         else:
             unit.delete()
+            return HttpResponse()
     else:
         opponent_settlement = Settlement.objects.all().filter(left=left, top=top).first()
         if opponent_settlement is not None:
@@ -105,8 +88,15 @@ def move_unit(request):
         unit.save()
 
     unit = Unit.objects.filter(pk=pk)
-    data = serializers.serialize('json', unit, use_natural_keys=True)
-    return HttpResponse(data, content_type='application/json')
+    opponent_units = get_opponent_units_for_unit(unit.first(), opponent)
+    opponent_settlements = get_opponent_settlements_for_unit(unit.first(), opponent)
+
+    unit = serializers.serialize('json', unit, use_natural_keys=True)
+
+    data = {'unit': unit, 'opponent_unit': opponent_unit_json,
+            'opponent_units': opponent_units, 'opponent_settlements': opponent_settlements}
+
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @game_required
@@ -214,3 +204,65 @@ def create_colony(request):
     settlement = Settlement.objects.filter(pk=settlement.pk)
     data = serializers.serialize('json', settlement, use_natural_keys=True)
     return HttpResponse(data, content_type='application/json')
+
+
+def get_units(player):
+    units = player.unit_set.all()
+    data = serializers.serialize('json', units, use_natural_keys=True)
+    return data
+
+
+def get_opponent_units_for_unit(unit, opponent):
+    opponent_units = opponent.unit_set.all()
+    shown_opponents_units = []
+    for opponent_unit in opponent_units:
+        if opponent_unit.left - 4 < unit.left < opponent_unit.left + 4\
+                and opponent_unit.top - 4 < unit.top < opponent_unit.top + 4:
+            shown_opponents_units.append(opponent_unit)
+
+    data = serializers.serialize('json', shown_opponents_units, use_natural_keys=True)
+    return data
+
+
+def get_opponent_settlements_for_unit(unit, opponent):
+    opponent_settlements = opponent.settlement_set.all()
+    shown_opponents_settlements = []
+    for opponent_settlement in opponent_settlements:
+        if opponent_settlement.left - 4 < unit.left < opponent_settlement.left + 4\
+                and opponent_settlement.top - 4 < unit.top < opponent_settlement.top + 4:
+            shown_opponents_settlements.append(opponent_settlement)
+
+    data = serializers.serialize('json', shown_opponents_settlements, use_natural_keys=True)
+    return data
+
+
+def get_opponent_units(player, opponent):
+    opponent_units = opponent.unit_set.all()
+    shown_opponents_units = []
+    for unit in opponent_units:
+        if Unit.objects.filter(player=player, left__gt=unit.left - 4, left__lt=unit.left + 4, top__gt=unit.top - 4,
+                               top__lt=unit.top + 4).exists() or \
+                Settlement.objects.filter(player=player, left__gt=unit.left - 4, left__lt=unit.left + 4,
+                                          top__gt=unit.top - 4,
+                                          top__lt=unit.top + 4).exists():
+            shown_opponents_units.append(unit)
+
+    data = serializers.serialize('json', shown_opponents_units, use_natural_keys=True)
+    return data
+
+
+def get_settlements(player):
+    settlements = player.settlement_set.all()
+    data = serializers.serialize('json', settlements, use_natural_keys=True)
+    return data
+
+
+def get_opponent_settlements(player, opponent):
+    opponent_settlements = opponent.settlement_set.all()
+    shown_opponents_settlements = []
+    for settlement in opponent_settlements:
+        if Unit.objects.filter(player=player, left__gt=settlement.left - 4, left__lt=settlement.left + 4,
+                               top__gt=settlement.top - 4, top__lt=settlement.top + 4).exists():
+            shown_opponents_settlements.append(settlement)
+    data = serializers.serialize('json', shown_opponents_settlements, use_natural_keys=True)
+    return data

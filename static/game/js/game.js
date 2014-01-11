@@ -1,4 +1,6 @@
 var game = null
+var interval = null
+var INTERVAL = 2000
 
 function Game(pk, game, player, opponent, units, settlements, opponentUnits, opponentSettlements) {
     this.pk = pk
@@ -49,12 +51,9 @@ Game.prototype.clear = function() {
     }
 }
 
-var interval = null
-var INTERVAL = 2000
-
 function initGame() {
     createMap()
-    loadGame()
+    checkGame()
 }
 
 function clearPanels() {
@@ -90,8 +89,10 @@ $("#finishStroke").click(function(){
 
             for (var pk in game.units) {
                 var unit = game.units[pk]
-                unit.active = false
-                unit.show()
+                if (unit.active) {
+                    unit.active = false
+                    unit.show()
+                }
             }
 
             game.player.active = false
@@ -103,18 +104,23 @@ $("#finishStroke").click(function(){
 });
 
 function checkGame() {
+    if (game == null) {
+        loadGame()
+        return
+    }
     $.ajax({
         url : '/ajax/check_game',
         data : {'game_pk': game.pk},
         success : function(response) {
-            if (response['game'] != undefined && response['game'].active == false) {
-                alert("winner " + game.winner + ", looser" + game.looser)
-                window.location.replace("/")
-            }
             if (response['player_active']) {
                 game.clear()
                 loadGame()
                 clearInterval(interval)
+            }
+            if (response['game']) {
+                var fields = jQuery.parseJSON(response['game'])[0].fields
+                alert("winner: " + fields.winner + ", looser: " + fields.looser)
+                window.location.replace("/")
             }
         }
     });
@@ -127,8 +133,11 @@ function loadGame() {
             var fields = jQuery.parseJSON(response['player'])[0].fields
             var player = new Player(fields.money, fields.color, fields.active)
 
-            fields = jQuery.parseJSON(response['opponent'])[0].fields
-            var opponent = new Player(fields.money, fields.color, fields.active)
+            var opponent = jQuery.parseJSON(response['opponent'])[0]
+            if (opponent) {
+                fields = opponent.fields
+                var opponent = new Player(fields.money, fields.color, fields.active)
+            }
 
             var records = jQuery.parseJSON(response['units'])
             var units = {}
@@ -171,7 +180,7 @@ function loadGame() {
                             opponentUnits, opponentSettlements)
             game.show()
 
-            if (!player.active) interval = setInterval(checkGame, INTERVAL);
+            if(!player.active) interval = setInterval(checkGame, INTERVAL)
         }
     });
 }

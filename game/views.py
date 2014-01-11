@@ -2,12 +2,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from game import models
-from main.views import game_required
+from game.models import Player
 
 
 @login_required
-@game_required
 def game(request):
+    if not Player.objects.filter(user=request.user).exists():
+        return HttpResponseRedirect("/")
     return render(request, 'game/game.html')
 
 

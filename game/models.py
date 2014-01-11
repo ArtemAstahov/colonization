@@ -41,7 +41,7 @@ def get_active_game(user):
 
 
 def is_created_game(user):
-    return Player.objects.filter(user=user).first().game.state == 1
+    return Player.objects.filter(user=user).exists() and Player.objects.filter(user=user).first().game.state == 1
 
 
 def get_game(game_pk):
@@ -64,14 +64,13 @@ def join_to_game(user, game_id):
 
 
 def finish_game(winner, looser):
-    winner.player_set.all().delete()
-    looser.player_set.all().delete()
-    get_active_game()
     game = get_active_game(winner)
     game.winner = winner
     game.looser = looser
     game.state = 2
     game.save()
+    winner.player_set.all().delete()
+    looser.player_set.all().delete()
 
 
 class Player(models.Model):
