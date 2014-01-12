@@ -68,6 +68,7 @@ def move_unit(request):
     opponent_units = opponent.unit_set.all().filter(left=left, top=top)
     opponent_unit = opponent_units.first()
     opponent_unit_json = None
+    settlement_json = None
 
     if opponent_units.exists():
         if fight(unit, opponent_unit):
@@ -79,10 +80,12 @@ def move_unit(request):
             unit.delete()
             return HttpResponse()
     else:
-        opponent_settlement = Settlement.objects.all().filter(left=left, top=top).first()
+        opponent_settlement = Settlement.objects.all().filter(player=opponent, left=left, top=top).first()
         if opponent_settlement is not None:
             opponent_settlement.player = get_player(request.user)
             opponent_settlement.save()
+            settlement_json = Settlement.objects.filter(pk=opponent_settlement.pk)
+            settlement_json = serializers.serialize('json', settlement_json, use_natural_keys=True)
         unit.left = left
         unit.top = top
         unit.save()
@@ -93,7 +96,7 @@ def move_unit(request):
 
     unit = serializers.serialize('json', unit, use_natural_keys=True)
 
-    data = {'unit': unit, 'opponent_unit': opponent_unit_json,
+    data = {'unit': unit, 'opponent_unit': opponent_unit_json, 'settlement': settlement_json,
             'opponent_units': opponent_units, 'opponent_settlements': opponent_settlements}
 
     return HttpResponse(json.dumps(data), content_type='application/json')

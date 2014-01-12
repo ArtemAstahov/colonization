@@ -131,9 +131,9 @@ Unit.prototype.createColony = function() {
         success : function(records) {
             that.layer.destroy()
             var pk = records[0].pk
-            var field = records[0].fields
+            var fields = records[0].fields
             var settlement =
-                new Settlement(pk, field.settlement_type, field.left, field.top, field.active, game.player.color)
+                new Settlement(pk, fields.settlement_type, fields.left, fields.top, fields.active, game.player.color)
             game.settlements[pk] = settlement
             settlement.show()
         }
@@ -149,33 +149,44 @@ Unit.prototype.move = function() {
         data : {'pk':  this.pk, 'left': this.left, 'top': this.top},
         success : function(response) {
             if (response) {
+                var opponent_unit = jQuery.parseJSON(response['opponent_unit'])
+                if (opponent_unit) game.opponentUnits[opponent_unit[0].pk].delete()
+
+                var settlement = jQuery.parseJSON(response['settlement'])
+                if (settlement) {
+                    game.opponentSettlements[settlement[0].pk].delete()
+                    var pk = settlement[0].pk
+                    var fields = settlement[0].fields
+                    settlement =
+                        new Settlement(pk, fields.settlement_type, fields.left, fields.top, fields.active, game.player.color)
+                    game.settlements[pk] = settlement
+                    settlement.show()
+                }
+
+                var opponentSettlements = jQuery.parseJSON(response['opponent_settlements'])
+                for (var i = 0; i < opponentSettlements.length; i++) {
+                    var pk = opponentSettlements[i].pk
+                    if (!game.opponentSettlements[pk]) {
+                        var fields = opponentSettlements[i].fields
+                        var settlement =
+                            new Settlement(pk, fields.settlement_type, fields.left, fields.top, false, game.opponent.color)
+                        game.opponentSettlements[pk] = settlement
+                        settlement.show()
+                    }
+                }
+
                 var unit = jQuery.parseJSON(response['unit'])[0].fields
                 that.left = unit.left;
                 that.top = unit.top;
                 that.active = unit.active;
                 that.show()
 
-                var opponent_unit = jQuery.parseJSON(response['opponent_unit'])
-                if (opponent_unit) game.opponentUnits[opponent_unit[0].pk].delete()
-
-                var opponentSettlements = jQuery.parseJSON(response['opponent_settlements'])
-                for (var i = 0; i < opponentSettlements.length; i++) {
-                    var pk = opponentSettlements[i].pk
-                    if (!game.opponentSettlements[pk]) {
-                        var field = opponentSettlements[i].fields
-                        var settlement =
-                            new Settlement(pk, field.settlement_type, field.left, field.top, field.active, game.opponent.color)
-                        game.opponentSettlements[pk] = settlement
-                        settlement.show()
-                    }
-                }
-
                 var opponentUnits = jQuery.parseJSON(response['opponent_units'])
                 for (var i = 0; i < opponentUnits.length; i++) {
                     var pk = opponentUnits[i].pk
                     if (!game.opponentUnits[pk]) {
-                        var field = opponentUnits[i].fields
-                        var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, game.opponent.color)
+                        var fields = opponentUnits[i].fields
+                        var unit = new Unit(pk, fields.unit_type, fields.left, fields.top, fields.active, game.opponent.color)
                         game.opponentUnits[pk] = unit
                         unit.show()
                     }

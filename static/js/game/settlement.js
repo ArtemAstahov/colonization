@@ -51,8 +51,8 @@ Settlement.prototype.show = function() {
                 success : function(records) {
                     hidePurchasesPanel()
                     var pk = records[0].pk
-                    var field = records[0].fields
-                    var unit = new Unit(pk, field.unit_type, field.left, field.top, field.active, game.player.color)
+                    var fields = records[0].fields
+                    var unit = new Unit(pk, fields.unit_type, fields.left, fields.top, fields.active, game.player.color)
                     unit.show()
                     game.units[pk] = unit
                     game.player.money -= UNIT_TYPE[unit_type]['cost']
@@ -70,9 +70,9 @@ Settlement.prototype.show = function() {
                     game.player.money -= 15
                     game.player.show()
 
-                    var field = records[0].fields
-                    that.settlement_type = field.settlement_type
-                    that.active = field.active
+                    var fields = records[0].fields
+                    that.settlement_type = fields.settlement_type
+                    that.active = fields.active
                     that.layer.clear()
                     that.show()
                 }
