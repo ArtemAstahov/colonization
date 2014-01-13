@@ -103,6 +103,17 @@ $("#finishStroke").click(function(){
     });
 });
 
+$("#leaveGame").click(function(){
+    $.ajax({
+        url : '/ajax/leave_game',
+        success : function(response) {
+            var fields = response[0].fields
+            alert("winner: " + fields.winner + ", looser: " + fields.looser)
+            window.location.replace("/")
+        }
+    });
+});
+
 function checkGame() {
     if (game == null) {
         loadGame()

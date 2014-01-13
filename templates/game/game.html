@@ -1,10 +1,11 @@
 {% extends "layout/layout.html" %}
 
 {% block content %}
-    <div style="float: left; width: 320px; margin-bottom: 5px">
+    <span style="float: left; width: 430px; margin-bottom: 5px">
         <span id="player"></span>
-        <input type="submit" id="finishStroke" value="Завершить ход" style="visibility: hidden">
-    </div>
+        <button id="leaveGame" value="Покинуть игру">Покинуть игру</button>
+        <button id="finishStroke" style="visibility: hidden">Завершить ход</button>
+    </span>
 
     <input type="submit" id="missStroke" value="Пропустить ход" style="display: none; float: left; margin-left: 100px">
     <input type="submit" id="createColony" value="Основать колонию" style="display: none; float: left; margin-left: 20px">

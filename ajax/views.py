@@ -30,6 +30,17 @@ def check_game(request):
     return HttpResponse()
 
 
+def leave_game(request):
+    opponent = get_opponent(request.user)
+    if opponent is not None:
+        game = finish_game(get_opponent(request.user).user, request.user)
+    else:
+        game = finish_game(None, request.user)
+    game = Game.objects.filter(pk=game.pk)
+    data = serializers.serialize('json', game, use_natural_keys=True)
+    return HttpResponse(data, content_type='application/json')
+
+
 def load_game(request):
     game = Game.objects.filter(pk=get_active_game(request.user).pk)
 

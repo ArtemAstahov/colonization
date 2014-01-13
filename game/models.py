@@ -64,13 +64,16 @@ def join_to_game(user, game_id):
 
 
 def finish_game(winner, looser):
-    game = get_active_game(winner)
+    game = get_active_game(looser)
     game.winner = winner
     game.looser = looser
     game.state = 2
     game.save()
-    winner.player_set.all().delete()
-    looser.player_set.all().delete()
+    if winner is not None:
+        winner.player_set.all().delete()
+    if looser is not None:
+        looser.player_set.all().delete()
+    return game
 
 
 class Player(models.Model):

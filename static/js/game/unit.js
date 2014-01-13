@@ -212,6 +212,7 @@ Unit.prototype.setCreateColony = function() {
                     $('#createColony').css({display: 'none'})
                     $('#createColony').off('click')
                     that.createColony()
+                    hideUnitPanel()
                 });
             } else {
                 $('#createColony').css({display: 'none'})
