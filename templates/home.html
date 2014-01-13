@@ -1,0 +1,21 @@
+{% extends "layout/layout.html" %}
+
+{% block content %}
+    <h1 style="text-align: center">It is Colonization!!!</h1>
+    <div>
+        {% if user.is_authenticated %}
+            {% if game %}
+                <h3><a href="/game" style="text-decoration: none">Go Forward</a></h3>
+            {% else %}
+                <h3><a href="/game/create_game" style="text-decoration: none">Create Game</a></h3>
+                <h3>Hosted Games:</h3>
+                {% for host_game in host_games %}
+                    <a href="/game/join_to_game/?pk={{ host_game.pk }}" style="text-decoration: none">Join to Game</a>
+                    hosted by {{ host_game.player_set.first.user.username }}
+                    <br>
+                {% endfor %}
+                <h4><a href="/" style="text-decoration: none">Refresh Host Games</a></h4>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,61 +1,125 @@
+from random import randint
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
 
 from django.utils import timezone
 
 
+GAME_STATE = {
+    0: 'CREATED',
+    1: 'STARTED',
+    2: 'FINISHED'
+}
+
+
 class Game(models.Model):
-    # user
+    state = models.IntegerField(default=0)
+    winner = models.ForeignKey(User, related_name='winner', null=True)
+    looser = models.ForeignKey(User, related_name='looser', null=True)
     creation_date = models.DateTimeField(default=timezone.now())
 
 
-def create_game(player_name):
+def create_game(user):
     game = Game()
     game.save()
 
-    player = create_player(player_name, game, "red")
+    player = create_player(user, game, "red")
+    player.active = False
+    player.save()
 
     game_map = Map(game=game)
     game_map.save()
-
-    create_unit(game_map, 3, 2, player, 1, True)
-    create_unit(game_map, 1, 5, player, 2, True)
-    create_unit(game_map, 7, 4, player, 3, True)
-    create_unit(game_map, 3, 2, player, 4, True)
-    create_unit(game_map, 1, 1, player, 5, True)
-
-    create_settlement(game_map, 3, 3, player, 1, True)
-    create_settlement(game_map, 4, 5, player, 2, True)
-    create_settlement(game_map, 6, 3, player, 3, True)
+    left = randint(1, game_map.width)
+    top = randint(1, game_map.height)
+    create_unit(game_map, left, top, player, 1, False)
 
     return game
 
 
+def get_active_game(user):
+    return Player.objects.filter(user=user).first().game
+
+
+def is_created_game(user):
+    return Player.objects.filter(user=user).exists() and Player.objects.filter(user=user).first().game.state == 1
+
+
+def get_game(game_pk):
+    return Game.objects.get(pk=game_pk)
+
+
+def get_host_games():
+    return Game.objects.filter(state=0).all()
+
+
+def join_to_game(user, game_id):
+    game = get_game(game_id)
+    player = create_player(user, game, "blue")
+    player.active = True
+    player.save()
+    game_map = game.map_set.all().first()
+    left = randint(1, game_map.width)
+    top = randint(1, game_map.height)
+    create_unit(game_map, left, top, player, 1, True)
+    game.state = 1
+    game.save()
+
+
+def finish_game(winner, looser):
+    game = get_active_game(looser)
+    game.winner = winner
+    game.looser = looser
+    game.state = 2
+    game.save()
+    if winner is not None:
+        winner.player_set.all().delete()
+    if looser is not None:
+        looser.player_set.all().delete()
+    return game
+
+
 class Player(models.Model):
+    user = models.ForeignKey(User)
     game = models.ForeignKey(Game)
-    name = models.CharField(max_length=100)
     money = models.IntegerField(default=10)
     color = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
 
     def increase_money_for_day(self):
         aggregate = Settlement.objects.filter(player=self.pk).aggregate(Sum('settlement_type'))
-        self.money = self.money + aggregate['settlement_type__sum']
+        if aggregate['settlement_type__sum'] is not None:
+            self.money = self.money + aggregate['settlement_type__sum']
+
+    def is_lost(self):
+        if not Unit.objects.filter(player=self).exists() and not Settlement.objects.filter(player=self).exists():
+            return True
+        else:
+            return False
 
 
-def create_player(name, game, color):
-    player = Player(name=name, game=game, color=color)
+def create_player(user, game, color):
+    player = Player(game=game, color=color, user=user)
     player.save()
     return player
 
 
+def get_player(user):
+    return Player.objects.filter(user=user).first()
+
+
+def get_opponent(user):
+    return Player.objects.filter(game=get_active_game(user)).exclude(user=user).first()
+
+
 class Map(models.Model):
     game = models.ForeignKey(Game)
-    height = models.IntegerField(default=10)
-    width = models.IntegerField(default=5)
+    height = models.IntegerField(default=15)
+    width = models.IntegerField(default=30)
 
-    def __unicode__(self):
-        return "height: " + str(self.height) + " width: " + str(self.width)
+
+def get_game_map(user):
+    return get_active_game(user).map_set.all().first()
 
 
 UNIT_TYPE = {
@@ -82,6 +146,17 @@ def create_unit(game_map, left, top, player, unit_type, active):
     return unit
 
 
+def fight(unit, opponent_unit):
+    settlement = Settlement.objects.filter(map=unit.map, left=opponent_unit.left, top=opponent_unit.top).first()
+    result = randint(0, 5) + UNIT_TYPE[unit.unit_type]['damage'] - randint(0, 5) - UNIT_TYPE[
+        opponent_unit.unit_type]['damage']
+    if settlement is not None:
+        result -= SETTLEMENT_TYPE[settlement.settlement_type]['defense']
+    if result == 0:
+        return fight(unit, opponent_unit)
+    return result > 0
+
+
 SETTLEMENT_TYPE = {
     1: {'name': 'Colony', 'income': 1, 'defense': 0},
     2: {'name': 'Fort', 'income': 2, 'defense': 1},
@@ -98,12 +173,13 @@ class Settlement(models.Model):
     active = models.BooleanField(default=True)
 
 
-def check_margins(left, top):
-    return Settlement.objects.filter(left__gt=left-4, left__lt=left+4, top__gt=top-4, top__lt=top+4).count() == 0
+def check_margins(game_map, left, top):
+    return not Settlement.objects.filter(map=game_map, left__gt=left - 4, left__lt=left + 4,
+                                         top__gt=top - 4, top__lt=top + 4).exists()
 
 
 def create_settlement(game_map, left, top, player, settlement_type, active):
-    settlement =\
+    settlement = \
         Settlement(map=game_map, left=left, top=top, player=player, settlement_type=settlement_type, active=active)
     settlement.save()
     return settlement

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Колонизация</title>
+    {% load staticfiles %}
+    <script type="text/javascript" charset="utf-8" src="{% static "js/lib/jquery-2.0.3.min.js" %}" ></script>
+    <script type="text/javascript" charset="utf-8" src="{% static "js/lib/kinetic-v4.7.4.min.js" %}" ></script>
+</head>
+<body style="text-align: center">
+    {% include "layout/header.html" %}
+    <hr>
+    {% block content %}{% endblock %}
+    {% block footer %}
+    <hr>
+    <p>© <a style="text-decoration: none;" href="https://github.com/vaaction/colonization">Ilya Bukanov</a>, 2013-2014</p>
+    {% endblock %}
+</body>
+</html>
