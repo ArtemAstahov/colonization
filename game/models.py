@@ -30,8 +30,9 @@ def create_game(user):
 
     game_map = Map(game=game)
     game_map.save()
-
-    create_unit(game_map, 3, 2, player, 1, False)
+    left = randint(1, game_map.width)
+    top = randint(1, game_map.height)
+    create_unit(game_map, left, top, player, 1, False)
 
     return game
 
@@ -58,7 +59,9 @@ def join_to_game(user, game_id):
     player.active = True
     player.save()
     game_map = game.map_set.all().first()
-    create_unit(game_map, 15, 10, player, 1, True)
+    left = randint(1, game_map.width)
+    top = randint(1, game_map.height)
+    create_unit(game_map, left, top, player, 1, True)
     game.state = 1
     game.save()
 
@@ -111,8 +114,8 @@ def get_opponent(user):
 
 class Map(models.Model):
     game = models.ForeignKey(Game)
-    height = models.IntegerField(default=10)
-    width = models.IntegerField(default=5)
+    height = models.IntegerField(default=15)
+    width = models.IntegerField(default=30)
 
 
 def get_game_map(user):
