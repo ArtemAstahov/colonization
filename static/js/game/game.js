@@ -1,5 +1,4 @@
 var game = null
-var interval = null
 var INTERVAL = 2000
 
 function Game(pk, game, player, opponent, units, settlements, opponentUnits, opponentSettlements) {
@@ -54,6 +53,7 @@ Game.prototype.clear = function() {
 function initGame() {
     createMap()
     checkGame()
+    setInterval(checkGame, INTERVAL)
 }
 
 function clearPanels() {
@@ -82,8 +82,6 @@ function createMap() {
 }
 
 $("#finishStroke").click(function(){
-    checkGame()
-
     $.ajax({
         url : '/ajax/finish_stroke',
         success : function() {
@@ -99,8 +97,6 @@ $("#finishStroke").click(function(){
 
             game.player.active = false
             game.player.show()
-
-            interval = setInterval(checkGame, INTERVAL);
         }
     });
 });
@@ -125,10 +121,9 @@ function checkGame() {
         url : '/ajax/check_game',
         data : {'game_pk': game.pk},
         success : function(response) {
-            if (response['player_active']) {
+            if (!game.player.active && response['player_active']) {
                 game.clear()
                 loadGame()
-                clearInterval(interval)
             }
             if (response['game']) {
                 var fields = jQuery.parseJSON(response['game'])[0].fields
@@ -192,8 +187,6 @@ function loadGame() {
             game = new Game(game.pk, game.fields, player, opponent, units, settlements,
                             opponentUnits, opponentSettlements)
             game.show()
-
-            if(!player.active) interval = setInterval(checkGame, INTERVAL)
         }
     });
 }
