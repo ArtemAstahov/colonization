@@ -6,7 +6,7 @@
         {%  else  %}
             Dude!
         {% endif %}
-        It's <a href="/">The Best Colonization Game</a> which you have ever seen!
+        It's <a href="/" style="text-decoration: none">The Best Colonization Game</a> which you have ever seen!
         {% if user.is_authenticated %}
             Add fuel to the fire!!!
         {%  else  %}
@@ -14,12 +14,12 @@
         {% endif %}
     </div>
 
-    <div style="float: right; margin-right: 5px">
+    <div style="float: right; margin-right: 5px;">
         {% if user.is_authenticated %}
-            <a href="/accounts/logout">Logout</a>
+            <a href="/accounts/logout" style="text-decoration: none">Logout</a>
         {%  else  %}
-            <a href="/accounts/login">Log in</a>
-            <a href="/accounts/register">Sign up</a>
+            <a href="/accounts/login" style="text-decoration: none">Log in</a> |
+            <a href="/accounts/register" style="text-decoration: none">Sign up</a>
         {% endif %}
     </div>
 </header>
