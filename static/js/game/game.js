@@ -82,6 +82,8 @@ function createMap() {
 }
 
 $("#finishStroke").click(function(){
+    checkGame()
+
     $.ajax({
         url : '/ajax/finish_stroke',
         success : function() {
