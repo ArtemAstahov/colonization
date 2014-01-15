@@ -2,8 +2,8 @@ var FIELD_SIZE = 40
 
 var stage = new Kinetic.Stage({
         container: 'container',
-        width: 30 * FIELD_SIZE, // 1200
-        height: 15 * FIELD_SIZE // 600
+        width: 20 * FIELD_SIZE, // 680
+        height: 15 * FIELD_SIZE // 680
 });
 
 function createMap() {
@@ -13,7 +13,7 @@ function createMap() {
         x: 0,
         y: 0,
         image: image,
-        width: 30 * FIELD_SIZE,
+        width: 20 * FIELD_SIZE,
         height: 15 * FIELD_SIZE,
         listening: false
     });
