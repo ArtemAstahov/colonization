@@ -2,8 +2,8 @@ var UNIT_TYPE = {
     1 : {name: 'Settler', code: 'S', steps: 1, icon: 'icon-men.png', cost: 10},
     2 : {name: 'Militiaman', code: 'M', steps: 1, icon: 'icon-bow.png', cost: 2},
     3 : {name: 'Scout', code: 'C', steps: 2, icon: 'icon-knight.png', cost: 4},
-    4 : {name: 'Officer', code: 'O', steps: 1, icon: 'icon-sword.png', cost: 4},
-    5 : {name: 'Dragoon', code: 'D', steps: 2, icon: 'icon-quake.png', cost: 6}
+    4 : {name: 'Officer', code: 'O', steps: 1, icon: 'icon-sword.png', cost: 3},
+    5 : {name: 'Dragoon', code: 'D', steps: 2, icon: 'icon-quake.png', cost: 5}
 };
 
 function Unit(pk, type, left, top, active, color) {

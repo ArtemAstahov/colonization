@@ -1,6 +1,13 @@
 var game = null
 var INTERVAL = 2000
 
+var notifyAudio = null
+if ( (/msie|trident/i).test(navigator.userAgent) ) {
+    notifyAudio = new Audio('/static/sounds/game/notify.mp3')
+} else {
+    notifyAudio = new Audio('/static/sounds/game/notify.wav')
+}
+
 function Game(pk, game, player, opponent, units, settlements, opponentUnits, opponentSettlements) {
     this.pk = pk
     this.game = game
@@ -102,6 +109,7 @@ function checkGame() {
         data : {'game_pk': game.pk},
         success : function(response) {
             if (!game.player.active && response['player_active']) {
+                notifyAudio.play()
                 game.clear()
                 loadGame()
             }
