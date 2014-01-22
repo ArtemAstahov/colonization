@@ -93,7 +93,7 @@ $("#leaveGame").click(function(){
         url : '/ajax/leave_game',
         success : function(response) {
             var fields = response[0].fields
-            alert("winner: " + fields.winner + ", looser: " + fields.looser)
+            alert("Выигравший: " + fields.winner + ", Проигравший: " + fields.looser)
             window.location.replace("/")
         }
     });
@@ -115,7 +115,7 @@ function checkGame() {
             }
             if (response['game']) {
                 var fields = jQuery.parseJSON(response['game'])[0].fields
-                alert("winner: " + fields.winner + ", looser: " + fields.looser)
+                alert("Выигравший: " + fields.winner + ", Проигравший: " + fields.looser)
                 window.location.replace("/")
             }
         }

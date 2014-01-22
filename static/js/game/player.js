@@ -5,7 +5,8 @@ function Player(money, color, active) {
 }
 
 Player.prototype.show = function() {
-    $('#player').html("money: " + this.money + ", active: " + this.active)
+    var active = this.active ? "ваш ход" : "ход противника"
+    $('#player').html("монеты: " + this.money + ", " + active)
     if (this.active) {
         $('#finishStroke').css({visibility: 'visible'})
     } else {
