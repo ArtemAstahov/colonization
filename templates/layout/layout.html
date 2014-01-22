@@ -7,12 +7,8 @@
     <script type="text/javascript" charset="utf-8" src="{% static "js/lib/kinetic-v4.7.4.min.js" %}" ></script>
 </head>
 <body style="text-align: center">
-    {% include "layout/header.html" %}
-    <hr>
+    {% block header %}{% endblock %}
     {% block content %}{% endblock %}
-    {% block footer %}
-    <hr>
-    <p>© <a style="text-decoration: none;" href="https://github.com/vaaction/colonization">Ilya Bukanov</a>, 2013-2014</p>
-    {% endblock %}
+    {% block footer %}{% endblock %}
 </body>
 </html>
