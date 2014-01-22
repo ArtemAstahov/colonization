@@ -13,6 +13,10 @@ MANAGERS = ADMINS
 VK_APP_ID = '4135666'
 VK_API_SECRET = 'pKQnGUTncTEoIJMEATVh'
 
+LOGIN_URL = '/login-form/'
+LOGIN_REDIRECT_URL = '/logged-in/'
+LOGIN_ERROR_URL = '/login-error/'
+
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES = {'default': dj_database_url.config()}
