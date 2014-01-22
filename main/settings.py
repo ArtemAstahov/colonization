@@ -10,12 +10,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-VK_APP_ID = '4135666'
-VK_API_SECRET = 'pKQnGUTncTEoIJMEATVh'
-
-LOGIN_URL = '/login-form/'
-LOGIN_REDIRECT_URL = '/logged-in/'
-LOGIN_ERROR_URL = '/login-error/'
+VK_APP_ID = '4135666'                   # Application ID
+VK_APP_SECRET = 'pKQnGUTncTEoIJMEATVh'  # Secure key
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
@@ -90,7 +86,6 @@ SECRET_KEY = '7%0@p6pa(%0i_d_*nm5wflj%teqh(ss=pc(47pu^mwau(&_$@c'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -99,9 +94,16 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'vk_iframe.middleware.IFrameFixMiddleware',
+    'vk_iframe.middleware.AuthenticationMiddleware',
+    'vk_iframe.middleware.LoginRequiredMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
+
+PUBLIC_URLS = [
+    '^admin/$',
+    '^my-callback/',
+]
 
 ROOT_URLCONF = 'main.urls'
 
@@ -122,13 +124,13 @@ INSTALLED_APPS = (
     #'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'social_auth',
+    'vk_iframe',
     'game'
 )
 
 AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.contrib.vk.VKOAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
+    'vk_iframe.backends.VkontakteUserBackend',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

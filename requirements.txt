@@ -5,4 +5,5 @@ gunicorn==18.0
 psycopg2==2.5.1
 #static==0.4
 wsgiref==0.1.2
-django-social-auth==0.7.28
+django-vkontakte-iframe==0.4.1
+django-annoying==0.7.9
