@@ -96,8 +96,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'vk_iframe.middleware.IFrameFixMiddleware',
     'vk_iframe.middleware.AuthenticationMiddleware',
-    'vk_iframe.middleware.LoginRequiredMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'vk_iframe.middleware.LoginRequiredMiddleware',
 )
 
 PUBLIC_URLS = [
