@@ -65,7 +65,7 @@ def load_game(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-#@game_required
+@game_required
 def move_unit(request):
     pk = int(request.GET['pk'])
     unit = Unit.objects.get(pk=pk)
@@ -113,7 +113,7 @@ def move_unit(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-#@game_required
+@game_required
 def finish_stroke(request):
     player = get_player(request.user)
     opponent = get_opponent(request.user)
@@ -140,7 +140,7 @@ def finish_stroke(request):
     return HttpResponse()
 
 
-#@game_required
+@game_required
 def buy_unit(request):
     settlement = Settlement.objects.get(pk=int(request.GET['settlement_pk']))
     if not settlement.active:
@@ -165,7 +165,7 @@ def buy_unit(request):
     return HttpResponse(data, content_type='application/json')
 
 
-#@game_required
+@game_required
 def upgrade_settlement(request):
     settlement = Settlement.objects.get(pk=int(request.GET['settlement_pk']))
     if not settlement.active:
@@ -189,20 +189,20 @@ def upgrade_settlement(request):
     return HttpResponse(data, content_type='application/json')
 
 
-#@game_required
+@game_required
 def check_settlement_active(request):
     settlement = Settlement.objects.get(pk=int(request.GET['pk']))
     return HttpResponse(json.dumps({'active': settlement.active}), mimetype="application/json")
 
 
-#@game_required
+@game_required
 def check_settlements_margins(request):
     unit = Unit.objects.get(pk=int(request.GET['pk']))
     return HttpResponse(json.dumps({'available': check_margins(get_game_map(request.user), unit.left, unit.top)}),
                         mimetype="application/json")
 
 
-#@game_required
+@game_required
 def create_colony(request):
     settler_type = 1
     unit = Unit.objects.get(pk=int(request.GET['pk']))
