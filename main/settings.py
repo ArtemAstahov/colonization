@@ -10,6 +10,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+VK_APP_ID = '4135666'
+VK_API_SECRET = 'pKQnGUTncTEoIJMEATVh'
+
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES = {'default': dj_database_url.config()}
@@ -115,7 +118,13 @@ INSTALLED_APPS = (
     #'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'social_auth',
     'game'
+)
+
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.contrib.vk.VKOAuth2Backend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
