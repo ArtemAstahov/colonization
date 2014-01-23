@@ -96,15 +96,15 @@ Settlement.prototype.setPurchasesPanel = function() {
             success : function(response) {
                 that.active = response['active']
                 if (that.active) {
-                    $('#purchasesPanel').css({visibility: 'visible'})
                     $('#upgradeSettlement').css({visibility: 'visible'})
+                    $('#purchasesPanel').css({visibility: 'visible'})
                     if (that.settlement_type == 1) {
-                        $("#finishStroke").attr({
+                        $("#upgradeSettlement").attr({
                             src: "/static/img/game/icon-temple.png",
                             title: "форт: атака 1, прирост 1, стоимость 15"
                         })
                     } else if(that.settlement_type == 2) {
-                         $("#finishStroke").attr({
+                         $("#upgradeSettlement").attr({
                             src: "/static/img/game/icon-fort.png",
                             title: "замок: атака 2, прирост 2, стоимость 15"
                         })
@@ -112,7 +112,7 @@ Settlement.prototype.setPurchasesPanel = function() {
                         $('#upgradeSettlement').css({visibility: 'hidden'})
                     }
                 } else {
-                    $('#purchasesPanel').css({visibility: 'hidden'})
+                    hidePurchasesPanel()
                 }
             }
         });
@@ -128,5 +128,6 @@ Settlement.prototype.delete = function() {
 }
 
 function hidePurchasesPanel() {
+    $('#upgradeSettlement').css({visibility: 'hidden'})
     $('#purchasesPanel').css({visibility: 'hidden'})
 }
