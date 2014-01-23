@@ -3,14 +3,18 @@
 {% block content %}
     <span style="float: left; width: 430px; margin-bottom: 5px">
         <span id="player"></span>
-        <button id="leaveGame" value="Покинуть игру">Покинуть игру</button>
-        <button id="finishStroke" style="visibility: hidden">Завершить ход</button>
+        <img id="leaveGame" title="Покинуть игру" src="/static/img/game/close.png" />
+        <img id="finishStroke" style="visibility: hidden" title="Завершить ход"
+                src="/static/img/game/recycle.png" />
     </span>
 
-    <input type="submit" id="missStroke" value="Пропустить ход" style="display: none; float: left; margin-left: 50px">
-    <input type="submit" id="createColony" value="Основать колонию" style="display: none; float: left; margin-left: 5px">
+    <img type="submit" id="missStroke" title="Пропустить ход" style="display: none; float: left; margin-left: 50px"
+            src="/static/img/game/recycle.png" />
+    <img type="submit" id="createColony" title="Основать колонию" style="display: none; float: left; margin-left: 5px"
+            src="/static/img/game/icon-temple.png" />
 
     <span id="purchasesPanel" style="display: none; float: left; margin-left: 50px">
+<<<<<<< HEAD
         <img title="поселенец 10 coins" height="24" width="24" name="1" class="buyUnit" id="buySettler"
              src="/static/img/game/icon-men.png" style="background-color: brown">
         <img title="милиция 2 coins" height="24" width="24" name="2" class="buyUnit" id="buyMilitiaman"
@@ -23,6 +27,20 @@
              src="/static/img/game/icon-quake.png" style="background-color: brown">
         <img title="замок 15 coins" height="24" width="24" id="upgradeSettlement"
              src="/static/img/game/icon-temple.png" style="background-color: brown; color: white;">
+=======
+        <img title="поселенец: атака -1, ход 1, стоимость 10" height="24" width="24" name="1" class="buyUnit" id="buySettler"
+             src="/static/img/game/icon-men.png" style="background-color: brown" />
+        <img title="милиция: атака 1, ход 1, стоимость 2" height="24" width="24" name="2" class="buyUnit" id="buyMilitiaman"
+             src="/static/img/game/icon-bow.png" style="background-color: brown" />
+        <img title="разведчик: атака 1, ход 2, стоимость 4" height="24" width="24" name="3" class="buyUnit" id="buyScout"
+             src="/static/img/game/icon-knight.png" style="background-color: brown" />
+        <img title="офицер: атака 2, ход 1, стоимость 3" height="24" width="24" name="4" class="buyUnit" id="buyOfficer"
+             src="/static/img/game/icon-sword.png" style="background-color: brown" />
+        <img title="драгун: атака 2, ход 2, стоимость 5" height="24" width="24" name="5" class="buyUnit" id="buyDragoon"
+             src="/static/img/game/icon-quake.png" style="background-color: brown" />
+        <img title="замок: атака +1, прирост +1, стоимость 15" height="24" width="24" id="upgradeSettlement"
+             src="/static/img/game/icon-temple.png" style="background-color: brown; color: white;" />
+>>>>>>> cdb1a4d... vk
     </span>
 
     <div style="clear: both" />

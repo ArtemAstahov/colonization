@@ -72,6 +72,7 @@ $("#finishStroke").click(function(){
     $.ajax({
         url : '/ajax/finish_stroke',
         success : function() {
+            $('#finishStroke').src('/static/img/game/delete.png')
             clearPanels();
 
             for (var pk in game.units) {
@@ -110,6 +111,7 @@ function checkGame() {
         success : function(response) {
             if (!game.player.active && response['player_active']) {
                 notifyAudio.play()
+                $('#finishStroke').src('/static/img/game/recycle.png')
                 game.clear()
                 loadGame()
             }
