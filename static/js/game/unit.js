@@ -110,14 +110,12 @@ Unit.prototype.show = function() {
 
     image.onload = function() {
         that.layer.add(shadow)
-        that.layer.moveUp()
-        that.layer.moveUp()
 
         if(that.active) {
             that.layer.add(unit)
-            that.layer.moveToTop()
         }
 
+        that.layer.moveToTop()
         that.layer.draw()
     };
     image.src = "/static/img/game/" + type.icon
