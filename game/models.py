@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Sum
 
 from django.utils import timezone
+from vk_iframe.models import Profile
 
 
 GAME_STATE = {
@@ -50,6 +51,7 @@ def get_game(game_pk):
 
 
 def get_host_games():
+    Profile.objects
     return Game.objects.filter(state=0).all()
 
 
