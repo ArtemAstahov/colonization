@@ -115,7 +115,7 @@ function checkGame() {
             }
             if (response['game']) {
                 var fields = jQuery.parseJSON(response['game'])[0].fields
-                alert("Выигравший: " + fields.winner + ", Проигравший: " + fields.looser)
+                alert("Выигравший: " + fields.winner.first_name + ", Проигравший: " + fields.first_name)
                 window.location.replace("/")
             }
         }
