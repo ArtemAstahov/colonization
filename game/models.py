@@ -51,7 +51,6 @@ def get_game(game_pk):
 
 
 def get_host_games():
-    Profile.objects
     return Game.objects.filter(state=0).all()
 
 
