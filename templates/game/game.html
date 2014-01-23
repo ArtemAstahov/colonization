@@ -1,18 +1,19 @@
 {% extends "layout/layout.html" %}
 
 {% block content %}
-    <span style="float: left; width: 430px; margin-bottom: 5px">
-        <span id="player"></span>
-        <img id="leaveGame" title="Покинуть игру" src="/static/img/game/close.png" />
-        <img id="finishStroke" style="visibility: hidden" />
-    </span>
+    <div style="float: left; margin-left: 30px">
+        <img style="float: left;" height="24" width="24" src="/static/img/game/coin.png" />
+        <span style="float: left; padding: 2px" id="player" />
+    </div>
 
-    <img type="submit" id="missStroke" title="Пропустить ход" style="display: none; float: left; margin-left: 50px"
-            src="/static/img/game/recycle.png" />
-    <img type="submit" id="createColony" title="Основать колонию" style="display: none; float: left; margin-left: 5px"
-            src="/static/img/game/icon-temple.png" />
+    <img id="finishStroke" style="float: left; margin-left: 20px" />
 
-    <span id="purchasesPanel" style="display: none; float: left; margin-left: 50px">
+    <img id="missStroke" title="Пропустить ход юнитом" style="display: none; float: left; margin-left: 50px"
+            src="/static/img/game/delete.png" />
+    <img id="createColony" title="Основать колонию" height="24" width="24" src="/static/img/game/icon-temple.png"
+         style="display: none; float: left; margin-left: 50px; background-color: brown" />
+
+    <span id="purchasesPanel" style="visibility: hidden; float: left; margin-left: 50px; height:24; width:24">
         <img title="поселенец 10 coins" height="24" width="24" name="1" class="buyUnit" id="buySettler"
              src="/static/img/game/icon-men.png" style="background-color: brown">
         <img title="милиция 2 coins" height="24" width="24" name="2" class="buyUnit" id="buyMilitiaman"
@@ -26,6 +27,8 @@
         <img title="замок 15 coins" height="24" width="24" id="upgradeSettlement"
              src="/static/img/game/icon-temple.png" style="background-color: brown; color: white;">
     </span>
+
+    <img id="leaveGame" title="Покинуть игру" style="float: right; margin-right: 30px" src="/static/img/game/close.png" />
 
     <div style="clear: both" />
     <div id="container"></div>

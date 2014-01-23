@@ -5,10 +5,14 @@ function Player(money, color, active) {
 }
 
 Player.prototype.show = function() {
-    $('#player').html("money: " + this.money + ", active: " + this.active)
+    $('#player').html(this.money)
     if (this.active) {
-        $('#finishStroke').css({visibility: 'visible'})
+        $("#finishStroke").attr({
+            src: "/static/img/game/recycle.png",
+            title: "Завершить Ход"
+        })
+        $("#finishStroke").css({visibility: 'visible'})
     } else {
-        $('#finishStroke').css({visibility: 'hidden'})
+        $("#finishStroke").css({visibility: 'hidden'})
     }
 }
