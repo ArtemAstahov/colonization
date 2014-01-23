@@ -12,7 +12,7 @@
                 <h3>Созданные Игры:</h3>
                 {% for host_game in host_games %}
                     <a href="/game/join_to_game/?pk={{ host_game.pk }}" style="text-decoration: none">
-                        Присоединиться к игре {{ host_game.player_set.first.user.username }} </a>
+                        Присоединиться к игре {{ host_game.player_set.first.user.nickname }} </a>
                     <br>
                 {% endfor %}
                 <h4><a href="/" style="text-decoration: none">Обновить Игры</a></h4>
