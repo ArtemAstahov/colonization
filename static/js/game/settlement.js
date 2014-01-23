@@ -96,9 +96,9 @@ Settlement.prototype.setPurchasesPanel = function() {
             success : function(response) {
                 that.active = response['active']
                 if (that.active) {
-                    $('#purchasesPanel').css({display: 'block'})
+                    $('#purchasesPanel').css({visibility: 'visible'})
                 } else {
-                    $('#purchasesPanel').css({display: 'none'})
+                    $('#purchasesPanel').css({visibility: 'hidden'})
                 }
             }
         });
@@ -114,5 +114,5 @@ Settlement.prototype.delete = function() {
 }
 
 function hidePurchasesPanel() {
-    $('#purchasesPanel').css({display: 'none'})
+    $('#purchasesPanel').css({visibility: 'hidden'})
 }

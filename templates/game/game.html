@@ -8,12 +8,14 @@
                 src="/static/img/game/recycle.png" />
     </span>
 
-    <img type="submit" id="missStroke" title="Пропустить ход" style="display: none; float: left; margin-left: 50px"
-            src="/static/img/game/recycle.png" />
-    <img type="submit" id="createColony" title="Основать колонию" style="display: none; float: left; margin-left: 5px"
-            src="/static/img/game/icon-temple.png" />
+    <img id="finishStroke" style="float: left; margin-left: 20px" />
 
-    <span id="purchasesPanel" style="display: none; float: left; margin-left: 50px">
+    <img id="missStroke" title="Пропустить ход юнитом" style="display: none; float: left; margin-left: 50px"
+            src="/static/img/game/delete.png" />
+    <img id="createColony" title="Основать колонию" height="24" width="24" src="/static/img/game/icon-temple.png"
+         style="display: none; float: left; margin-left: 50px; background-color: brown" />
+
+    <span id="purchasesPanel" style="visibility: hidden; float: left; margin-left: 50px; height:24; width:24">
         <img title="поселенец: атака -1, ход 1, стоимость 10" height="24" width="24" name="1" class="buyUnit" id="buySettler"
              src="/static/img/game/icon-men.png" style="background-color: brown" />
         <img title="милиция: атака 1, ход 1, стоимость 2" height="24" width="24" name="2" class="buyUnit" id="buyMilitiaman"
@@ -27,6 +29,8 @@
         <img title="замок: атака +1, прирост +1, стоимость 15" height="24" width="24" id="upgradeSettlement"
              src="/static/img/game/icon-temple.png" style="background-color: brown; color: white;" />
     </span>
+    
+    <img id="leaveGame" title="Покинуть игру" style="float: right; margin-right: 30px" src="/static/img/game/close.png" />
 
     <div style="clear: both" />
     <div id="container"></div>

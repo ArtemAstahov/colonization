@@ -69,6 +69,9 @@ function clearPanels() {
 }
 
 $("#finishStroke").click(function(){
+    if (!game.player.active)
+        return
+
     $.ajax({
         url : '/ajax/finish_stroke',
         success : function() {
@@ -111,7 +114,6 @@ function checkGame() {
         success : function(response) {
             if (!game.player.active && response['player_active']) {
                 notifyAudio.play()
-                $('#finishStroke').src('/static/img/game/recycle.png')
                 game.clear()
                 loadGame()
             }
