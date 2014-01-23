@@ -13,7 +13,8 @@
                 {% for host_game in host_games %}
                     <a href="/game/join_to_game/?pk={{ host_game.pk }}" style="text-decoration: none">
                         Присоединиться к игре
-                        {{ vk_profile.last_name }}
+                        {{ host_game.player_set.first.user.first_name }}
+                        {{ host_game.player_set.first.user.last_name }}
                     </a>
                     <br>
                 {% endfor %}
