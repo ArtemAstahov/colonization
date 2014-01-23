@@ -72,7 +72,6 @@ $("#finishStroke").click(function(){
     $.ajax({
         url : '/ajax/finish_stroke',
         success : function() {
-            $('#finishStroke').src('/static/img/game/delete.png')
             clearPanels();
 
             for (var pk in game.units) {
@@ -112,8 +111,12 @@ function checkGame() {
             if (!game.player.active && response['player_active']) {
                 notifyAudio.play()
                 $('#finishStroke').src('/static/img/game/recycle.png')
+                $('#finishStroke').title('Ваш Ход')
                 game.clear()
                 loadGame()
+            } else {
+                $('#finishStroke').src('/static/img/game/delete.png')
+                $('#finishStroke').title('Ход Противника')
             }
             if (response['game']) {
                 var fields = jQuery.parseJSON(response['game'])[0].fields
