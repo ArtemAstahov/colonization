@@ -95,9 +95,7 @@ $("#finishStroke").click(function(){
 $("#leaveGame").click(function(){
     $.ajax({
         url : '/ajax/leave_game',
-        success : function(response) {
-            var fields = response[0].fields
-            alert("Выигравший: " + fields.winner + ", Проигравший: " + fields.looser)
+        success : function() {
             window.location.replace("/")
         }
     });
@@ -118,8 +116,6 @@ function checkGame() {
                 loadGame()
             }
             if (response['game']) {
-                var fields = jQuery.parseJSON(response['game'])[0].fields
-                alert("Выигравший: " + fields.winner.first_name + ", Проигравший: " + fields.first_name)
                 window.location.replace("/")
             }
         }
