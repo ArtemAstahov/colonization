@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models import Sum
 
 from django.utils import timezone
-from vk_iframe.models import Profile
 
 
 GAME_STATE = {
