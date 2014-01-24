@@ -75,7 +75,6 @@ $("#finishStroke").click(function(){
     $.ajax({
         url : '/ajax/finish_stroke',
         success : function() {
-            $('#finishStroke').src('/static/img/game/delete.png')
             clearPanels();
 
             for (var pk in game.units) {
