@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 from ajax import views
 
+
 urlpatterns = patterns('',
     url(r'^load_game', views.load_game),
     url(r'^check_game', views.check_game),
