@@ -2,8 +2,8 @@ var FIELD_SIZE = 40
 
 var stage = new Kinetic.Stage({
         container: 'container',
-        width: 20 * FIELD_SIZE, // 680
-        height: 15 * FIELD_SIZE // 680
+        width: 18 * FIELD_SIZE, // 720
+        height: 14 * FIELD_SIZE // 560
 });
 
 function createMap() {
@@ -13,8 +13,8 @@ function createMap() {
         x: 0,
         y: 0,
         image: image,
-        width: 20 * FIELD_SIZE,
-        height: 15 * FIELD_SIZE,
+        width: 18 * FIELD_SIZE,
+        height: 14 * FIELD_SIZE,
         listening: false
     });
     image.onload = function() {
@@ -22,6 +22,6 @@ function createMap() {
         layer.moveToBottom()
         layer.draw()
     };
-    image.src = "/static/img/game/map.jpg"
+    image.src = "/static/img/game/map.png"
     stage.add(layer);
 }
