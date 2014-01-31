@@ -1,27 +1,27 @@
 {% extends "layout/layout.html" %}
 
 {% block content %}
-    <span class="label label-success" style="float: left">
+    <span class="label label-success pull-left">
         <span class="glyphicon glyphicon-euro"></span>
-        <span id="player" class="badge"></span>
+        <span id="player" class="badge pull-right"></span>
     </span>
 
-    <button id="finishStroke" type="button" class="btn btn-warning btn-xs" style="float: left; margin-left: 10px">
+    <button id="finishStroke" type="button" class="btn btn-warning btn-xs pull-left" style="margin-left: 10px">
         <span class="glyphicon glyphicon-flag"></span>
         Завершить Ход
     </button>
 
-    <button id="missStroke" type="button" class="btn btn-info btn-xs" style="display: none; float: left; margin-left: 10px">
+    <button id="missStroke" type="button" class="btn btn-info btn-xs pull-left" style="display: none; margin-left: 10px">
         <span class="glyphicon glyphicon-refresh"></span>
         Передать ход следующему юниту
     </button>
 
-    <button id="createColony" type="button" class="btn btn-primary btn-xs" style="display: none; float: left; margin-left: 10px;">
+    <button id="createColony" type="button" class="btn btn-primary btn-xs pull-left" style="display: none; margin-left: 10px;">
         <img height="16" src="/static/img/game/icon-house.png" />
         Основать колонию
     </button>
 
-    <span id="purchasesPanel" class="label label-primary" style="visibility: hidden; float: left; margin-left: 10px;">
+    <span id="purchasesPanel" class="label label-primary pull-left" style="visibility: hidden; margin-left: 10px;">
         <img title="поселенец: атака -1, ход 1, стоимость 10" height="16" name="1" class="buyUnit" id="buySettler"
              src="/static/img/game/icon-men.png" />
         <img title="милиция: атака 1, ход 1, стоимость 2" height="16" name="2" class="buyUnit" id="buyMilitiaman"
@@ -35,7 +35,7 @@
         <img height="16" id="upgradeSettlement" style="color: white; visibility: hidden;" />
     </span>
 
-    <button id="leaveGame" type="button" class="btn btn-danger btn-xs" style="float: right;" title="Сдаться" >
+    <button id="leaveGame" type="button" class="btn btn-danger btn-xs pull-right" title="Сдаться" >
         <span class="glyphicon glyphicon-remove"></span>
     </button>
 
