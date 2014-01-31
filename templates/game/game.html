@@ -1,46 +1,62 @@
 {% extends "layout/layout.html" %}
 
 {% block content %}
-    <span class="label label-success pull-left">
-        <span class="glyphicon glyphicon-euro"></span>
-        <span id="player" class="badge pull-right"></span>
-    </span>
+    <div style="height: 35px; padding: 5px">
+        <span class="label label-success pull-left">
+            <span class="glyphicon glyphicon-euro"></span>
+            <span id="player" class="badge"></span>
+        </span>
 
-    <button id="finishStroke" type="button" class="btn btn-warning btn-xs pull-left" style="margin-left: 10px">
-        <span class="glyphicon glyphicon-flag"></span>
-        Завершить Ход
-    </button>
+        <button id="finishStroke" type="button" class="btn btn-warning btn-xs pull-left"
+                style="visibility: hidden; margin-left: 10px">
+            <span class="glyphicon glyphicon-flag"></span>
+            Завершить Ход
+        </button>
 
-    <button id="missStroke" type="button" class="btn btn-info btn-xs pull-left" style="display: none; margin-left: 10px">
-        <span class="glyphicon glyphicon-refresh"></span>
-        Передать ход следующему юниту
-    </button>
+        <button id="missStroke" type="button" class="btn btn-info btn-xs pull-left" style="display: none; margin-left: 10px">
+            <span class="glyphicon glyphicon-refresh"></span>
+            Следующий Юнит
+        </button>
 
-    <button id="createColony" type="button" class="btn btn-primary btn-xs pull-left" style="display: none; margin-left: 10px;">
-        <img height="16" src="/static/img/game/icon-house.png" />
-        Основать колонию
-    </button>
+        <button id="createColony" type="button" class="btn btn-primary btn-xs pull-left"
+            style="display: none; margin-left: 10px;">
+            <img height="16" width="16" src="/static/img/game/icon-house.png" />
+            Основать Колонию
+        </button>
 
-    <span id="purchasesPanel" class="label label-primary pull-left" style="visibility: hidden; margin-left: 10px;">
-        <img title="поселенец: атака -1, ход 1, стоимость 10" height="16" name="1" class="buyUnit" id="buySettler"
-             src="/static/img/game/icon-men.png" />
-        <img title="милиция: атака 1, ход 1, стоимость 2" height="16" name="2" class="buyUnit" id="buyMilitiaman"
-             src="/static/img/game/icon-bow.png" />
-        <img title="разведчик: атака 1, ход 2, стоимость 4" height="16" name="3" class="buyUnit" id="buyScout"
-             src="/static/img/game/icon-knight.png" />
-        <img title="офицер: атака 2, ход 1, стоимость 3" height="16" name="4" class="buyUnit" id="buyOfficer"
-             src="/static/img/game/icon-sword.png" />
-        <img title="драгун: атака 2, ход 2, стоимость 5" height="16" name="5" class="buyUnit" id="buyDragoon"
-             src="/static/img/game/icon-quake.png" />
-        <img height="16" id="upgradeSettlement" style="color: white; visibility: hidden;" />
-    </span>
+        <div id="purchasesPanel" style="display: none; float: left; margin-left: 10px;">
+            <div class="label label-primary" style="padding: 5px">
+                <span class="glyphicon glyphicon-shopping-cart"></span>
+                Купить
+            </div>
+            <button name="1" class="buyUnit btn btn-primary btn-xs" style="margin-left: 5px"
+                    title="поселенец: атака -1, ход 1, стоимость 10" id="buySettler">
+                <img height="16" src="/static/img/game/icon-men.png" />
+            </button>
+            <button name="2" class="buyUnit btn btn-primary btn-xs" title="лучник: атака 1, ход 1, стоимость 2" id="buyMilitiaman">
+                <img height="16" src="/static/img/game/icon-bow.png" />
+            </button>
+            <button name="3" class="buyUnit btn btn-primary btn-xs" title="разведчик: атака 1, ход 2, стоимость 4" id="buyScout">
+                <img height="16" src="/static/img/game/icon-knight.png" />
+            </button>
+            <button name="4" class="buyUnit btn btn-primary btn-xs" title="офицер: атака 2, ход 1, стоимость 3" id="buyOfficer">
+                <img height="16" src="/static/img/game/icon-sword.png" />
+            </button>
+            <button name="5" class="buyUnit btn btn-primary btn-xs" title="драгун: атака 2, ход 2, стоимость 5" id="buyDragoon">
+                <img height="16" src="/static/img/game/icon-quake.png" />
+            </button>
+            <button class="btn btn-primary btn-xs" style="color: white; visibility: hidden;" id="upgradeSettlement">
+                <img height="16" />
+            </button>
+        </div>
 
-    <button id="leaveGame" type="button" class="btn btn-danger btn-xs pull-right" title="Сдаться" >
-        <span class="glyphicon glyphicon-remove"></span>
-    </button>
+        <button id="leaveGame" type="button" class="btn btn-danger btn-xs pull-right" title="Сдаться" >
+            <div class="glyphicon glyphicon-remove"></div>
+        </button>
+    </div>
 
-    <div style="clear: both" />
     <div id="container" ></div>
+
     {% load staticfiles %}
     <script type="text/javascript" charset="utf-8" src="{% static "js/game/map.js" %}" ></script>
     <script type="text/javascript" charset="utf-8" src="{% static "js/game/player.js" %}" ></script>

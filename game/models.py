@@ -115,8 +115,8 @@ def get_opponent(user):
 
 class Map(models.Model):
     game = models.ForeignKey(Game)
-    height = models.IntegerField(default=15)
-    width = models.IntegerField(default=20)
+    height = models.IntegerField(default=14)
+    width = models.IntegerField(default=18)
 
 
 def get_game_map(user):

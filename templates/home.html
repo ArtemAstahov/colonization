@@ -1,7 +1,8 @@
 {% extends "layout/layout.html" %}
 
 {% block content %}
-    <h1 style="text-align: center">
+    <div style="padding: 50px"></div>
+    <h1>
         <span class="label label-primary">Колонизация</span>
     </h1>
     <div>
@@ -12,7 +13,9 @@
                 <h3>
                     <a href="/game/create_game" style="text-decoration: none">Создать Игру</a>
                 </h3>
-                <h3>Хосты:</h3>
+                <h3>
+                    <span class="label label-primary">Хосты:</span>
+                </h3>
                 {% for host_game in host_games %}
                     <a href="/game/join_to_game/?pk={{ host_game.pk }}" style="text-decoration: none">
                         {{ host_game.player_set.first.user.first_name }}
