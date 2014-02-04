@@ -103,7 +103,7 @@ $("#leaveGame").click(function(){
     $.ajax({
         url : '/ajax/leave_game',
         success : function(response) {
-            if (response['winner']) {
+            if (response['winner'] || response['looser']) {
                 showGameResult(response['winner'], response['looser'])
             }
         }
@@ -124,7 +124,7 @@ function checkGame() {
                 game.clear()
                 loadGame()
             }
-            if (response['winner']) {
+            if (response['winner'] || response['looser']) {
                 showGameResult(response['winner'], response['looser'])
             }
         }
