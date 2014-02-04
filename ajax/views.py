@@ -30,7 +30,7 @@ def check_game(request):
     game_pk = request.GET['game_pk']
     game = Game.objects.filter(pk=int(game_pk))
     if game.exists() and GAME_STATE[game.first().state] == 'FINISHED':
-        return respond_game_result(game)
+        return respond_game_result(game.first())
 
     return HttpResponse()
 
@@ -42,7 +42,7 @@ def leave_game(request):
     else:
         game = finish_game(None, request.user)
     game = Game.objects.filter(pk=game.pk)
-    return respond_game_result(game)
+    return respond_game_result(game.first())
 
 
 def load_game(request):
