@@ -70,6 +70,7 @@ function clearPanels() {
 
 function showGameResult(winner, looser) {
     if (winner && looser) {
+        $("#gameResultModalBody").css({display: 'block'})
         $("#gameResultModalBody").html("Выигравший: " + winner + ", Проигравший: " + looser)
     }
     $("#gameResultModal").modal('show')
