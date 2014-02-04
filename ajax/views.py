@@ -45,7 +45,7 @@ def leave_game(request):
     if opponent is not None:
         game = finish_game(get_opponent(request.user).user, request.user)
     else:
-        game = finish_game(None, None)
+        game = finish_game(None, request.user)
     game = Game.objects.filter(pk=game.pk)
     return respond_game_result(game.first())
 
