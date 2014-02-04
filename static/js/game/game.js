@@ -69,7 +69,9 @@ function clearPanels() {
 }
 
 function showGameResult(winner, looser) {
-    $("#gameResultModalBody").html("Выигравший: " + winner + ", Проигравший: " + looser)
+    if (winner && looser) {
+        $("#gameResultModalBody").html("Выигравший: " + winner + ", Проигравший: " + looser)
+    }
     $("#gameResultModal").modal('show')
     $("#gameResultModal").on('hidden.bs.modal', function() {
         window.location.replace("/")
