@@ -101,12 +101,7 @@ $("#finishStroke").click(function(){
 
 $("#leaveGame").click(function(){
     $.ajax({
-        url : '/ajax/leave_game',
-        success : function(response) {
-            if (response['winner'] || response['looser']) {
-                showGameResult(response['winner'], response['looser'])
-            }
-        }
+        url : '/ajax/leave_game'
     });
 });
 
