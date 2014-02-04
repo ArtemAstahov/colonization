@@ -68,6 +68,14 @@ function clearPanels() {
     hideUnitPanel()
 }
 
+function showGameResult(winner, looser) {
+    $("#gameResultModalBody").html("Выигравший: " + winner + ", Проигравший: " + looser)
+    $("#gameResultModal").modal('show')
+    $("#gameResultModal").on('hidden.bs.modal', function() {
+        window.location.replace("/")
+    })
+}
+
 $("#finishStroke").click(function(){
     if (!game.player.active)
         return
@@ -94,8 +102,10 @@ $("#finishStroke").click(function(){
 $("#leaveGame").click(function(){
     $.ajax({
         url : '/ajax/leave_game',
-        success : function() {
-            window.location.replace("/")
+        success : function(response) {
+            if (response['winner']) {
+                showGameResult(response['winner'], response['looser'])
+            }
         }
     });
 });
@@ -114,8 +124,8 @@ function checkGame() {
                 game.clear()
                 loadGame()
             }
-            if (response['game']) {
-                window.location.replace("/")
+            if (response['winner']) {
+                showGameResult(response['winner'], response['looser'])
             }
         }
     });

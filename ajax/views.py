@@ -15,6 +15,12 @@ def game_required(function):
     return check
 
 
+def respond_game_result(game):
+    winner = game.winner.first_name + game.winner.last_name
+    looser = game.looser.first_name + game.looser.last_name
+    return HttpResponse(json.dumps({'winner': winner, 'looser': looser}), mimetype="application/json")
+
+
 def check_game(request):
     player = Player.objects.filter(user=request.user)
 
@@ -24,8 +30,7 @@ def check_game(request):
     game_pk = request.GET['game_pk']
     game = Game.objects.filter(pk=int(game_pk))
     if game.exists() and GAME_STATE[game.first().state] == 'FINISHED':
-        game = serializers.serialize('json', game, use_natural_keys=True)
-        return HttpResponse(json.dumps({'game': game}), mimetype="application/json")
+        return respond_game_result(game)
 
     return HttpResponse()
 
@@ -37,8 +42,7 @@ def leave_game(request):
     else:
         game = finish_game(None, request.user)
     game = Game.objects.filter(pk=game.pk)
-    data = serializers.serialize('json', game, use_natural_keys=True)
-    return HttpResponse(data, content_type='application/json')
+    return respond_game_result(game)
 
 
 def load_game(request):
