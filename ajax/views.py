@@ -16,9 +16,14 @@ def game_required(function):
 
 
 def respond_game_result(game):
-    winner = game.winner.first_name + game.winner.last_name
-    looser = game.looser.first_name + game.looser.last_name
-    return HttpResponse(json.dumps({'winner': winner, 'looser': looser}), mimetype="application/json")
+    data = {}
+    if game.winner is not None:
+        winner = game.winner.first_name + game.winner.last_name
+        data['winner'] = winner
+    if game.looser is not None:
+        looser = game.looser.first_name + game.looser.last_name
+        data['looser'] = looser
+    return HttpResponse(json.dumps(data), mimetype="application/json")
 
 
 def check_game(request):
