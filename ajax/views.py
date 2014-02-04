@@ -16,7 +16,7 @@ def game_required(function):
 
 
 def respond_game_result(game):
-    data = {}
+    data = {'winner': None, 'looser': None}
     if game.winner is not None:
         winner = game.winner.first_name + " " + game.winner.last_name
         data['winner'] = winner
@@ -45,7 +45,7 @@ def leave_game(request):
     if opponent is not None:
         game = finish_game(get_opponent(request.user).user, request.user)
     else:
-        game = finish_game(None, request.user)
+        game = finish_game(None, None)
     game = Game.objects.filter(pk=game.pk)
     return respond_game_result(game.first())
 
