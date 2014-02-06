@@ -22,7 +22,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Хосты</h3>
                     </div>
-                    <div class="panel-body" style="height: 150px; overflow-y: auto;">
+                    <div class="panel-body" style="max-height: 150px; overflow-y: auto;">
                         {% for host_game in host_games %}
                             <a href="/game/join_to_game/?pk={{ host_game.pk }}" style="text-decoration: none">
                             {{ host_game.player_set.first.user.first_name }}
