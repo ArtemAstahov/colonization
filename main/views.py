@@ -18,7 +18,7 @@ def home(request):
     users = User.objects.all()
     for user in users:
         score = get_user_score(user)
-        user_scores.append(UserScores(name=user.username, score=score))
+        user_scores.append(UserScores(name=user.first_name + " " + user.last_name, score=score))
     user_scores.sort(key=operator.attrgetter('score'))
     user_scores.reverse()
 
