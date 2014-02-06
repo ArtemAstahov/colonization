@@ -14,19 +14,19 @@ class UserScores:
 
 
 def home(request):
-    host_scores = []
+    user_scores = []
     users = User.objects.all()
     for user in users:
         score = get_user_score(user)
-        host_scores.append(UserScores(name=user.username, score=score))
-    host_scores.sort(key=operator.attrgetter('score'))
-    host_scores.reverse()
+        user_scores.append(UserScores(name=user.username, score=score))
+    user_scores.sort(key=operator.attrgetter('score'))
+    user_scores.reverse()
 
     if request.user.is_authenticated() and get_player(request.user) is not None and get_active_game(request.user):
         return render(request, 'home.html',
-                      {'game': get_active_game(request.user), 'user_scores': host_scores[0:5]})
+                      {'game': get_active_game(request.user), 'user_scores': user_scores[0:5]})
     else:
-        return render(request, 'home.html', {'host_games': get_host_games(), 'user_scores': host_scores[0:5]})
+        return render(request, 'home.html', {'host_games': get_host_games(), 'user_scores': user_scores[0:5]})
 
 
 @login_required
