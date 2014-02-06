@@ -1,8 +1,7 @@
 {% extends "layout/layout.html" %}
 
 {% block content %}
-    <div style="padding: 50px"></div>
-    <h1>
+    <h1 style="padding: 10px">
         <span class="label label-primary">Колонизация</span>
     </h1>
     <div>
@@ -10,20 +9,44 @@
             {% if game %}
                 <h3><a href="/game" style="text-decoration: none">В Бой</a></h3>
             {% else %}
-                <h3>
+                <h4>
                     <a href="/game/create_game" style="text-decoration: none">Создать Игру</a>
-                </h3>
-                <h3>
-                    <span class="label label-primary">Хосты:</span>
-                </h3>
-                {% for host_game in host_games %}
-                    <a href="/game/join_to_game/?pk={{ host_game.pk }}" style="text-decoration: none">
-                        {{ host_game.player_set.first.user.username }}
-                    </a>
-                    <br>
-                {% endfor %}
-                <h4><a href="/" style="text-decoration: none">Обновить Хостов</a></h4>
+                </h4>
+
+                <div class="panel panel-primary" style="width: 330px; margin-left: 200px; margin-right: 200px">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Хосты</h3>
+                    </div>
+                    <div class="panel-body" style="height: 150px; overflow-y: auto;">
+                        {% for host_game in host_games %}
+                            <a href="/game/join_to_game/?pk={{ host_game.pk }}" style="text-decoration: none">
+                            {{ host_game.player_set.first.user.username }}
+                            </a>
+                            <br>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <strong><a href="/" style="text-decoration: none">Обновить Хостов</a></strong>
+                <br><br>
             {% endif %}
+
+            {% if user_scores %}
+                <table class="table" style="color: #ffffff; width: 330px; margin-left: 200px; margin-right: 200px">
+                    <strong style="color: #ffffff">Таблица Рекордов</strong>
+                    <tr class="info" style="color: #000000">
+                        <td><strong>Имя</strong></td>
+                        <td><strong>Очки</strong></td>
+                    </tr>
+                    {% for user_score in user_scores %}
+                        <tr>
+                            <td>{{ user_score.name }}</td>
+                            <td>{{ user_score.score }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+
         {% endif %}
     </div>
 {% endblock %}
