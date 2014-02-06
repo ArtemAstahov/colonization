@@ -17,6 +17,17 @@ VK_APP_SECRET = 'pKQnGUTncTEoIJMEATVh'  # Secure key
 import dj_database_url
 DATABASES = {'default': dj_database_url.config()}
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'colonization_cache',
+        'TIMEOUT': 60,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
@@ -88,6 +99,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -97,6 +109,7 @@ MIDDLEWARE_CLASSES = (
     'vk_iframe.middleware.AuthenticationMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'vk_iframe.middleware.LoginRequiredMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 PUBLIC_URLS = [
