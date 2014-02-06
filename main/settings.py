@@ -19,8 +19,8 @@ DATABASES = {'default': dj_database_url.config()}
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'colonization_cache',
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp/django_cache',
         'TIMEOUT': 60,
         'OPTIONS': {
             'MAX_ENTRIES': 1000
