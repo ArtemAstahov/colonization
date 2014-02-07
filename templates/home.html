@@ -1,8 +1,8 @@
 {% extends "layout/layout.html" %}
 
 {% block content %}
-
-        <span class="label label-primary">Колонизация</span>
+    <div class="clearfix" />
+    <h2><span class="label label-primary">Колонизация</span></h2>
 
     <div>
         {% if user.is_authenticated %}
@@ -11,10 +11,10 @@
                     <span class="glyphicon glyphicon-fire"></span>
                     В Бой
                 </button>
-                <h4 style="color: #ffffff;">
+                <h5 style="color: #ffffff;">
                     <p>Ни одна армия не способна остановить мысль,</p>
                     <p>если пришло ее время ...</p>
-                </h4>
+                </h5>
             {% else %}
                 <button id="createGame" type="button" class="btn btn-danger">
                     <span class="glyphicon glyphicon-star-empty"></span>
